@@ -223,7 +223,7 @@ def collect_remote_statics(name=None):
     remote_static_dir = '{project_dir}/{project_name}/remote_static'.format(**env)
     run_as_umap('mkdir -p {0}'.format(remote_static_dir))
     remote_repositories = {
-        'storage': 'git://github.com/yohanboniface/Leaflet.Storage.git@master',
+        'storage': 'git://github.com/yohanboniface/Leaflet.Storage.git',
     }
     with cd(remote_static_dir):
         for subdir, path in remote_repositories.iteritems():

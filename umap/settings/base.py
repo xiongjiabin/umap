@@ -14,7 +14,7 @@ DEBUG = True
 SITE_ID = 1
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 USE_TZ = True
 USE_I18N = True
 USE_L10N = True
@@ -41,6 +41,7 @@ LANGUAGES = (
     ('uk-ua', u'Ukrainian'),
     ('am-et', u'Amharic'),
 )
+
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = ''
@@ -95,6 +96,9 @@ STATICFILES_FINDERS = [
     # 'npm.finders.NpmFinder',
 ] + STATICFILES_FINDERS
 
+LOCALE_PATHS = (
+    os.path.join(PROJECT_DIR, 'locale'),
+)
 # =============================================================================
 # Templates
 # =============================================================================
