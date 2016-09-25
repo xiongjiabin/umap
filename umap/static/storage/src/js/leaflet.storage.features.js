@@ -159,7 +159,7 @@ L.Storage.FeatureMixin = {
 
     getDisplayName: function () {
         var key = this.getOption('labelKey') || 'name';
-        return this.properties[key] || this.properties.title || this.datalayer.options.name;
+        return this.properties[key] || this.properties.title ;// note by xiongjiabin || this.datalayer.options.name;
     },
 
     hasPopupFooter: function () {
@@ -196,7 +196,6 @@ L.Storage.FeatureMixin = {
 
     connectToDataLayer: function (datalayer) {
         this.datalayer = datalayer;
-        this.options.pane = this.datalayer.pane;
         this.options.renderer = this.datalayer.renderer;
     },
 
@@ -402,8 +401,8 @@ L.Storage.FeatureMixin = {
                 direction: this.getOption('labelDirection'),
                 interactive: this.getOption('labelInteractive')
             };
+        this.unbindTooltip();
         if (this.getOption('showLabel') && displayName) this.bindTooltip(L.Util.escapeHTML(displayName), options);
-        else this.unbindTooltip();
     },
 
     matchFilter: function (filter, keys) {
@@ -427,6 +426,18 @@ L.Storage.FeatureMixin = {
 
     isMulti: function () {
         return false;
+    },
+
+    closeTooltip: function () {
+        // Remove me when #371 is fixed.
+        if (this._tooltip) {
+            this._tooltip._close();
+            if (this._tooltip.options.interactive && this._tooltip._container) {
+                L.DomUtil.removeClass(this._tooltip._container, 'leaflet-clickable');
+                this.removeInteractiveTarget(this._tooltip._container);
+            }
+        }
+        return this;
     }
 
 };
@@ -573,6 +584,12 @@ L.Storage.Marker = L.Marker.extend({
 
 
 L.Storage.PathMixin = {
+
+    connectToDataLayer: function (datalayer) {
+        L.S.FeatureMixin.connectToDataLayer.call(this, datalayer);
+        // We keep markers on their own layer on top of the paths.
+        this.options.pane = this.datalayer.pane;
+    },
 
     edit: function (e) {
         if(this.map.editEnabled) {
