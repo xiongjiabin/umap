@@ -165,6 +165,9 @@ L.Storage.DataLayer = L.Class.extend({
                     isDirty = status;
                     if (status) {
                         self.map.addDirtyDatalayer(self);
+                        // A layer can be made dirty by indirect action (like dragging layers)
+                        // we need to have it loaded before saving it.
+                        if (!self.isLoaded()) self.fetchData();
                     } else {
                         self.map.removeDirtyDatalayer(self);
                         self.isDeleted = false;
@@ -198,9 +201,7 @@ L.Storage.DataLayer = L.Class.extend({
             (!this.map.datalayersOnLoad && this.options.displayOnLoad)) {
             this.show();
         }
-        if (!this.storage_id) {
-            this.isDirty = true;
-        }
+        if (!this.storage_id) this.isDirty = true;
         this.onceLoaded(function () {
             this.map.on('moveend', function () {
                 if (this.isRemoteLayer() && this.options.remoteData.dynamic && this.isVisible()) {
@@ -370,7 +371,7 @@ L.Storage.DataLayer = L.Class.extend({
         var id = L.stamp(this);
         if (!this.map.datalayers[id]) {
             this.map.datalayers[id] = this;
-            this.map.datalayers_index.push(this);
+            if (L.Util.indexOf(this.map.datalayers_index, this) === -1) this.map.datalayers_index.push(this);
         }
         this.map.updateDatalayersControl();
     },
@@ -395,9 +396,7 @@ L.Storage.DataLayer = L.Class.extend({
         this._layers[id] = feature;
         this.layer.addLayer(feature);
         this.indexProperties(feature);
-        if (this.hasDataLoaded()) {
-            this.fire('datachanged');
-        }
+        if (this.hasDataLoaded()) this.fire('datachanged');
     },
 
     removeLayer: function (feature) {
@@ -406,9 +405,7 @@ L.Storage.DataLayer = L.Class.extend({
         this._index.splice(this._index.indexOf(id), 1);
         delete this._layers[id];
         this.layer.removeLayer(feature);
-        if (this.hasDataLoaded()) {
-            this.fire('datachanged');
-        }
+        if (this.hasDataLoaded()) this.fire('datachanged');
     },
 
     indexProperties: function (feature) {
@@ -451,13 +448,16 @@ L.Storage.DataLayer = L.Class.extend({
                 includeLatLon: false
             }, function(err, result) {
                 if (err) {
-                    var message = '';
-                    for (var i = 0; i < err.length; i++) {
-                        message += err[i].message;
+                    var message;
+                    if (err.type === 'Error') {
+                        message = err.message;
+                    } else {
+                        message = L._('{count} errors during import: {message}', {count: err.length, message: err[0].message});
                     }
-                    self.map.ui.alert({content: message, level: 'error'});
+                    self.map.ui.alert({content: message, level: 'error', duration: 10000});
                     console.log(err);
-                } else {
+                }
+                if (result && result.features.length) {
                     callback(result);
                 }
             });
@@ -650,7 +650,7 @@ L.Storage.DataLayer = L.Class.extend({
     erase: function () {
         this.hide();
         delete this.map.datalayers[L.stamp(this)];
-        this.map.datalayers_index.splice(this.map.datalayers_index.indexOf(this), 1);
+        this.map.datalayers_index.splice(this.getRank(), 1);
         this.parentPane.removeChild(this.pane);
         this.map.updateDatalayersControl();
         this.fire('erase');
@@ -664,7 +664,6 @@ L.Storage.DataLayer = L.Class.extend({
         if (this.storage_id) {
             this.resetOptions();
             this.parentPane.appendChild(this.pane);
-            this.map.indexDatalayers();
             if (this._leaflet_events_bk && !this._leaflet_events) {
                 this._leaflet_events = this._leaflet_events_bk;
             }
@@ -913,7 +912,7 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     getNextVisible: function () {
-        var id = this.map.datalayers_index.indexOf(this),
+        var id = this.getRank(),
             next = this.map.datalayers_index[id + 1] || this.map.datalayers_index[0];
         while(!next.isVisible() || !next.isBrowsable() || next._index.length === 0) {
             next = next.getNextVisible();
@@ -922,7 +921,7 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     getPreviousVisible: function () {
-        var id = this.map.datalayers_index.indexOf(this),
+        var id = this.getRank(),
             prev = this.map.datalayers_index[id - 1] || this.map.datalayers_index[this.map.datalayers_index.length - 1];
         while(!prev.isVisible() || !prev.isBrowsable() || prev._index.length === 0) {
             prev = prev.getPreviousVisible();

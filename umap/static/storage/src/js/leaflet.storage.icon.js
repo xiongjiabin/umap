@@ -16,26 +16,16 @@ L.Storage.Icon = L.DivIcon.extend({
 
     _getIconUrl: function (name) {
         var url;
-        if(this.feature && this.feature._getIconUrl(name)) {
-            url = this.feature._getIconUrl(name);
-        }
-        else {
-            url = this.options[name + 'Url'];
-        }
+        if(this.feature && this.feature._getIconUrl(name)) url = this.feature._getIconUrl(name);
+        else url = this.options[name + 'Url'];
         return this.formatUrl(url, this.feature);
     },
 
     _getColor: function () {
         var color;
-        if(this.feature) {
-            color = this.feature.getOption('color');
-        }
-        else if (this.options.color) {
-            color = this.options.color;
-        }
-        else {
-            color = this.map.getDefaultOption('color');
-        }
+        if(this.feature) color = this.feature.getOption('color');
+        else if (this.options.color) color = this.options.color;
+        else color = this.map.getDefaultOption('color');
         return color;
     },
 
@@ -49,7 +39,7 @@ L.Storage.Icon.Default = L.Storage.Icon.extend({
     default_options: {
         iconAnchor: new L.Point(16, 40),
         popupAnchor: new L.Point(0, -40),
-        labelAnchor: new L.Point(16, -24),
+        tooltipAnchor: new L.Point(16, -24),
         className: 'storage-div-icon'
     },
 
@@ -71,9 +61,7 @@ L.Storage.Icon.Default = L.Storage.Icon.extend({
         this.elements.arrow = L.DomUtil.create('div', 'icon_arrow', this.elements.main);
         this.elements.img = L.DomUtil.create('img', null, this.elements.container);
         var src = this._getIconUrl('icon');
-        if(src) {
-            this.elements.img.src = src;
-        }
+        if (src) this.elements.img.src = src;
         this._setColor();
         this._setIconStyles(this.elements.main, 'icon');
         return this.elements.main;
@@ -86,7 +74,7 @@ L.Storage.Icon.Circle = L.Storage.Icon.extend({
         var default_options = {
             iconAnchor: new L.Point(6, 6),
             popupAnchor: new L.Point(0, -6),
-            labelAnchor: new L.Point(6, 0),
+            tooltipAnchor: new L.Point(6, 0),
             className: 'storage-circle-icon'
         };
         options = L.Util.extend({}, default_options, options);
@@ -112,7 +100,7 @@ L.Storage.Icon.Drop = L.Storage.Icon.Default.extend({
     default_options: {
             iconAnchor: new L.Point(16, 42),
             popupAnchor: new L.Point(0, -42),
-            labelAnchor: new L.Point(16, -24),
+            tooltipAnchor: new L.Point(16, -24),
             className: 'storage-drop-icon'
     }
 });
@@ -121,7 +109,7 @@ L.Storage.Icon.Ball = L.Storage.Icon.Default.extend({
     default_options: {
             iconAnchor: new L.Point(8, 30),
             popupAnchor: new L.Point(0, -28),
-            labelAnchor: new L.Point(8, -23),
+            tooltipAnchor: new L.Point(8, -23),
             className: 'storage-ball-icon'
     },
 

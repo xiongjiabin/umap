@@ -185,6 +185,15 @@
             return polygon;
         },
 
+        startNotice: function (latlng, options) {
+          latlng = latlng || this.map.getCenter();
+          var marker = this.createMarker(latlng, options);
+          this.connectCreatedToMap(marker);
+          var editor = marker.enableEdit();
+          editor.startDrawing();
+          return marker;
+        },
+
         startMarker: function (latlng, options) {
             latlng = latlng || this.map.getCenter();
             var marker = this.createMarker(latlng, options);

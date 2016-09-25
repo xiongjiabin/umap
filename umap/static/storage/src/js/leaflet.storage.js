@@ -47,12 +47,12 @@ L.Map.mergeOptions({
     clickable: true,
     easing: true,
     syncVideoEnable: false,
-    syncVideoUrl: 'http://localhost:8989'
+    syncVideoUrl: 'http://localhost:8001'
 });
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'home', 'datalayers'],
+    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
 
     initialize: function (el, geojson) {
 
@@ -119,14 +119,17 @@ L.Storage.Map.include({
         this.handleLimitBounds();
 
         this.initTileLayers(this.options.tilelayers);
-        this.initControls();
 
         // Global storage for retrieving datalayers
         this.datalayers = {};
         this.datalayers_index = [];
         this.dirty_datalayers = [];
+
+        this.initControls();
+
         // create datalayers
         this.initDatalayers();
+
         if (this.options.displayCaptionOnLoad) {
             // Retrocompat
             if (!this.options.onLoadPanel) {
@@ -232,7 +235,6 @@ L.Storage.Map.include({
         }
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});
         this._controls.datalayers = new L.Storage.DataLayersControl(this);
-        this._controls.home = new L.S.HomeControl();
         this._controls.locate = new L.S.LocateControl();
         this._controls.fullscreen = new L.Control.Fullscreen({title: {'false': L._('View Fullscreen'), 'true': L._('Exit Fullscreen')}});
         this._controls.search = new L.Storage.SearchControl();
@@ -309,6 +311,7 @@ L.Storage.Map.include({
             if (!pane.dataset || !pane.dataset.id) continue;
             this.datalayers_index.push(this.datalayers[pane.dataset.id]);
         }
+        this.updateDatalayersControl();
     },
 
     ensurePanesOrder: function () {
@@ -609,7 +612,7 @@ L.Storage.Map.include({
                 filetype: 'application/json'
             },
             gpx: {
-                formatter: function (gpx) {return togpx(map.toGeoJSON());},
+                formatter: function (map) {return togpx(map.toGeoJSON());},
                 ext: '.gpx',
                 filetype: 'application/xml'
             },
@@ -825,7 +828,8 @@ L.Storage.Map.include({
             try {
                 self.importRaw(rawData);
             } catch (e) {
-                this.ui.alert({content: L._('Invalid umap data in {filename}', {filename: file.name}), level: 'error'});
+                console.error('Error importing data', e);
+                self.ui.alert({content: L._('Invalid umap data in {filename}', {filename: file.name}), level: 'error'});
             }
         };
     },
@@ -997,7 +1001,6 @@ L.Storage.Map.include({
         'editinosmControl',
         'embedControl',
         'measureControl',
-        'homeControl',
         'tilelayersControl',
         'syncVideoEnable',
         'syncVideoUrl'
@@ -1397,8 +1400,6 @@ L.Storage.Map.include({
         var disable = L.DomUtil.create('a', 'leaflet-control-edit-disable', container);
         disable.href = '#';
         disable.title = disable.innerHTML = L._('Disable editing');
-
-        var latlng = L.DomUtil.create('input','',container);
 
 
         L.DomEvent

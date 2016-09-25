@@ -408,7 +408,6 @@ L.Storage.MoreControls = L.Control.extend({
             less = L.DomUtil.create('a', 'storage-control-less storage-control-text', container);
         more.href = '#';
         more.title = L._('More controls');
-        more.innerHTML = '🞁';
 
         L.DomEvent
             .on(more, 'click', L.DomEvent.stop)
@@ -416,7 +415,6 @@ L.Storage.MoreControls = L.Control.extend({
 
         less.href = '#';
         less.title = L._('Hide controls');
-        less.innerHTML = '🞁';
 
         L.DomEvent
             .on(less, 'click', L.DomEvent.stop)
@@ -507,9 +505,9 @@ L.Storage.DataLayersControl = L.Control.extend({
     update: function () {
         if (this._datalayers_container) {
             this._datalayers_container.innerHTML = '';
-            for(var idx in this._map.datalayers) {
-                this.addDataLayer(this._datalayers_container, this._map.datalayers[idx]);
-            }
+            this._map.eachDataLayer(function (datalayer) {
+                this.addDataLayer(this._datalayers_container, datalayer);
+            }, this)
         }
     },
 
@@ -579,18 +577,26 @@ L.Storage.DataLayer.include({
         var toggle = L.DomUtil.create('i', 'layer-toggle', container),
             zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container),
             edit = L.DomUtil.create('i', 'layer-edit show-on-edit', container),
-            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container);
+            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
+            remove = L.DomUtil.create('i', 'layer-delete show-on-edit', container);
         zoomTo.title = L._('Zoom to layer extent');
         toggle.title = L._('Show/hide layer');
         edit.title = L._('Edit');
         table.title = L._('Edit properties in a table');
+        remove.title = L._('Delete layer');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
         L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
         L.DomEvent.on(edit, 'click', this.edit, this);
         L.DomEvent.on(table, 'click', this.tableEdit, this);
+        L.DomEvent.on(remove, 'click', function () {
+                    if (!this.isVisible()) return;
+                    if (!confirm(L._('Are you sure you want to delete this layer?'))) return;
+                    this._delete();
+                    this.map.ui.closePanel();
+                }, this);
         L.DomUtil.addClass(container, this.getHidableClass());
         L.DomUtil.classIf(container, 'off', !this.isVisible());
-        container.dataset.id = this._leaflet_id;
+        container.dataset.id = L.stamp(this);
     },
 
     getLocalId: function () {
@@ -789,26 +795,13 @@ L.S.AttributionControl = L.Control.Attribution.extend({
             .on(link, 'click', L.DomEvent.stop)
             .on(link, 'click', this._map.displayCaption, this._map)
             .on(link, 'dblclick', L.DomEvent.stop);
+        if (window.top === window.self) {
+            // We are not in iframe mode
+            var home = L.DomUtil.add('a', '', this._container, ' — ' + L._('Home'));
+            home.href = '/';
+        }
     }
 
-});
-
-
-L.Storage.HomeControl = L.Control.extend({
-
-    options: {
-        position: 'topleft'
-    },
-
-    onAdd: function () {
-        var container = L.DomUtil.create('div', 'leaflet-control-home storage-control'),
-            link = L.DomUtil.create('a', '', container);
-
-        link.href = '/';
-        link.title = L._('Go to home page');
-
-        return container;
-    }
 });
 
 
@@ -1070,7 +1063,12 @@ L.S.Editable = L.Editable.extend({
             if (this.map.editedFeature !== e.layer) e.layer.edit(e);
         });
         this.on('editable:editing', function (e) {
-            e.layer.isDirty = true;
+            var layer = e.layer;
+            layer.isDirty = true;
+            if (layer._tooltip && layer.isTooltipOpen()) {
+                layer._tooltip.setLatLng(layer.getCenter());
+                layer._tooltip.update();
+            }
         });
         this.on('editable:vertex:ctrlclick', function (e) {
             var index = e.vertex.getIndex();
