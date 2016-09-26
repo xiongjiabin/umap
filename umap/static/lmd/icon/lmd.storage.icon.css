@@ -1,0 +1,11 @@
+.storage-rect-icon {
+    border: 1px solid white;
+    border-radius: 10px 10px 10px 10px;
+    height: 100px;
+    width: 100px;
+}
+
+.storage-rect-icon img{
+  height:100px;
+  width:100px;
+}
