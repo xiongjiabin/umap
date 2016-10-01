@@ -590,6 +590,60 @@ L.FormBuilder.Range = L.FormBuilder.Input.extend({
 
 });
 
+L.FormBuilder.DevStatusSwitcher = L.FormBuilder.MultiChoice.extend({
+    //第一个参数可以是数字
+    default: 1,
+    choices: [
+        [1, L._('Add device')],
+        [2, L._('Change device')],
+        [3, L._('Remove device')],
+        [4, L._('Remove to other palace')],
+        [0,L._('unset')]
+    ]
+});
+
+L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
+
+    default: 0,
+    choices: [
+        [1, L._('left')],
+        [2, L._('right')],
+        [0, L._('unset')]
+    ],
+});
+
+L.FormBuilder.PillSuppSwitcher = L.FormBuilder.Select.extend({
+
+    selectOptions: [
+        ["1", L._('Single Support')],
+        ["2", L._('Double Support')],
+        ["3", L._('Single Arm Support')],
+        ["4", L._('Doulle Arms Support')],
+        ["5", L._('Door Support')]
+    ]
+
+});
+
+L.FormBuilder.PillDiamSwitcher = L.FormBuilder.Select.extend({
+    //第一个参数必须是字符串
+    selectOptions: [
+      ["60","60"],
+      ["76","70"],
+      ["89","89"],
+      ["114","114"],
+      ["133","133"],
+      ["140","140"],
+      ["159","159"],
+      ["165","165"],
+      ["180","180"],
+      ["219","219"],
+      ["273","273"],
+      ["325","325"],
+      ["377","377"]
+    ]
+});
+
+
 L.Storage.FormBuilder = L.FormBuilder.extend({
 
     options: {
@@ -635,6 +689,18 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         tilelayersControl: {handler: 'ControlChoice', label: L._('Display the tile layers control')},
         editinosmControl: {handler: 'ControlChoice', label: L._('Display the control to open OpenStreetMap editor')},
         datalayersControl: {handler: 'DataLayersControl', label: L._('Display the data layers control')},
+
+        //added by xiongjiabin 2016-09-30
+        subNum: {label: L._('Sub Number')},
+        devStatus: {handler: 'DevStatusSwitcher', label: L._('Device Status')},
+        leftRight: {handler: 'LeftRightChoice', label: L._('Direction')},
+
+        //pillar attributes
+        pillarSupport: {handler:'PillSuppSwitcher',label: L._('Support Type')},
+        pillarDiam: {handler:'PillDiamSwitcher',label:L._('Pillar Diam')},
+        pillarThick: {handler:'FloatInput', label: L._('Pillar Thickness')},
+        pillarHeight: {handler:'FloatInput', label: L._('Pillar Height')},
+        PillarBase: {label: L._('Pillar Base')}
     },
 
     initialize: function (obj, fields, options) {

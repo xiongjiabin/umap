@@ -206,7 +206,7 @@ input:-moz-placeholder, :-moz-placeholder {
 }
 
 #storage-ui-container textarea {
-    height: 100px;
+    height: 50px;
     margin-bottom: 14px;
 }
 #storage-ui-container select {

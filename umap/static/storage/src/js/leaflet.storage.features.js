@@ -85,15 +85,24 @@ L.Storage.FeatureMixin = {
         });
         container.appendChild(builder.build());
 
-        var properties = [], property;
-        for (var i = 0; i < this.datalayer._propertiesIndex.length; i++) {
+        var properties = [], property,i = 0, len = 0;
+
+        // add a basic properties for our new design
+        var basicOptions = this.getBasicOptions();
+        for(i = 0, len = basicOptions.length; i < len; i++){
+           property = basicOptions[i];
+           if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
+           properties.push(property);
+        }
+
+        //添加在layer自定义的属性列表
+        for (i = 0; i < this.datalayer._propertiesIndex.length; i++) {
             property = this.datalayer._propertiesIndex[i];
             if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
             properties.push(['properties.' + property, {label: property}]);
         }
         // We always want name and description for now (properties management to come)
-        properties.unshift('properties.description');
-        properties.unshift('properties.name');
+        properties.unshift('properties.name','properties.description');
         builder = new L.S.FormBuilder(this, properties,
             {
                 id: 'storage-feature-properties',
@@ -143,6 +152,14 @@ L.Storage.FeatureMixin = {
         var popupFieldset = L.DomUtil.createFieldset(container, L._('Interaction options'));
         popupFieldset.appendChild(builder.build());
 
+    },
+
+    //added by xiongjiabin
+    getBasicOptions: function () {
+        return [
+          //'properties._storage_options.subNum',
+          //'properties._storage_options.devStatus'
+        ];
     },
 
     getInteractionOptions: function () {
@@ -450,6 +467,15 @@ L.Storage.Marker = L.Marker.extend({
         this.setIcon(this.getIcon());
     },
 
+    //added by xiongjiabin
+    getBasicOptions: function () {
+        return [
+          'properties._storage_options.leftRight',
+          'properties._storage_options.subNum',
+          'properties._storage_options.devStatus'
+        ];
+    },
+
     addInteractions: function () {
         L.Storage.FeatureMixin.addInteractions.call(this);
         this.on('dragend', function (e) {
@@ -535,7 +561,7 @@ L.Storage.Marker = L.Marker.extend({
         return [
             'properties._storage_options.color',
             'properties._storage_options.iconClass',
-            'properties._storage_options.iconUrl'
+            'properties._storage_options.iconUrl',
         ];
     },
 
@@ -815,6 +841,20 @@ L.Storage.Polyline = L.Polyline.extend({
     staticOptions: {
         stroke: true,
         fill: false
+    },
+
+    //added by xiongjiabin
+    getBasicOptions: function () {
+        return [
+          'properties._storage_options.leftRight',
+          'properties._storage_options.subNum',
+          'properties._storage_options.pillarSupport',
+          'properties._storage_options.pillarDiam',
+          'properties._storage_options.pillarThick',
+          'properties._storage_options.pillarHeight',
+          'properties._storage_options.PillarBase',
+          'properties._storage_options.devStatus',
+        ];
     },
 
     isSameClass: function (other) {

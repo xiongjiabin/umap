@@ -90,7 +90,7 @@ input + .help-text {
 .formbox {
     min-height: 36px;
     line-height: 28px;
-    margin-bottom: 14px;
+    margin-bottom: 7px;
 }
 .formbox.with-switch {
     padding-top: 2px;
