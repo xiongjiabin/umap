@@ -106,7 +106,8 @@ L.Storage.FeatureMixin = {
         builder = new L.S.FormBuilder(this, properties,
             {
                 id: 'storage-feature-properties',
-                callback: this.resetTooltip
+                callback: this.resetTooltip,
+                listenChange: true
             }
         );
         container.appendChild(builder.build());
@@ -467,15 +468,6 @@ L.Storage.Marker = L.Marker.extend({
         this.setIcon(this.getIcon());
     },
 
-    //added by xiongjiabin
-    getBasicOptions: function () {
-        return [
-          'properties._storage_options.leftRight',
-          'properties._storage_options.subNum',
-          'properties._storage_options.devStatus'
-        ];
-    },
-
     addInteractions: function () {
         L.Storage.FeatureMixin.addInteractions.call(this);
         this.on('dragend', function (e) {
@@ -605,7 +597,6 @@ L.Storage.Marker = L.Marker.extend({
     getPopupToolbarAnchor: function () {
         return this.options.icon.options.popupAnchor;
     }
-
 });
 
 
@@ -655,7 +646,8 @@ L.Storage.PathMixin = {
         return [
             'properties._storage_options.color',
             'properties._storage_options.opacity',
-            'properties._storage_options.weight'
+            'properties._storage_options.weight',
+            'properties._storage_options.iconUrl',
         ];
     },
 

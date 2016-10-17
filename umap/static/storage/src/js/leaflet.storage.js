@@ -1425,6 +1425,10 @@ L.Storage.Map.include({
         this.ui.closePanel();
     },
 
+    startLmdMarker: function(){
+        return this.editTools.startLmdMarker();
+    },
+    
     startMarker: function () {
         return this.editTools.startMarker();
     },

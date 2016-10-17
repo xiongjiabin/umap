@@ -185,9 +185,9 @@
             return polygon;
         },
 
-        startNotice: function (latlng, options) {
+        startLmdMarker: function (latlng, options) {
           latlng = latlng || this.map.getCenter();
-          var marker = this.createMarker(latlng, options);
+          var marker = this.createLmdMarker(latlng, options);
           this.connectCreatedToMap(marker);
           var editor = marker.enableEdit();
           editor.startDrawing();

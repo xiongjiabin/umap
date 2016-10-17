@@ -293,6 +293,12 @@ var locale = {
     "Single Arm Support": "单悬臂式",
     "Doulle Arms Support": "双悬臂式",
     "Door Support":"门架式",
+
+    "Marker Type": "标志类型",
+    "warming indication":"警告标志",
+    "forbid indication":"禁令标志",
+    "point indication":"指示标志",
+    "road indication":"指路标志"
 };
 L.registerLocale("zh", locale);
 L.setLocale("zh");

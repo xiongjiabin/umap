@@ -539,14 +539,19 @@ L.Storage.DataLayer = L.Class.extend({
         }
     },
 
+    pointClass: { marker: L.Storage.Marker, lmdMarker: L.Storage.LmdMarker},
     _pointToLayer: function(geojson, latlng) {
-        return new L.Storage.Marker(
+
+        var Class = (geojson.properties && this.pointClass[geojson.properties.className]) || L.Storage.Marker;
+        return new Class(
             this.map,
             latlng,
-            {'geojson': geojson, 'datalayer': this}
+            {'geojson':geojson, 'datalayer': this}
         );
+
     },
 
+    lineClass: {},
     _lineToLayer: function(geojson, latlngs) {
         return new L.Storage.Polyline(
             this.map,

@@ -29,8 +29,29 @@ L.Storage.Icon = L.DivIcon.extend({
         return color;
     },
 
+    //这个机制效率有些问题，导致每一个icon都会去调用一次这个copy
+    copyProperties: function( obj ,data){
+        for(var i in obj){
+          if(typeof obj[i] !== 'object'){
+              data[i] = obj[i];
+          }else{
+              this.copyProperties(obj[i],data)
+          }
+        }
+    },
+
     formatUrl: function (url, feature) {
-        return L.Util.greedyTemplate(url || '', feature ? feature.properties : {});
+        //xiongjiabin,merge the data, let the icon url can use everything
+        //10-11
+        if(url.match(/{.+}/)){ //when no need to replace, no need to do replace
+            var data = {};
+            if(feature && feature.properties) {
+                this.copyProperties(feature.properties,data);
+            }
+            return L.Util.greedyTemplate(url || '', data);
+        }else{
+            return url;
+        }
     }
 
 });

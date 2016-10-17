@@ -196,6 +196,17 @@ L.FormBuilder.IconClassSwitcher = L.FormBuilder.Select.extend({
 
 });
 
+L.FormBuilder.LmdIconClassSwitcher = L.FormBuilder.Select.extend({
+
+    selectOptions: [
+        ['Rect', L._('Rect')],
+        ['Square','正方形'],
+        ['LmdCircle','圆形'],
+        ['Octagon','八角形']
+    ]
+
+});
+
 L.FormBuilder.PopupTemplate = L.FormBuilder.Select.extend({
 
     selectOptions: [
@@ -643,6 +654,39 @@ L.FormBuilder.PillDiamSwitcher = L.FormBuilder.Select.extend({
     ]
 });
 
+L.FormBuilder.MarkerTypeSwitcher = L.FormBuilder.Select.extend({
+    selectOptions: [
+      [undefined, L._('Choose the marker type')],
+      ["0", L._('warming indication')],
+      ["1", L._('forbid indication')],
+      ["2", L._('point indication')],
+      ["3", L._('road indication')]
+    ],
+    build: function () {
+        L.FormBuilder.Select.prototype.build.call(this);
+        L.DomEvent.on(this.select, 'change', this.sync, this);
+    },
+
+    sync: function () {
+        L.FormBuilder.Select.prototype.sync.call(this);
+    },
+});
+
+L.FormBuilder.MarkerContentSwitcher = L.FormBuilder.Select.extend({
+    selectOptions: [
+    ],
+
+    resetOptions: function( newOptions ) {
+        if(newOptions instanceof Array ){
+            this.selectOptions = []
+            for(var i = 0, len = newOptions.length; i < len; i++){
+                this.selectOptions.push(newOptions[i]);
+            }
+            //reset all options
+            L.FormBuilder.Select.prototype.buildOptions.call(this);
+        }
+    }
+});
 
 L.Storage.FormBuilder = L.FormBuilder.extend({
 
@@ -700,7 +744,12 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         pillarDiam: {handler:'PillDiamSwitcher',label:L._('Pillar Diam')},
         pillarThick: {handler:'FloatInput', label: L._('Pillar Thickness')},
         pillarHeight: {handler:'FloatInput', label: L._('Pillar Height')},
-        PillarBase: {label: L._('Pillar Base')}
+        PillarBase: {label: L._('Pillar Base')},
+
+        //marker attributes 2016-10-9
+        markerType: {handler:'MarkerTypeSwitcher', label: L._('Makrker Type')},
+        markerContent: {handler:'MarkerContentSwitcher',label: L._('Makrker Content')},
+        lmdIconClass: {handler: 'LmdIconClassSwitcher', label: L._('Icon shape'), inheritable: true},
     },
 
     initialize: function (obj, fields, options) {

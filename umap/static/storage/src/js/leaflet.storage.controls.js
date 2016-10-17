@@ -107,6 +107,21 @@ L.Storage.DrawMarkerAction = L.Storage.BaseAction.extend({
 
 });
 
+
+L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'storage-draw-marker dark',
+        tooltip: '标志标牌'
+    },
+
+    addHooks: function () {
+        this.map.startLmdMarker();
+    }
+
+});
+
 L.Storage.DrawPolylineAction = L.Storage.BaseAction.extend({
 
     options: {
@@ -326,6 +341,9 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
 
     appendToContainer: function (container) {
         this.options.actions = [];
+
+        this.options.actions.push(L.S.DrawLmdMarkerAction);
+
         if (this.map.options.enableMarkerDraw) {
             this.options.actions.push(L.S.DrawMarkerAction);
         }
@@ -1091,6 +1109,11 @@ L.S.Editable = L.Editable.extend({
 
     createMarker: function (latlng) {
         return new L.Storage.Marker(this.map, latlng);
+    },
+
+    //added by xiongjiabin
+    createLmdMarker: function (latlng) {
+        return new L.Storage.LmdMarker(this.map, latlng);
     },
 
     connectCreatedToMap: function (layer) {
