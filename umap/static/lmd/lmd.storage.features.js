@@ -17,14 +17,14 @@ L.Storage.LmdFeatureMixin  = {
   var basicOptions = this.getBasicOptions();
   for(i = 0, len = basicOptions.length; i < len; i++){
      property = basicOptions[i];
-     if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
+     if (L.Util.indexOf(['name', 'description','className'], property) !== -1) {continue;}
      properties.push(property);
   }
 
   //添加在layer自定义的属性列表
   for (i = 0; i < this.datalayer._propertiesIndex.length; i++) {
     property = this.datalayer._propertiesIndex[i];
-    if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
+    if (L.Util.indexOf(['name', 'description','className'], property) !== -1) {continue;}
       properties.push(['properties.' + property, {label: property}]);
   }
 
@@ -51,11 +51,12 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     getBasicOptions: function () {
         this.properties['className'] = this.getClassName()
         return [
-          'properties._storage_options.markerType',
-          'properties._storage_options.markerContent',
-          'properties._storage_options.leftRight',
-          'properties._storage_options.subNum',
-          'properties._storage_options.devStatus'
+          'properties._storage_options.mt',
+          'properties._storage_options.msh',
+          'properties._storage_options.mss',
+          'properties._storage_options.lr',
+          'properties._storage_options.sn',
+          'properties._storage_options.ds'
         ];
     },
 
@@ -81,29 +82,42 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     },
 
     edit: function (e){
+      //通过改变对应的select的prototype的selectOptions来改变需要变化的options值
+      //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
+      var mt = this.properties._storage_options.mt || 1
+      var mtOptions = lmd.getMarkerCategorySecond(mt)
+      L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = mtOptions;
+      var msh = this.properties._storage_options.msh || mtOptions[0][0] || 1
+      L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(mt,msh);
+
       L.Storage.LmdFeatureMixin.edit.call(this,e)
     },
+
     //added by xiongjiabin
-    //for listen the select change event for basic operations 2016-10-
+    //for listen the select change event for basic operations 2016-10-18
+    //对应编辑框的select的变化是一个体系，之间都有一些错综复杂的关系
+    //这个东西，可能就是react处理data的优势了，数据变化对应试图发生变化
     change: function ( e ){
         //console.log(e);
         if(!e.target) return;
-        if(e.target.name === 'markerType') {
-          console.log('markerType changed, new value:', e.target.value)
-          var theObject = this.xiongjiabin.helpers['properties._storage_options.markerContent']
-          var options = [
-            ["1",'I love you'],
-            ["2",'I hate you'],
-            ["3",'I like you']
-          ];
-          theObject.resetOptions(options);
+        if(e.target.name === 'mt') {
+          //console.log('markerType changed, new value:', e.target.value)
+          var msh = this.xiongjiabin.helpers['properties._storage_options.msh']
+          var mshOptions = lmd.getMarkerCategorySecond(e.target.value)
+          msh.resetOptions(mshOptions);
+          var mss = this.xiongjiabin.helpers['properties._storage_options.mss']
+          mss.resetOptions(lmd.getMarkerCategoryThird(e.target.value,mshOptions[0][0]))
           this._redraw();
-        } else if(e.target.name === 'markerContent') {
+        } else if(e.target.name === 'msh') {
+          var mt = this.properties._storage_options.mt
+          var mssObject = this.xiongjiabin.helpers['properties._storage_options.mss']
+          mssObject.resetOptions(lmd.getMarkerCategoryThird(mt, e.target.value))
           this._redraw();
-          console.log('markerContent changed, new value:', e.target.value)
+          //console.log('markerContent changed, new value:', e.target.value)
         } else {
-          console.log('un defined message')
+          //console.log('un defined message')
         }
-    }
+    },
+
 
 });

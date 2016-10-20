@@ -282,7 +282,7 @@ var locale = {
     "Direction":"方位",
     "left": "左侧",
     "right": "右侧",
-    "unset": "未设置",
+    "middle": "居中",
     "Support Type": "支撑类型",
     "Pillar Diam": "立柱直径",
     "Pillar Thickness":"立柱厚度",

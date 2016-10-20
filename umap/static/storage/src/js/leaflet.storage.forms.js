@@ -609,17 +609,16 @@ L.FormBuilder.DevStatusSwitcher = L.FormBuilder.MultiChoice.extend({
         [2, L._('Change device')],
         [3, L._('Remove device')],
         [4, L._('Remove to other palace')],
-        [0,L._('unset')]
     ]
 });
 
 L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
 
-    default: 0,
+    default: 1,
     choices: [
         [1, L._('left')],
         [2, L._('right')],
-        [0, L._('unset')]
+        [3, L._('middle')]
     ],
 });
 
@@ -656,11 +655,10 @@ L.FormBuilder.PillDiamSwitcher = L.FormBuilder.Select.extend({
 
 L.FormBuilder.MarkerTypeSwitcher = L.FormBuilder.Select.extend({
     selectOptions: [
-      [undefined, L._('Choose the marker type')],
-      ["0", L._('warming indication')],
-      ["1", L._('forbid indication')],
-      ["2", L._('point indication')],
-      ["3", L._('road indication')]
+      ["1", L._('warming indication')],
+      ["2", L._('forbid indication')],
+      ["3", L._('point indication')],
+      ["4", L._('road indication')]
     ],
     build: function () {
         L.FormBuilder.Select.prototype.build.call(this);
@@ -672,7 +670,7 @@ L.FormBuilder.MarkerTypeSwitcher = L.FormBuilder.Select.extend({
     },
 });
 
-L.FormBuilder.MarkerContentSwitcher = L.FormBuilder.Select.extend({
+L.FormBuilder.EmptySwitcher = L.FormBuilder.Select.extend({
     selectOptions: [
     ],
 
@@ -686,6 +684,11 @@ L.FormBuilder.MarkerContentSwitcher = L.FormBuilder.Select.extend({
             L.FormBuilder.Select.prototype.buildOptions.call(this);
         }
     }
+});
+
+L.FormBuilder.MarkerShapeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+});
+L.FormBuilder.MarkerSpeedSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
 });
 
 L.Storage.FormBuilder = L.FormBuilder.extend({
@@ -735,20 +738,21 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         datalayersControl: {handler: 'DataLayersControl', label: L._('Display the data layers control')},
 
         //added by xiongjiabin 2016-09-30
-        subNum: {label: L._('Sub Number')},
-        devStatus: {handler: 'DevStatusSwitcher', label: L._('Device Status')},
-        leftRight: {handler: 'LeftRightChoice', label: L._('Direction')},
+        sn: {label: L._('Sub Number')},
+        ds: {handler: 'DevStatusSwitcher', label: L._('Device Status')},
+        lr: {handler: 'LeftRightChoice', label: L._('Direction')},
 
         //pillar attributes
-        pillarSupport: {handler:'PillSuppSwitcher',label: L._('Support Type')},
-        pillarDiam: {handler:'PillDiamSwitcher',label:L._('Pillar Diam')},
-        pillarThick: {handler:'FloatInput', label: L._('Pillar Thickness')},
-        pillarHeight: {handler:'FloatInput', label: L._('Pillar Height')},
-        PillarBase: {label: L._('Pillar Base')},
+        ps: {handler:'PillSuppSwitcher',label: L._('Support Type')},
+        pd: {handler:'PillDiamSwitcher',label:L._('Pillar Diam')},
+        pt: {handler:'FloatInput', label: L._('Pillar Thickness')},
+        ph: {handler:'FloatInput', label: L._('Pillar Height')},
+        pb: {label: L._('Pillar Base')},
 
-        //marker attributes 2016-10-9
-        markerType: {handler:'MarkerTypeSwitcher', label: L._('Makrker Type')},
-        markerContent: {handler:'MarkerContentSwitcher',label: L._('Makrker Content')},
+        //marker attributes 2016-10-20
+        mt: {handler:'MarkerTypeSwitcher', label: L._('Makrker Type')},
+        msh:{handler:'MarkerShapeSwitcher', label: '分类&形状'},
+        mss:{handler:'MarkerSpeedSizeSwitcher', label: '速度&尺寸'},
         lmdIconClass: {handler: 'LmdIconClassSwitcher', label: L._('Icon shape'), inheritable: true},
     },
 
