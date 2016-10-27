@@ -27,3 +27,47 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
     }
 
 });
+
+L.Storage.Icon.Square = L.Storage.Icon.Rect.extend({
+    initialize: function(map, options) {
+        var default_options = {
+            iconAnchor: new L.Point(6, 6),
+            popupAnchor: new L.Point(0, -6),
+            tooltipAnchor: new L.Point(6, 0),
+            className: 'storage-square-icon'
+        };
+        options = L.Util.extend({}, default_options, options);
+        L.Storage.Icon.prototype.initialize.call(this, map, options);
+    }
+});
+
+//这个是针对所有的
+L.Storage.Icon.Opaque = L.Storage.Icon.Rect.extend({
+    initialize: function(map, options) {
+        var default_options = {
+            iconAnchor: new L.Point(6, 6),
+            popupAnchor: new L.Point(0, -6),
+            tooltipAnchor: new L.Point(6, 0),
+            className: 'storage-opaque-icon'
+        };
+        options = L.Util.extend({}, default_options, options);
+        L.Storage.Icon.prototype.initialize.call(this, map, options);
+    },
+
+    _setColor: function() {
+        //对透明的图形来说，不需要底图
+    },
+});
+
+L.Storage.Icon.LmdCircle = L.Storage.Icon.Rect.extend({
+    initialize: function(map, options) {
+        var default_options = {
+            iconAnchor: new L.Point(6, 6),
+            popupAnchor: new L.Point(0, -6),
+            tooltipAnchor: new L.Point(6, 0),
+            className: 'storage-lmdcircle-icon'
+        };
+        options = L.Util.extend({}, default_options, options);
+        L.Storage.Icon.prototype.initialize.call(this, map, options);
+    }
+});

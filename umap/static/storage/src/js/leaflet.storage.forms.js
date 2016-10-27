@@ -193,18 +193,6 @@ L.FormBuilder.IconClassSwitcher = L.FormBuilder.Select.extend({
         ['Ball', L._('Ball')],
         ['Rect', L._('Rect')]
     ]
-
-});
-
-L.FormBuilder.LmdIconClassSwitcher = L.FormBuilder.Select.extend({
-
-    selectOptions: [
-        ['Rect', L._('Rect')],
-        ['Square','正方形'],
-        ['LmdCircle','圆形'],
-        ['Octagon','八角形']
-    ]
-
 });
 
 L.FormBuilder.PopupTemplate = L.FormBuilder.Select.extend({
@@ -686,10 +674,9 @@ L.FormBuilder.EmptySwitcher = L.FormBuilder.Select.extend({
     }
 });
 
-L.FormBuilder.MarkerShapeSwitcher = L.FormBuilder.EmptySwitcher.extend({
-});
-L.FormBuilder.MarkerSpeedSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
-});
+L.FormBuilder.MarkerShapeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
+L.FormBuilder.MarkerSpeedSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
+L.FormBuilder.MarkerIconClassSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
 L.Storage.FormBuilder = L.FormBuilder.extend({
 
@@ -750,10 +737,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         pb: {label: L._('Pillar Base')},
 
         //marker attributes 2016-10-20
-        mt: {handler:'MarkerTypeSwitcher', label: L._('Makrker Type')},
-        msh:{handler:'MarkerShapeSwitcher', label: '分类&形状'},
+        mt: {handler:'MarkerTypeSwitcher', label: '类型'},
+        msh:{handler:'MarkerShapeSwitcher', label: '内容'},
         mss:{handler:'MarkerSpeedSizeSwitcher', label: '速度&尺寸'},
-        lmdIconClass: {handler: 'LmdIconClassSwitcher', label: L._('Icon shape'), inheritable: true},
+        mic: {handler:'MarkerIconClassSwitcher', label: '图形'},
     },
 
     initialize: function (obj, fields, options) {

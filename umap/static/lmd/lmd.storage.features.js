@@ -47,11 +47,28 @@ L.Storage.LmdFeatureMixin  = {
 }}
 
 L.Storage.LmdMarker = L.Storage.Marker.extend({
+
+    preInit: function() {
+      if(!this.properties['className']){
+        this.properties['className'] = this.getClassName()
+      }
+      if(!this.properties._storage_options.mt) {
+        this.properties._storage_options = {
+          mt: "" + lmd.MARKER_WARMING,
+          mic: "1",
+          msh: "1",
+          mss: "1",
+          lr: "1",
+          ds: "1"
+        }
+      }
+    },
+
     //added by xiongjiabin
     getBasicOptions: function () {
-        this.properties['className'] = this.getClassName()
         return [
           'properties._storage_options.mt',
+          'properties._storage_options.mic',
           'properties._storage_options.msh',
           'properties._storage_options.mss',
           'properties._storage_options.lr',
@@ -63,13 +80,26 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     getShapeOptions: function () {
         return [
             'properties._storage_options.color',
-            'properties._storage_options.lmdIconClass',
             'properties._storage_options.iconUrl',
         ];
     },
 
+    _getIconUrl: function (name) {
+        var baseUrl = '/static/storage/src/img/'
+        var mt = this.getOption('mt')
+        var mic = this.getOption('mic')
+        var msh = this.getOption('msh')
+        if(!mt || !mic || !msh) {
+            return baseUrl + 'marker.png'
+        }
+        return baseUrl +  [mt,mic,''].join('/') + msh + '.gif'
+    },
+
     getIconClass: function () {
-        return this.getOption('lmdIconClass');
+        var mt = this.getOption('mt')
+        var mic = this.getOption('mic')
+        var className = lmd.getMarkerThirdClass(mt,mic)
+        return className
     },
 
     getIcon: function () {
@@ -82,15 +112,16 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     },
 
     edit: function (e){
-      //通过改变对应的select的prototype的selectOptions来改变需要变化的options值
-      //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
-      var mt = this.properties._storage_options.mt || 1
-      var mtOptions = lmd.getMarkerCategorySecond(mt)
-      L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = mtOptions;
-      var msh = this.properties._storage_options.msh || mtOptions[0][0] || 1
-      L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(mt,msh);
+        //通过改变对应的select的prototype的selectOptions来改变需要变化的options值
+        //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
+        var mt = this.getOption('mt') || 1
+        var mtOptions = lmd.getMarkerCategorySecond(mt)
+        L.FormBuilder.MarkerIconClassSwitcher.prototype.selectOptions = mtOptions;
+        var mic = this.getOption('mic') || mtOptions[0][0] || 1
+        L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(mt,mic);
+        L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(mt,mic);
 
-      L.Storage.LmdFeatureMixin.edit.call(this,e)
+        L.Storage.LmdFeatureMixin.edit.call(this,e)
     },
 
     //added by xiongjiabin
@@ -100,24 +131,26 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     change: function ( e ){
         //console.log(e);
         if(!e.target) return;
+        var msh = this.xiongjiabin.helpers['properties._storage_options.msh']
+        var mic = this.xiongjiabin.helpers['properties._storage_options.mic']
+        var mss = this.xiongjiabin.helpers['properties._storage_options.mss']
+
         if(e.target.name === 'mt') {
           //console.log('markerType changed, new value:', e.target.value)
-          var msh = this.xiongjiabin.helpers['properties._storage_options.msh']
           var mshOptions = lmd.getMarkerCategorySecond(e.target.value)
-          msh.resetOptions(mshOptions);
-          var mss = this.xiongjiabin.helpers['properties._storage_options.mss']
+          mic.resetOptions(mshOptions);
           mss.resetOptions(lmd.getMarkerCategoryThird(e.target.value,mshOptions[0][0]))
+          msh.resetOptions(lmd.getMarkerCategoryThirdWife(e.target.value,mshOptions[0][0]))
           this._redraw();
-        } else if(e.target.name === 'msh') {
-          var mt = this.properties._storage_options.mt
-          var mssObject = this.xiongjiabin.helpers['properties._storage_options.mss']
-          mssObject.resetOptions(lmd.getMarkerCategoryThird(mt, e.target.value))
+        } else if(e.target.name === 'mic') {
+          var mt = this.getOption('mt');
+          mss.resetOptions(lmd.getMarkerCategoryThird(mt, e.target.value))
+          msh.resetOptions(lmd.getMarkerCategoryThirdWife(mt,e.target.value))
           this._redraw();
-          //console.log('markerContent changed, new value:', e.target.value)
-        } else {
-          //console.log('un defined message')
+        } else if(e.target.name === 'msh'){
+          this._redraw();
+        }else {
+
         }
-    },
-
-
+    }
 });
