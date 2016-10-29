@@ -8,6 +8,26 @@ function isLon(f) { return !!f.match(/(L)(on|ng)(gitude)?/i); }
 function keyCount(o) {
     return (typeof o == 'object') ? Object.keys(o).length : 0;
 }
+function getColorFromLevel(level){
+  var colors = []
+  colors[1] = 'red';
+  colors[2] = 'blue';
+  colors[3] = '#ffff00';
+  colors[4] = '#eed5d2';
+  colors[5] = 'black';
+  colors[6] = '#8b636c';
+  colors[7] = '#ffa500';
+  colors[8] = '#00bfff';
+  colors[9] = '#90ee90';
+  colors[10] = '#228b22';
+  colors[11] = '#ff1493';
+  colors[12] = '#ee82ee';
+  colors[13] = '#9932cc';
+  colors[14] = '#8b008b';
+  colors[15] = '#ff0000';
+  colors[16] = '#1c1c1c';
+  return colors[level] || 'white'
+}
 
 function autoDelimiter(x) {
     var delimiters = [',', ';', '\t', '|'];
@@ -140,23 +160,48 @@ function csv2geojson(x, options, callback) {
     callback(errors.length ? errors: null, featurecollection);
 }
 
-function toLine(gj) {
+function toSplitLine(gj) {
     var features = gj.features;
-    var line = {
-        type: 'Feature',
-        geometry: {
-            type: 'LineString',
-            coordinates: []
-        }
-    };
+    var lines = [];
     for (var i = 0; i < features.length; i++) {
+        var line = {
+          type: 'Feature',
+          geometry: {
+              type: 'LineString',
+              coordinates: []
+          }
+        };
+        line.properties = features[i].properties
         line.geometry.coordinates.push(features[i].geometry.coordinates);
+        if( features[i+1] ){
+            line.geometry.coordinates.push(features[i+1].geometry.coordinates);
+            lines.push(line)
+        }
     }
-    line.properties = features[0].properties;
+
     return {
         type: 'FeatureCollection',
-        features: [line]
+        features: lines
     };
+}
+
+function toLine(gi){
+  var features = gj.features;
+  var line = {
+      type: 'Feature',
+      geometry: {
+          type: 'LineString',
+          coordinates: []
+      }
+  };
+  for (var i = 0; i < features.length; i++) {
+      line.geometry.coordinates.push(features[i].geometry.coordinates);
+  }
+  line.properties = features[0].properties;
+  return {
+      type: 'FeatureCollection',
+      features: [line]
+  };
 }
 
 function toPolygon(gj) {
@@ -187,6 +232,7 @@ module.exports = {
     auto: auto,
     csv2geojson: csv2geojson,
     toLine: toLine,
+    toSplitLine: toSplitLine,
     toPolygon: toPolygon
 };
 

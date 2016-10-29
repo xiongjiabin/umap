@@ -263,6 +263,37 @@ L.Storage.DataLayer = L.Class.extend({
         });
     },
 
+    //added xiongjiabin 2016-10-29 9:37
+    addColorByLevelGeoJSON: function( classColor, by ){
+      if (!this._geojson) return false;
+      this.backupData();
+      var features = this._geojson.features;
+      if(!features) return false;
+      var feature = null;
+      by = by || 'level';
+      var newGeoJSON = {};
+      for(var j in this._geojson){
+        if(j !== 'features'){
+            newGeoJSON[j] = L.Util.CopyJSON(this._geojson[j])
+        }
+      }
+      newGeoJSON['features'] = []
+      var newFeature = null
+      var color = null
+      for(var i = 0,len = features.length; i < len; i++){
+          feature = features[i];
+          newFeature = L.Util.CopyJSON(feature)
+          !newFeature['properties'] && (newFeature['properties'] = {});
+          color = classColor[feature['properties'][by]];
+          if(color){
+              !newFeature['properties']['_storage_options'] && (newFeature['properties']['_storage_options'] = {});
+              newFeature['properties']['_storage_options']['color'] = color;
+          }
+          newGeoJSON['features'].push(newFeature)
+      }
+      this.fromGeoJSON(newGeoJSON)
+    },
+
     fromGeoJSON: function (geojson) {
         this.addData(geojson);
         this._geojson = geojson;
@@ -458,7 +489,9 @@ L.Storage.DataLayer = L.Class.extend({
                     console.log(err);
                 }
                 if (result && result.features.length) {
-                    callback(result);
+                    var linegeson = csv2geojson.toSplitLine(result);
+                    //callback(result);
+                    callback(linegeson)
                 }
             });
         } else if (type === 'gpx') {
@@ -704,6 +737,29 @@ L.Storage.DataLayer = L.Class.extend({
                 if (e.helper.field === 'options.type') {
                     this.resetLayer();
                     this.edit();
+                }
+                //color:level:1#0x1234,2#0x1111,3#0x33333
+                var colorMatch = this.options.description.match(/^color:(\w*):(.+)$/)
+                if(colorMatch){
+                    //xiongjiabin added for render with different colors
+                    var colors = colorMatch[2].split(',')
+                    var tempTest = colorMatch[2].split('#')
+                    var classColor = []
+                    var valid = true
+                    if(colors.length >= 2 && tempTest.length >= colors.length) {
+                        for(var i = 0, len = colors.length; i < len; i++){
+                            var id_color = colors[i].split('#')
+                            if(id_color[0] && id_color[1]){
+                                classColor[id_color[0]] = '#' + id_color[1]
+                            }else{
+                                valid = false
+                                break
+                            }
+                        }
+                        if(valid){
+                            this.addColorByLevelGeoJSON(classColor,colorMatch[1])
+                        }
+                    }
                 }
             }
         });
