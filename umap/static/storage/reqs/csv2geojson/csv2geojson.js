@@ -163,6 +163,7 @@ function csv2geojson(x, options, callback) {
 function toSplitLine(gj) {
     var features = gj.features;
     var lines = [];
+    var centerPointLength = Math.round(features.length / 2)
     for (var i = 0; i < features.length; i++) {
         var line = {
           type: 'Feature',
@@ -176,6 +177,22 @@ function toSplitLine(gj) {
         if( features[i+1] ){
             line.geometry.coordinates.push(features[i+1].geometry.coordinates);
             lines.push(line)
+        }
+
+        if(i == 0 || i == features.length - 1 || i === centerPointLength){
+             var properties = Object.assign({},features[i].properties)
+             properties['name'] = properties['sub'] || ''
+             lines.push({
+                 type: 'Feature',
+                 properties: properties,
+                 geometry: {
+                     type: 'Point',
+                     coordinates: [
+                         features[i].geometry.coordinates[0],
+                         features[i].geometry.coordinates[1]
+                     ]
+                 }
+             })
         }
     }
 

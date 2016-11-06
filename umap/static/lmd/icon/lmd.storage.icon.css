@@ -1,13 +1,12 @@
 .storage-rect-icon {
     border: 1px solid white;
     border-radius: 5px 5px 5px 5px;
-    height: 50px;
-    width: 70px;
+    height: 60px;
+    width: 80px;
     text-align: center;
 }
 .storage-rect-icon img{
-  height:50px;
-  width:50px;
+
 }
 
 .storage-square-icon {
@@ -18,8 +17,8 @@
     text-align: center;
 }
 .storage-square-icon img{
-  height:50px;
-  width:50px;
+  height:60px;
+  width:60px;
 }
 
 

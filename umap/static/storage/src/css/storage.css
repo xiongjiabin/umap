@@ -231,6 +231,10 @@ ul.photon-autocomplete {
     display: block;
 }
 
+.storage-draw-biaozhi,
+.storage-toolbar .storage-draw-biaozhi {
+    background-position: -80px -160px;
+}
 
 /* ********************************* */
 /*   Third party plugin override     */

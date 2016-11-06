@@ -112,7 +112,7 @@ L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
 
     options: {
         helpMenu: true,
-        className: 'storage-draw-marker dark',
+        className: 'storage-draw-biaozhi dark',
         tooltip: '标志标牌'
     },
 

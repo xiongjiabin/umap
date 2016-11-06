@@ -436,7 +436,8 @@ L.Storage.Map.include({
             this.addLayer(tilelayer);
             this.fire('baselayerchange', {layer: tilelayer});
             if (this.selected_tilelayer) {
-                this.removeLayer(this.selected_tilelayer);
+                //xiongjiabin not removed
+                //this.removeLayer(this.selected_tilelayer);
             }
             this.selected_tilelayer = tilelayer;
             if (!isNaN(this.selected_tilelayer.options.minZoom) && this.getZoom() < this.selected_tilelayer.options.minZoom) {
@@ -1428,7 +1429,7 @@ L.Storage.Map.include({
     startLmdMarker: function(){
         return this.editTools.startLmdMarker();
     },
-    
+
     startMarker: function () {
         return this.editTools.startMarker();
     },

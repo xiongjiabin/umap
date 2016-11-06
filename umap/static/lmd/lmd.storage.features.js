@@ -92,7 +92,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         if(!mt || !mic || !msh) {
             return baseUrl + 'marker.png'
         }
-        return baseUrl +  [mt,mic,''].join('/') + msh + '.gif'
+        return baseUrl +  [mt,mic,''].join('/') + msh + '.jpg'
     },
 
     getIconClass: function () {

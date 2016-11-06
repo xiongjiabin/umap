@@ -266,7 +266,6 @@ L.Storage.DataLayer = L.Class.extend({
     //added xiongjiabin 2016-10-29 9:37
     addColorByLevelGeoJSON: function( classColor, by ){
       if (!this._geojson) return false;
-      this.backupData();
       var features = this._geojson.features;
       if(!features) return false;
       var feature = null;
@@ -283,14 +282,17 @@ L.Storage.DataLayer = L.Class.extend({
       for(var i = 0,len = features.length; i < len; i++){
           feature = features[i];
           newFeature = L.Util.CopyJSON(feature)
-          !newFeature['properties'] && (newFeature['properties'] = {});
-          color = classColor[feature['properties'][by]];
-          if(color){
-              !newFeature['properties']['_storage_options'] && (newFeature['properties']['_storage_options'] = {});
-              newFeature['properties']['_storage_options']['color'] = color;
+          if(newFeature.geometry.type === 'LineString'){
+             !newFeature['properties'] && (newFeature['properties'] = {});
+              color = classColor[feature['properties'][by]];
+              if(color){
+                  !newFeature['properties']['_storage_options'] && (newFeature['properties']['_storage_options'] = {});
+                  newFeature['properties']['_storage_options']['color'] = color;
+              }
           }
           newGeoJSON['features'].push(newFeature)
       }
+      this.clear()
       this.fromGeoJSON(newGeoJSON)
     },
 
@@ -757,6 +759,7 @@ L.Storage.DataLayer = L.Class.extend({
                             }
                         }
                         if(valid){
+                            //console.log(classColor)
                             this.addColorByLevelGeoJSON(classColor,colorMatch[1])
                         }
                     }

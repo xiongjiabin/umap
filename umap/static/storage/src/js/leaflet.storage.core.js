@@ -386,6 +386,8 @@ L.Storage.Help = L.Class.extend({
         var container = L.DomUtil.create('div'),
             title = L.DomUtil.add('h3', '', container, L._('Text formatting')),
             elements = L.DomUtil.create('ul', '', container);
+        L.DomUtil.add('li', '', elements, 'color:level:1#ff00ff,2#0000ff,5#00ff00');
+        L.DomUtil.add('li', '', elements, 'color:关键词 level:依据那个值进行渲染 1#ff00ff:值对应的颜色');
         L.DomUtil.add('li', '', elements, L._('*simple star for italic*'));
         L.DomUtil.add('li', '', elements, L._('**double star for bold**'));
         L.DomUtil.add('li', '', elements, L._('# one hash for main heading'));
