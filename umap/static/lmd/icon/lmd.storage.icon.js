@@ -71,3 +71,21 @@ L.Storage.Icon.LmdCircle = L.Storage.Icon.Rect.extend({
         L.Storage.Icon.prototype.initialize.call(this, map, options);
     }
 });
+
+//这个是针对所有的
+L.Storage.Icon.Pillar = L.Storage.Icon.Rect.extend({
+    initialize: function(map, options) {
+        var default_options = {
+            iconAnchor: new L.Point(6, 6),
+            popupAnchor: new L.Point(75, 75),
+            tooltipAnchor: new L.Point(6, 0),
+            className: 'storage-pillar-icon'
+        };
+        options = L.Util.extend({}, default_options, options);
+        L.Storage.Icon.prototype.initialize.call(this, map, options);
+    },
+
+    _setColor: function() {
+        //对透明的图形来说，不需要底图
+    },
+});

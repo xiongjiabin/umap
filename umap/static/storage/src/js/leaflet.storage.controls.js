@@ -107,6 +107,29 @@ L.Storage.DrawMarkerAction = L.Storage.BaseAction.extend({
 
 });
 
+L.Storage.DrawLmdPillarAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-pillar dark',
+      tooltip: '立柱'
+  },
+
+  addHooks: function () {
+      this.map.startLmdPillar();
+  }
+});
+
+L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-guard dark',
+      tooltip: '护栏'
+  },
+
+  addHooks: function () {
+      this.map.startLmdMarker();
+  }
+});
 
 L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
 
@@ -343,6 +366,8 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions = [];
 
         this.options.actions.push(L.S.DrawLmdMarkerAction);
+        this.options.actions.push(L.S.DrawLmdPillarAction);
+        this.options.actions.push(L.S.DrawLmdGuardAction);
 
         if (this.map.options.enableMarkerDraw) {
             this.options.actions.push(L.S.DrawMarkerAction);
@@ -1114,6 +1139,10 @@ L.S.Editable = L.Editable.extend({
     //added by xiongjiabin
     createLmdMarker: function (latlng) {
         return new L.Storage.LmdMarker(this.map, latlng);
+    },
+
+    createLmdPillar: function (latlng) {
+        return new L.Storage.LmdPillar(this.map, latlng);
     },
 
     connectCreatedToMap: function (layer) {

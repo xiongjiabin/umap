@@ -1430,6 +1430,14 @@ L.Storage.Map.include({
         return this.editTools.startLmdMarker();
     },
 
+    startLmdPillar: function(){
+        return this.editTools.startLmdPillar();
+    },
+
+    startLmdGuard: function(){
+        return this.editTools.startLmdGuard();
+    },
+
     startMarker: function () {
         return this.editTools.startMarker();
     },

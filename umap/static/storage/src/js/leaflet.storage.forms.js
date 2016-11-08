@@ -741,6 +741,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         msh:{handler:'MarkerShapeSwitcher', label: '内容'},
         mss:{handler:'MarkerSpeedSizeSwitcher', label: '速度&尺寸'},
         mic: {handler:'MarkerIconClassSwitcher', label: '图形'},
+
+        //旋转
+        rotate: {handler: 'Range', min: 1, max: 360, step: 1, label: '旋转'}
     },
 
     initialize: function (obj, fields, options) {

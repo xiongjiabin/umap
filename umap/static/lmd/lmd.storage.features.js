@@ -154,3 +154,90 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         }
     }
 });
+
+
+L.Storage.LmdPillar = L.Storage.Marker.extend({
+
+    getSvgData( type, rotate, scale,translatex, translatey){
+      translatex = translatex || 75
+      translatey = translatey || 75
+      var svgHeader = '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1">';
+      var svgFooter = '</svg>';
+      var rotateStr = '<g style="fill:#ffcc00" transform="translate(' + translatex + ',' + translatey + ') rotate(' + rotate + ') scale(' + scale + ')">';
+      var svgStr = svgHeader +  rotateStr
+
+      var typeSvg = {
+        1:'<circle cx="91.837326" cy="17.580078" r="14.5" /> <rect width="178" height="20" x="2" y="31.325439" /></g>',//单柱式
+        2:'<circle cx="42.341717" cy="16.31813" r="14.5" /> <circle cx="129.88086" cy="15.88588" r="14.5" /> <rect width="178" height="25" x="2" y="30.106392" /></g>',//双柱式
+        3:'<rect width="149" height="25" x="2" y="2" /><circle cx="166" cy="15" r="15" /> </g>',//单悬臂式
+        4:'<rect width="72.986015" height="25" x="106.27666" y="14.277634" /> <circle cx="90.311035" cy="16.431107" r="14.5" /> <rect width="72.478447" height="24.748737" x="2" y="14.679733" /></g>',//双悬臂式
+        5:'<rect width="121.90018" height="25" x="31.11552" y="3.5418777" /> <circle cx="16.5" cy="15.179672" r="14.5" /> <circle cx="167.53844" cy="15.409348" r="14.5" /></g>',//门架式
+      }
+      svgStr += typeSvg[type] || typeSvg[1]
+
+      svgStr += svgFooter;
+      console.log(svgStr)
+      return svgStr
+    },
+
+    preInit: function() {
+      if(!this.properties['className']){
+        this.properties['className'] = this.getClassName()
+      }
+    },
+
+    //added by xiongjiabin
+    getBasicOptions: function () {
+        return [
+          'properties._storage_options.ps',
+          'properties._storage_options.lr',
+          'properties._storage_options.sn',
+          'properties._storage_options.ds',
+
+          //pillar attributes
+          'properties._storage_options.pd',
+          'properties._storage_options.pt',
+          'properties._storage_options.ph',
+          'properties._storage_options.pb'
+        ];
+    },
+
+    getShapeOptions: function () {
+        return [
+            'properties._storage_options.color',
+            'properties._storage_options.iconUrl',
+            'properties._storage_options.rotate'
+        ];
+    },
+
+    _getIconUrl: function (name) {
+      var ps = this.getOption('ps')
+      var rotate = this.getOption('rotate') || 0
+      var icon = this.getSvgData(ps,rotate,0.4,75,75)
+      // here's the trick, base64 encode the URL
+      var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+      return svgURL
+    },
+
+    getIcon: function () {
+        var Class =  L.Storage.Icon.Pillar;
+        return new Class(this.map, {feature: this});
+    },
+
+    getClassName: function () {
+        return 'lmdPillar';
+    },
+
+    edit: function (e){
+        L.Storage.LmdFeatureMixin.edit.call(this,e)
+    },
+
+    change: function ( e ){
+        //console.log(e);
+        if(!e.target) return;
+        var ps = this.xiongjiabin.helpers['properties._storage_options.ps']
+        if(e.target.name === 'ps') {
+          this._redraw();
+        }
+    }
+});

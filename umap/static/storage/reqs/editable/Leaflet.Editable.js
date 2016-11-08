@@ -194,6 +194,15 @@
           return marker;
         },
 
+        startLmdPillar: function (latlng, options) {
+          latlng = latlng || this.map.getCenter();
+          var pillar = this.createLmdPillar(latlng, options);
+          this.connectCreatedToMap(pillar);
+          var editor = pillar.enableEdit();
+          editor.startDrawing();
+          return pillar;
+        },
+
         startMarker: function (latlng, options) {
             latlng = latlng || this.map.getCenter();
             var marker = this.createMarker(latlng, options);
