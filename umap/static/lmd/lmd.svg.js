@@ -11,7 +11,7 @@ L.SVG.include({
       L.DomUtil.addClass(svgObject, 'leaflet-interactive')
     }
 
-    this._updateSvgText(layer)
+    this._updateSVGText(layer)
   },
 
   _addSVGObject: function(layer) {
@@ -26,16 +26,16 @@ L.SVG.include({
     layer.removeInteractiveTarget(layer._svgObject)
   },
 
-  _updatePosition: function(layer) {
+  _updateSVGPosition: function(layer) {
     var pos = layer._point || new L.Point(0, 0)
     L.DomUtil.setPosition(layer._svgObject, pos)
   },
 
-  _updateSvgText: function(layer) {
+  _updateSVGText: function(layer) {
     layer._svgObjectChild.innerHTML = layer.options.svgText;
   },
 
-  _updateStyle: function(layer) {
+  _updateSVGStyle: function(layer) {
     var path = layer._svgObject,options = layer.options, pathChild = layer._svgObjectChild;
     var scale = options.scale || 10, rotate = options.rotate || 0
 
@@ -150,7 +150,7 @@ L.SVGObject = L.Layer.extend({
   //负责更新图形
   setSvgText: function(svgText) {
     this.options.svgText = svgText;
-    this._renderer._updateSvgText(this)
+    this._renderer._updateSVGText(this)
   },
 
   //负责更新位置
@@ -159,7 +159,7 @@ L.SVGObject = L.Layer.extend({
       return;
     }
     this._point = this._map.latLngToLayerPoint(this._latlng)
-    this._renderer._updatePosition(this);
+    this._renderer._updateSVGPosition(this);
   },
 
   //负责更新样式，大小，旋转
@@ -168,7 +168,7 @@ L.SVGObject = L.Layer.extend({
     for(var i in options){
       this.options[i] = options[i]
     }
-    this._renderer._updateStyle(this);
+    this._renderer._updateSVGStyle(this);
   },
 
   _initInteraction: function() {

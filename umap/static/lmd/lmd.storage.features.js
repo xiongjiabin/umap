@@ -450,6 +450,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       3: '<rect width="149" height="25" x="2" y="2" /><circle cx="166" cy="15" r="15" /> ', //单悬臂式
       4: '<rect width="72.986015" height="25" x="106.27666" y="14.277634" /> <circle cx="90.311035" cy="16.431107" r="14.5" /> <rect width="72.478447" height="24.748737" x="2" y="14.679733" />', //双悬臂式
       5: '<rect width="121.90018" height="25" x="31.11552" y="3.5418777" /> <circle cx="16.5" cy="15.179672" r="14.5" /> <circle cx="167.53844" cy="15.409348" r="14.5" />', //门架式
+      //5: ' <text font-family="Verdana" font-size="55"> 新建混泥土护栏 </text>'
     }
     var svgStr = typeSvg[type] || typeSvg[1]
 

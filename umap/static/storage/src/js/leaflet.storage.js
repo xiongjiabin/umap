@@ -436,8 +436,8 @@ L.Storage.Map.include({
             this.addLayer(tilelayer);
             this.fire('baselayerchange', {layer: tilelayer});
             if (this.selected_tilelayer) {
-                //xiongjiabin not removed
-                //this.removeLayer(this.selected_tilelayer);
+                //xiongjiabin not removed 瓦片服务器
+                this.removeLayer(this.selected_tilelayer);
             }
             this.selected_tilelayer = tilelayer;
             if (!isNaN(this.selected_tilelayer.options.minZoom) && this.getZoom() < this.selected_tilelayer.options.minZoom) {

@@ -8,26 +8,7 @@ function isLon(f) { return !!f.match(/(L)(on|ng)(gitude)?/i); }
 function keyCount(o) {
     return (typeof o == 'object') ? Object.keys(o).length : 0;
 }
-function getColorFromLevel(level){
-  var colors = []
-  colors[1] = 'red';
-  colors[2] = 'blue';
-  colors[3] = '#ffff00';
-  colors[4] = '#eed5d2';
-  colors[5] = 'black';
-  colors[6] = '#8b636c';
-  colors[7] = '#ffa500';
-  colors[8] = '#00bfff';
-  colors[9] = '#90ee90';
-  colors[10] = '#228b22';
-  colors[11] = '#ff1493';
-  colors[12] = '#ee82ee';
-  colors[13] = '#9932cc';
-  colors[14] = '#8b008b';
-  colors[15] = '#ff0000';
-  colors[16] = '#1c1c1c';
-  return colors[level] || 'white'
-}
+
 
 function autoDelimiter(x) {
     var delimiters = [',', ';', '\t', '|'];
@@ -112,6 +93,7 @@ function csv2geojson(x, options, callback) {
     }
 
     var errors = [];
+    var cj02 = null;
 
     for (var i = 0; i < parsed.length; i++) {
         if (parsed[i][lonfield] !== undefined &&
@@ -142,14 +124,17 @@ function csv2geojson(x, options, callback) {
                     delete parsed[i][latfield];
                 }
 
+                cj02 = coordtransform.wgs84togcj02(parseFloat(lonf), parseFloat(latf));
                 features.push({
                     type: 'Feature',
                     properties: parsed[i],
                     geometry: {
                         type: 'Point',
                         coordinates: [
-                            parseFloat(lonf),
-                            parseFloat(latf)
+                            //parseFloat(lonf),
+                            //parseFloat(latf)
+                            cj02[0],
+                            cj02[1]
                         ]
                     }
                 });
