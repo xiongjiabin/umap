@@ -30,6 +30,7 @@
             polygonClass: L.Polygon,
             polylineClass: L.Polyline,
             markerClass: L.Marker,
+            svgObjectClass: L.SVGObject,
             drawingCSSClass: 'leaflet-editable-drawing',
             drawingCursor: 'crosshair'
         },
@@ -699,6 +700,10 @@
 
     });
 
+    L.Editable.SVGObjectEditor = L.Editable.MarkerEditor.extend({
+
+    });
+
     L.Editable.PathEditor = L.Editable.BaseEditor.extend({
 
         CLOSED: false,
@@ -1156,6 +1161,8 @@
     L.Polyline.include(EditableMixin);
     L.Polygon.include(EditableMixin);
     L.Marker.include(EditableMixin);
+   //xiongjiabin svgobject 增加editable
+    L.SVGObject.include(EditableMixin);
 
     L.Polyline.include({
 
@@ -1240,5 +1247,11 @@
         }
 
     });
+
+    L.SVGObject.include({
+        getEditorClass: function(map){
+            return (map && map.options.svgObjectEditorClass) ? map.options.svgObjectEditorClass : L.Editable.SVGObjectEditor;
+        }
+    })
 
 }, window));

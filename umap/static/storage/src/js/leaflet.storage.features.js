@@ -838,14 +838,6 @@ L.Storage.Polyline = L.Polyline.extend({
     //added by xiongjiabin
     getBasicOptions: function () {
         return [
-          /*'properties._storage_options.leftRight',
-          'properties._storage_options.subNum',
-          'properties._storage_options.pillarSupport',
-          'properties._storage_options.pillarDiam',
-          'properties._storage_options.pillarThick',
-          'properties._storage_options.pillarHeight',
-          'properties._storage_options.PillarBase',
-          'properties._storage_options.devStatus',*/
         ];
     },
 

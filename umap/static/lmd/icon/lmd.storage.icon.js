@@ -1,7 +1,8 @@
 L.Storage.Icon.Rect = L.Storage.Icon.extend({
+
     initialize: function(map, options) {
         var default_options = {
-            iconAnchor: new L.Point(6, 6),
+            iconAnchor: new L.Point(0, 0),
             popupAnchor: new L.Point(0, -6),
             tooltipAnchor: new L.Point(6, 0),
             className: 'storage-rect-icon'
@@ -14,13 +15,29 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
         this.elements.main.style.backgroundColor = this._getColor();
     },
 
+    getDefaultHeightWidth(){
+      return [60,60]
+    },
+
     createIcon: function() {
       this.elements = {};
       this.elements.main = L.DomUtil.create('div');
-      this.elements.container = L.DomUtil.create('div', 'icon_container', this.elements.main);
-      this.elements.img = L.DomUtil.create('img', null, this.elements.container);
+      //this.elements.container = L.DomUtil.create('div', 'icon_container', this.elements.main);
+      this.elements.img = L.DomUtil.create('img', null, this.elements.main);
       var src = this._getIconUrl('icon');
-      if (src) this.elements.img.src = src;
+      if (src) {
+        this.elements.img.src = src;
+        var height = +(this._getOption('height'))
+        var width  = +(this._getOption('width'))
+        if(height || width){
+            if(width) this.elements.img.style.width = width + 'px'
+            if(height) this.elements.img.style.height = height + 'px'
+        }else{
+            var size = this.getDefaultHeightWidth()
+            this.elements.img.style.width = size[1] + 'px'
+            this.elements.img.style.height = size[0] + 'px'
+        }
+      }
       this._setColor();
       this._setIconStyles(this.elements.main, 'icon');
       return this.elements.main;
@@ -31,7 +48,7 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
 L.Storage.Icon.Square = L.Storage.Icon.Rect.extend({
     initialize: function(map, options) {
         var default_options = {
-            iconAnchor: new L.Point(6, 6),
+            iconAnchor: new L.Point(0, 0),
             popupAnchor: new L.Point(0, -6),
             tooltipAnchor: new L.Point(6, 0),
             className: 'storage-square-icon'
@@ -45,7 +62,7 @@ L.Storage.Icon.Square = L.Storage.Icon.Rect.extend({
 L.Storage.Icon.Opaque = L.Storage.Icon.Rect.extend({
     initialize: function(map, options) {
         var default_options = {
-            iconAnchor: new L.Point(6, 6),
+            iconAnchor: new L.Point(0, 0),
             popupAnchor: new L.Point(0, -6),
             tooltipAnchor: new L.Point(6, 0),
             className: 'storage-opaque-icon'
@@ -62,7 +79,7 @@ L.Storage.Icon.Opaque = L.Storage.Icon.Rect.extend({
 L.Storage.Icon.LmdCircle = L.Storage.Icon.Rect.extend({
     initialize: function(map, options) {
         var default_options = {
-            iconAnchor: new L.Point(6, 6),
+            iconAnchor: new L.Point(0, 0),
             popupAnchor: new L.Point(0, -6),
             tooltipAnchor: new L.Point(6, 0),
             className: 'storage-lmdcircle-icon'
@@ -76,7 +93,7 @@ L.Storage.Icon.LmdCircle = L.Storage.Icon.Rect.extend({
 L.Storage.Icon.Pillar = L.Storage.Icon.Rect.extend({
     initialize: function(map, options) {
         var default_options = {
-            iconAnchor: new L.Point(6, 6),
+            iconAnchor: new L.Point(0, 0),
             popupAnchor: new L.Point(75, 75),
             tooltipAnchor: new L.Point(6, 0),
             className: 'storage-pillar-icon'
@@ -85,6 +102,9 @@ L.Storage.Icon.Pillar = L.Storage.Icon.Rect.extend({
         L.Storage.Icon.prototype.initialize.call(this, map, options);
     },
 
+    getDefaultHeightWidth(){
+      return [150,150]
+    },
     _setColor: function() {
         //对透明的图形来说，不需要底图
     },

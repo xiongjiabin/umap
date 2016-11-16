@@ -2,12 +2,8 @@
     border: 1px solid white;
     border-radius: 5px 5px 5px 5px;
     height: 60px;
-    width: 80px;
+    width: 60px;
     text-align: center;
-}
-.storage-rect-icon img{
-    height: 60px;
-    width:80px;
 }
 
 .storage-square-icon {
@@ -17,19 +13,12 @@
     width: 60px;
     text-align: center;
 }
-.storage-square-icon img{
-  height:60px;
-  width:60px;
-}
 
 .storage-opaque-icon {
     height: 60px;
     width: 60px;
 }
-.storage-opaque-icon img{
-  height:60px;
-  width:60px;
-}
+
 
 .storage-pillar-icon {
   height:150px;
@@ -46,8 +35,4 @@
     height: 60px;
     width: 60px;
     text-align: center;
-}
-.storage-lmdcircle-icon img{
-  height:60px;
-  width:60px;
 }

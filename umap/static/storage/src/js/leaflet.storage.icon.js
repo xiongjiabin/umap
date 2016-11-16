@@ -29,6 +29,14 @@ L.Storage.Icon = L.DivIcon.extend({
         return color;
     },
 
+    //added by xiongjiabin ,simulate it's get option
+    _getOption(name){
+        if(this.feature){
+            return this.feature.getOption(name);
+        }
+        return null;
+    },
+
     //这个机制效率有些问题，导致每一个icon都会去调用一次这个copy
     copyProperties: function( obj ,data){
         for(var i in obj){
