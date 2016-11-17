@@ -117,7 +117,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         lr: "1",
         ds: "1",
         width: "60",
-        height: "60"
+        height: "60",
+        rotate: "0",
       }
     }
   },
@@ -178,6 +179,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       'properties._storage_options.iconUrl',
       'properties._storage_options.width',
       'properties._storage_options.height',
+      'properties._storage_options.rotate',
       'properties._storage_options.helpX',
       'properties._storage_options.helpY'
     ];

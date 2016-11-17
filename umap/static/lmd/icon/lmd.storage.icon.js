@@ -29,6 +29,7 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
         this.elements.img.src = src;
         var height = +(this._getOption('height'))
         var width  = +(this._getOption('width'))
+        var rotate  = +(this._getOption('rotate'))
         if(height || width){
             if(width) this.elements.img.style.width = width + 'px'
             if(height) this.elements.img.style.height = height + 'px'
@@ -36,6 +37,14 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
             var size = this.getDefaultHeightWidth()
             this.elements.img.style.width = size[1] + 'px'
             this.elements.img.style.height = size[0] + 'px'
+        }
+        if(rotate){
+          var rotateStr = 'rotate(' + rotate + 'deg)'
+          this.elements.img.style['-webkit-transform'] = rotateStr
+          this.elements.img.style['-moz-transform'] = rotateStr
+          this.elements.img.style['-ms-transform'] = rotateStr
+          this.elements.img.style['-o-transform'] = rotateStr
+          this.elements.img.style['transform'] = rotateStr
         }
       }
       this._setColor();
