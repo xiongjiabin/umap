@@ -145,6 +145,64 @@ L.Storage.Map.include({
     return result
   },
 
+  getLatLngsInBounds: function(){
+    var bounds = this.getBounds()
+    var i = 0,len = this.datalayers_index.length;
+    var j, len1, k, len2;
+    var latlng = null
+    var result = []
+    for (; i < len; i++) {
+      var subHelpData = this.datalayers_index[i].options &&
+                        this.datalayers_index[i].options.subHelpData
+      if(!subHelpData) continue
+      for(j = 0,len1 = subHelpData.length; j < len1; j++){
+        subHelp = subHelpData[j]
+        for(k = subHelp.min, len2 = subHelp['data'].length; k < len2; k++){
+          if(!subHelp['data'][k]) contniue
+          latlng = [subHelp['data'][k][1],subHelp['data'][k][0]]
+          if(bounds.contains(latlng)){
+            result.push([latlng[0],latlng[1],k])
+          }
+        }
+      }
+    }
+    return result
+  },
+
+  _MARKER_SHOW: [],
+  handleShowMarker: function(){
+    var MAX_SHOWED = 5
+    console.time('showmarker')
+    var results = this.getLatLngsInBounds()
+    var temp = null,index = 0
+    var i = 0, step = Math.floor((results.length - 2) / (MAX_SHOWED - 2))
+    while(this._MARKER_SHOW.length > 0){
+      this._MARKER_SHOW.pop().remove()
+    }
+    var markerShowIndex = []
+    if(results.length > 0) markerShowIndex.push(0)
+    if(results.length > 1) markerShowIndex.push(results.length - 1)
+    step = step || 1
+    for(i = 1; i < MAX_SHOWED - 1; i++){
+      markerShowIndex.push( step * i)
+    }
+
+    for(i = 0; i < markerShowIndex.length ; i++){
+      index = markerShowIndex[i]
+      if(!results[index]) contniue
+       temp = L.marker([results[index][0],results[index][1]],{
+          'title': results[index][2],
+          'interactive': false
+      }).addTo(this)
+      temp.openTooltip()
+      this._MARKER_SHOW.push(temp)
+    }
+    console.log(results)
+    console.log(markerShowIndex)
+    results = null
+    console.timeEnd('showmarker')
+  }
+
 })
 
 L.DomUtil.setTransformRotate = function(el, offset, scale, rotate) {
