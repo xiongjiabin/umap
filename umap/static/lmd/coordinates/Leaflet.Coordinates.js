@@ -258,28 +258,30 @@ L.Control.Coordinates = L.Control.extend({
 	_update: function(evt) {
 		var pos = evt.latlng,
 			opts = this.options;
-        if (pos) {
-            pos = pos.wrap();
-            this._currentPos = pos;
-            this._inputY.value = L.NumberFormatter.round(pos.lat, opts.decimals, opts.decimalSeperator);
-            this._inputX.value = L.NumberFormatter.round(pos.lng, opts.decimals, opts.decimalSeperator);
-            this._label.innerHTML = this._createCoordinateLabel(pos);
+    if (pos) {
+      pos = pos.wrap();
+      this._currentPos = pos;
+      this._inputY.value = L.NumberFormatter.round(pos.lat, opts.decimals, opts.decimalSeperator);
+      this._inputX.value = L.NumberFormatter.round(pos.lng, opts.decimals, opts.decimalSeperator);
+      this._label.innerHTML = this._createCoordinateLabel(pos);
 
-            var syncEnable = this._map.getOption('syncVideoEnable');
-            if(syncEnable) {
-                var syncUrl = this._map.getOption('syncVideoUrl');
-                if(!syncUrl.endsWith('/')){
-                    syncUrl += '/';
-                }
-                syncUrl += 'seek-location:' + this._inputY.value + ',' + this._inputX.value;
+      var syncEnable = this._map.getOption('syncVideoEnable');
+      if(syncEnable) {
+        var syncUrl = this._map.getOption('syncVideoUrl');
+        if(!syncUrl.endsWith('/')){
+          syncUrl += '/';
+        }
+        syncUrl += 'seek-location:' + this._inputY.value + ',' + this._inputX.value;
 
-                console.log(syncUrl)
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', syncUrl, true);
-                xhr.send("")
-            }
-		}
-	},
+        console.log(syncUrl)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', syncUrl, true);
+        xhr.send("")
+      }
+
+      console.log(this._map.getSubNoByLatLng([pos.lng,pos.lat]))
+    }
+  },
 
 	_createNewMarker: function() {
 		return this.options.markerType(null, this.options.markerProps);

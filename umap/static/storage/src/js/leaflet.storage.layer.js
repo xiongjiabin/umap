@@ -501,7 +501,8 @@ L.Storage.DataLayer = L.Class.extend({
         } else if (type === 'georss') {
             callback(GeoRSSToGeoJSON(toDom(c)));
         } else if (type === 'kml') {
-            callback(toGeoJSON.kml(toDom(c)));
+            var newData = (toGeoJSON.kml(toDom(c)));
+            callback(newData);
         } else if (type === 'osm') {
             var d;
             try {
@@ -744,7 +745,7 @@ L.Storage.DataLayer = L.Class.extend({
                     this.edit();
                 }
                 //color:level:1#0x1234,2#0x1111,3#0x33333
-                var colorMatch = this.options.description.match(/^color:(\w*):(.+)$/)
+                var colorMatch = this.options.description && this.options.description.match(/^color:(\w*):(.+)$/)
                 if(colorMatch){
                     //xiongjiabin added for render with different colors
                     var colors = colorMatch[2].split(',')
@@ -1071,8 +1072,68 @@ L.Storage.DataLayer = L.Class.extend({
         if (this.isRemoteLayer() || !this.isVisible()) return;
         var editor = new L.S.TableEditor(this);
         editor.edit();
-    }
+    },
 
+    //xiongjaibin 对导入的kml文件中的marker做特殊处理
+    notMarker: function( geoData ) {
+        if(!geoData) return null
+        if(geoData['type'] !== 'FeatureCollection'){
+          return null
+        }
+
+        if(!geoData['features']) return null
+        var newGeoJSON = {};
+        for(var j in geoData){
+          if(j !== 'features'){
+              newGeoJSON[j] = L.Util.CopyJSON(geoData[j])
+          }
+        }
+        newGeoJSON['features'] = []
+
+        var subCoords = []
+        var obj = null
+        var whatNeed = null
+        var properties = null, geometry = null
+        for(var i = 0, len = geoData['features'].length; i < len; i++){
+          obj = geoData['features'][i]
+          geometry = obj['geometry']
+          properties = obj['properties']
+          if(!geometry || !properties){
+            continue
+          }
+
+          if(geometry['type'] === 'Point' && properties['name']) {
+            subCoords.push([properties['name'],
+                            geometry['coordinates'][0],
+                            geometry['coordinates'][1],
+                            geometry['coordinates'][2],
+                          ])
+         }else{
+           newGeoJSON['features'].push(L.Util.CopyJSON(obj))
+         }
+       }
+
+       var newSubCoords = []
+       var index = 0,minIndex = Number.MAX_SAFE_INTEGER,maxIndex = 0
+       for(i = 0, len = subCoords.length; i < len; i++){
+         index = Math.round(parseFloat(subCoords[i][0]) * 10)
+         if(index < minIndex){
+           minIndex = index
+         }
+         if(index > maxIndex){
+           maxIndex = index
+         }
+         newSubCoords[index] = [subCoords[i][1], subCoords[i][2],subCoords[i][3]]
+       }
+       subCoords = null
+       this.options.subHelpData = this.options.subHelpData || []
+       this.options.subHelpData.push({
+         'data': newSubCoords,
+         'min': minIndex,
+         'max': maxIndex
+       })
+       return newGeoJSON
+     }
 });
 
 L.TileLayer.include({

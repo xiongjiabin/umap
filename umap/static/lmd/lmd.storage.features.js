@@ -146,18 +146,20 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       this.helpPath = null;
     }
     var latlng = this.getLatLng()
-    var center = lmd.getLatLngFromSubNo()
-    var latlngs = [center, latlng]
-    this.helpPath = L.polyline(latlngs, {
-      color: 'grey'
-    }).addTo(this.map);
-    var latlngPoint = this.map.latLngToLayerPoint(latlng);
-    var centerPoint = this.map.latLngToLayerPoint(center);
-    this.properties._storage_options['helpX'] = Math.round(latlngPoint[
-      'x'] - centerPoint['x'])
-    this.properties._storage_options['helpY'] = Math.round(latlngPoint[
-      'y'] - centerPoint['y'])
-
+    var sn = +this.getOption('sn')
+    if(sn){
+      var center = this.map.getAnchorLatLngBySubNo(sn)
+      var latlngs = [center, latlng]
+      this.helpPath = L.polyline(latlngs, {
+        color: 'grey'
+      }).addTo(this.map);
+      var latlngPoint = this.map.latLngToLayerPoint(latlng);
+      var centerPoint = this.map.latLngToLayerPoint(center);
+      this.properties._storage_options['helpX'] = Math.round(latlngPoint[
+        'x'] - centerPoint['x'])
+      this.properties._storage_options['helpY'] = Math.round(latlngPoint[
+        'y'] - centerPoint['y'])
+    }
   },
 
   //added by xiongjiabin
@@ -197,12 +199,17 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     var helpX = this.properties._storage_options['helpX'] || 0
     var helpY = this.properties._storage_options['helpY'] || 0
     if (helpX || helpY) {
-      var center = lmd.getLatLngFromSubNo()
-      var centerPoint = this.map.latLngToLayerPoint(center)
-      var destX = centerPoint['x'] + helpX
-      var destY = centerPoint['y'] + helpY
-      var dest = this.map.layerPointToLatLng([destX, destY])
-      this.setLatLng(dest)
+      var subNo = +this.getOption('sn')
+      if(subNo > 0){
+        var center = this.map.getAnchorLatLngBySubNo(subNo)
+        if(center){
+          var centerPoint = this.map.latLngToLayerPoint(center)
+          var destX = centerPoint['x'] + helpX
+          var destY = centerPoint['y'] + helpY
+          var dest = this.map.layerPointToLatLng([destX, destY])
+          this.setLatLng(dest)
+        }
+      }
     }
   },
 
