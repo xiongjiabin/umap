@@ -1435,8 +1435,12 @@ L.Storage.Map.include({
         return this.editTools.startLmdPillar();
     },
 
-    startLmdGuard: function(){
-        return this.editTools.startLmdGuard();
+    startLmdLabel: function(){
+        return this.editTools.startLmdLabel();
+    },
+
+    startGuardbar: function(){
+        return this.editTools.startGuardbar();
     },
 
     startMarker: function () {
@@ -1450,6 +1454,7 @@ L.Storage.Map.include({
     startPolygon: function () {
         return this.editTools.startPolygon();
     },
+
 
     del: function () {
         if (confirm(L._('Are you sure you want to delete this map?'))) {

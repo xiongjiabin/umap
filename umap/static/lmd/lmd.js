@@ -171,36 +171,37 @@ L.Storage.Map.include({
 
   _MARKER_SHOW: [],
   handleShowMarker: function(){
-    var MAX_SHOWED = 5
-    console.time('showmarker')
+    var MAX_SHOWED = 8
+    //console.time('showmarker')
     var results = this.getLatLngsInBounds()
     var temp = null,index = 0
-    var i = 0, step = Math.floor((results.length - 2) / (MAX_SHOWED - 2))
+    var i = 0, step = Math.floor((results.length ) / (MAX_SHOWED ))
     while(this._MARKER_SHOW.length > 0){
       this._MARKER_SHOW.pop().remove()
     }
     var markerShowIndex = []
-    if(results.length > 0) markerShowIndex.push(0)
     if(results.length > 1) markerShowIndex.push(results.length - 1)
     step = step || 1
-    for(i = 1; i < MAX_SHOWED - 1; i++){
-      markerShowIndex.push( step * i)
+    for(i = 0; i < MAX_SHOWED - 1; i++){
+      markerShowIndex[i] = step * i
     }
 
+    var myIcon = L.divIcon({className: 'storage-circle-icon'});
     for(i = 0; i < markerShowIndex.length ; i++){
       index = markerShowIndex[i]
-      if(!results[index]) contniue
+      if(!results[index]) continue
        temp = L.marker([results[index][0],results[index][1]],{
           'title': results[index][2],
-          'interactive': false
-      }).addTo(this)
+          'interactive': false,
+          icon: myIcon
+      }).bindTooltip(results[index][2] + '').addTo(this)
       temp.openTooltip()
       this._MARKER_SHOW.push(temp)
     }
-    console.log(results)
-    console.log(markerShowIndex)
+    //console.log(results)
+    //console.log(markerShowIndex)
     results = null
-    console.timeEnd('showmarker')
+    //console.timeEnd('showmarker')
   }
 
 })

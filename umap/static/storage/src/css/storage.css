@@ -246,6 +246,11 @@ ul.photon-autocomplete {
     background-position: -160px -160px;
 }
 
+.storage-draw-label,
+.storage-toolbar .storage-draw-label {
+   background-position: 0 0;
+}
+
 /* ********************************* */
 /*   Third party plugin override     */
 /* ********************************* */

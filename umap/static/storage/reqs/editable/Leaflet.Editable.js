@@ -172,6 +172,13 @@
             return this.featuresLayer.addLayer(layer);
         },
 
+        startGuardbar: function (latlng, options) {
+            var line = this.createGuardbar([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+
         startPolyline: function (latlng, options) {
             var line = this.createPolyline([], options);
             this.connectCreatedToMap(line);
@@ -204,6 +211,15 @@
           return pillar;
         },
 
+        startLmdLabel: function (latlng, options) {
+          latlng = latlng || this.map.getCenter();
+          var label = this.createLmdLabel(latlng, options);
+          this.connectCreatedToMap(label);
+          var editor = pillar.enableEdit();
+          editor.startDrawing();
+          return label;
+        },
+
         startMarker: function (latlng, options) {
             latlng = latlng || this.map.getCenter();
             var marker = this.createMarker(latlng, options);
@@ -217,7 +233,8 @@
             editor.newHole(latlng);
         },
 
-        createPolyline: function (latlngs, options) {
+        //xiongjaibin looks likes no used ,use L.storage.control's code
+        /*createPolyline: function (latlngs, options) {
             options = L.Util.extend({editOptions: {editTools: this}}, options);
             var line = new this.options.polylineClass(latlngs, options);
             this.fireAndForward('editable:created', {layer: line});
@@ -236,7 +253,7 @@
             var marker = new this.options.markerClass(latlng, options);
             this.fireAndForward('editable:created', {layer: marker});
             return marker;
-        }
+        }*/
 
     });
 

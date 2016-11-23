@@ -500,3 +500,260 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     }
   }
 });
+
+L.Storage.LmdLabel = L.Storage.SVGObject.extend({
+
+  initialize: function(map, latlng, options) {
+
+    L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
+  },
+
+  preInit: function() {
+    if (!this.properties['className']) {
+      this.properties['className'] = this.getClassName()
+    }
+
+    if (!this.properties._storage_options.color) {
+      this.properties._storage_options = {
+        scale: 1,
+        rotate: 0,
+        color: 'Yellow'
+      }
+    }
+
+    var options = {}
+    var _storage_options = this.properties._storage_options
+    options.svgText = this.getSvgData()
+
+    var validObj = {rotate:1,scale:1,color:1}
+    for(var i in _storage_options){
+      if(validObj[i]){
+        options[i] = _storage_options[i]
+      }
+    }
+    return options
+  },
+
+  getSvgData: function() {
+    var name = this.getDisplayName()|| '请输入文字'
+    var size = this.getOption('size') || 35
+    return ' <text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
+  },
+
+  resetTooltip: function(){
+    this.setSvgText(this.getSvgData())
+  },
+
+  //added by xiongjiabin
+  getBasicOptions: function() {
+    return [
+    ];
+  },
+
+
+  getClassName: function() {
+    return 'lmdLabel';
+  },
+
+  edit: function(e) {
+    L.Storage.LmdFeatureMixin.edit.call(this, e)
+  },
+
+  change: function(e) {
+    if (!e.target) return;
+  }
+});
+
+L.Storage.Guardbar = L.Storage.Polyline.extend({
+
+
+    preInit: function() {
+      if (!this.properties['className']) {
+        this.properties['className'] = this.getClassName()
+      }
+
+      if (!this.properties._storage_options.gbt) {
+        this.properties._storage_options = {
+          gbt: "1",
+          color: "yellow",
+          weight:"10"
+        }
+      }
+    },
+
+    edit: function(e) {
+      L.Storage.LmdFeatureMixin.edit.call(this, e)
+    },
+
+    //added by xiongjiabin
+    getBasicOptions: function () {
+        return [
+          'properties._storage_options.gbt',//类型
+          'properties._storage_options.lr',
+          'properties._storage_options.gbss',//起始桩号
+          'properties._storage_options.gbse',
+          'properties._storage_options.gbl',//总长
+          'properties._storage_options.gbs',//间距
+          'properties._storage_options.gbn',//数量
+          'properties._storage_options.ds',
+        ];
+    },
+
+    getShapeOptions: function () {
+        return [
+            'properties._storage_options.color',
+            'properties._storage_options.weight',
+        ];
+    },
+
+    getAdvancedOptions: function () {
+        return [
+            'properties._storage_options.smoothFactor',
+            'properties._storage_options.zoomTo'
+        ];
+    },
+
+    setStyle: function (options) {
+      var gbtype = +this.getOption('gbt')
+      if(gbtype === 1){
+        L.Storage.BarTypeRect.call(this,options)
+      }else if(gbtype === 3){
+        L.Storage.BarTypeCircle.call(this,options)
+      }else if(gbtype === 2){
+        L.Storage.BarTypeLine.call(this,options)
+      }else if(gbtype === 4){
+        L.Storage.BarTypeCustomize.call(this,options)
+      }
+    },
+
+    _updatePath: function(){
+      this.parentClass.prototype._updatePath.call(this);
+      var gbtype = +this.getOption('gbt')
+      if(gbtype === 4){
+        L.Storage.BarTypeCustomize.call(this,null)
+      }
+    },
+
+    getClassName: function () {
+        return 'guardbar';
+    },
+
+    getContextMenuEditItems: function (e) {
+        var items = L.S.PathMixin.getContextMenuEditItems.call(this, e),
+            vertexClicked = e.vertex, index;
+        if (vertexClicked) {
+            index = e.vertex.getIndex();
+            if (index !== 0 && index !== e.vertex.getLastIndex()) {
+                items.push({
+                    text: L._('Split line'),
+                    callback: e.vertex.split,
+                    context: e.vertex
+                });
+            } else if (index === 0 || index === e.vertex.getLastIndex()) {
+                items.push({
+                    text: L._('Continue line (Ctrl-click)'),
+                    callback: e.vertex.continue,
+                    context: e.vertex.continue
+                });
+            }
+        }
+        return items;
+    },
+
+    getContextMenuMultiItems: function (e) {
+        var items = L.S.PathMixin.getContextMenuMultiItems.call(this, e);
+        items.push({
+            text: L._('Merge lines'),
+            callback: this.mergeShapes,
+            context: this
+        });
+        return items;
+    },
+
+
+    change: function(e) {
+      //console.log(e);
+      if (!e.target) return;
+
+      if (e.target.name === 'gbt') {
+        this._redraw();
+      } else {
+
+      }
+    }
+});
+/*
+'smoothFactor',
+'color',
+'opacity',
+'stroke',
+'weight',
+'fill',
+'fillColor',
+'fillOpacity',
+'dashArray',
+'interactive'
+*/
+L.Storage.BarTypeRect  = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '20,10';
+  if(options['weight'] < 15) options['weight'] = 15;
+  options['opacity'] = 1;
+  options['lineCap'] = 'butt';
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
+L.Storage.BarTypeCircle = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '0,25';
+  if(options['weight'] < 15) options['weight'] = 15;
+  options['opacity'] = 1;
+  options['lineCap'] = 'round';
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
+L.Storage.BarTypeLine = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '5,20';
+  options['lineCap'] = 'butt';
+  options['opacity'] = 1;
+  options['weight'] = 20;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+L.Storage.BarTypeCustomize = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '';
+  options['lineCap'] = 'round';
+  options['opacity'] = 0.4;
+  options['weight'] = 5;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+  this.updatePolyMarker();
+}

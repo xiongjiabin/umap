@@ -279,7 +279,9 @@ L.Control.Coordinates = L.Control.extend({
         xhr.send("")
       }
 
+      console.time('get sub no')
       console.log(this._map.getSubNoByLatLng([pos.lng,pos.lat]))
+      console.timeEnd('get sub no')
     }
   },
 

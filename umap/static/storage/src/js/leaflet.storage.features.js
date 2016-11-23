@@ -678,13 +678,13 @@ L.Storage.PathMixin = {
 
     onAdd: function (map) {
         this._container = null;
-        this.setStyle();
         // Show tooltip again when Leaflet.label allow static label on path.
         // cf https://github.com/Leaflet/Leaflet/pull/3952
         // this.map.on('showmeasure', this.showMeasureTooltip, this);
         // this.map.on('hidemeasure', this.removeTooltip, this);
         this.parentClass.prototype.onAdd.call(this, map);
         if (this.editing && this.editing.enabled()) this.editing.addHooks();
+        this.setStyle();
         this.resetTooltip();
     },
 

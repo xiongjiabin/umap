@@ -1,4 +1,57 @@
 L.SVG.include({
+
+  _initContainer: function () {
+    this._container = L.SVG.create('svg');
+
+    // makes it possible to click through svg root; we'll reset it back in individual paths
+    this._container.setAttribute('pointer-events', 'none');
+
+    this._rootGroup = L.SVG.create('g');
+    this._container.appendChild(this._rootGroup);
+
+    //add pre defined markers xiongjiabin
+    this._initPredefinedMarkers();
+  },
+
+  _initPredefinedMarkers: function(){
+    this._defs = L.SVG.create('defs')
+    this._defs.innerHTML = '<g id="m_cross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>'
+    //add other markers
+    this._container.appendChild(this._defs)
+  },
+
+  _updatePolyMarker: function( layer, options ){
+    var i = 0, len = 0
+    var point = null
+    options = options || {}
+    var parts = null
+    if(layer._parts && layer._parts[0]){
+      parts = layer._parts[0]
+      len = parts.length
+    }else{
+      return
+    }
+
+    if(layer._polyMarker){
+      L.DomUtil.remove(layer._polyMarker)
+      layer._polyMarker  = null
+    }
+
+    if(len < 1) return
+    layer._polyMarker = L.SVG.create('g')
+    layer._polyMarker.setAttribute('stroke', options.color || 'red');
+    layer._polyMarker.setAttribute('stroke-width', options.weight || 4);
+    layer._polyMarker.setAttribute('fill', 'none');
+
+    //<use xlink:href="#m_cross" x="962" y="180"></use>
+    for(; i < len; i++){
+      point = parts[i]
+      layer._polyMarker.innerHTML +=
+            '<use xlink:href="#m_cross" x="' + point.x + '" y="' + point.y + '"></use>'
+    }
+    this._rootGroup.appendChild(layer._polyMarker)
+  },
+
   //we want to include a direct svg object
   _initSVGOjbect: function(layer) {
     var svgObject = layer._svgObject = L.SVG.create('g');
@@ -79,6 +132,13 @@ L.SVG.include({
 
 })
 
+L.Polyline.include({
+  updatePolyMarker: function(options){
+    if(this._renderer){
+      this._renderer._updatePolyMarker(this, options)
+    }
+  },
+})
 
 L.SVGObject = L.Layer.extend({
 

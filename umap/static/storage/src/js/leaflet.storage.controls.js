@@ -119,6 +119,18 @@ L.Storage.DrawLmdPillarAction = L.Storage.BaseAction.extend({
   }
 });
 
+L.Storage.DrawLmdLabelAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-label dark',
+      tooltip: '文字'
+  },
+
+  addHooks: function () {
+      this.map.startLmdLabel();
+  }
+});
+
 L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
   options: {
       helpMenu: true,
@@ -127,7 +139,7 @@ L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
   },
 
   addHooks: function () {
-      this.map.startLmdMarker();
+      this.map.startGuardbar();
   }
 });
 
@@ -368,6 +380,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdMarkerAction);
         this.options.actions.push(L.S.DrawLmdPillarAction);
         this.options.actions.push(L.S.DrawLmdGuardAction);
+        this.options.actions.push(L.S.DrawLmdLabelAction);
 
         if (this.map.options.enableMarkerDraw) {
             this.options.actions.push(L.S.DrawMarkerAction);
@@ -1123,6 +1136,11 @@ L.S.Editable = L.Editable.extend({
         this.on('editable:vertex:rawclick', this.onVertexRawClick);
     },
 
+    //xiongjiabin 创建护栏类型
+    createGuardbar: function(latlngs) {
+        return new  L.Storage.Guardbar(this.map, latlngs);
+    },
+
     createPolyline: function (latlngs) {
         return new L.Storage.Polyline(this.map, latlngs);
     },
@@ -1143,6 +1161,10 @@ L.S.Editable = L.Editable.extend({
 
     createLmdPillar: function (latlng) {
         return new L.Storage.LmdPillar(this.map, latlng);
+    },
+
+    createLmdLabel: function (latlng) {
+        return new L.Storage.LmdLabel(this.map, latlng);
     },
 
     connectCreatedToMap: function (layer) {

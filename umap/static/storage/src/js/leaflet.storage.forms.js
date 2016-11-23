@@ -678,6 +678,24 @@ L.FormBuilder.MarkerShapeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 L.FormBuilder.MarkerSpeedSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 L.FormBuilder.MarkerIconClassSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
+L.FormBuilder.GuardbarTypeSwitcher = L.FormBuilder.Select.extend({
+  selectOptions: [
+    ["1", '石墩'],
+    ["2", '竖线'],
+    ["3", '圆形'],
+    ["4", '叉叉']
+  ],
+  build: function() {
+    L.FormBuilder.Select.prototype.build.call(this);
+    L.DomEvent.on(this.select, 'change', this.sync, this);
+  },
+
+  sync: function() {
+    L.FormBuilder.Select.prototype.sync.call(this);
+  },
+
+});
+
 L.Storage.FormBuilder = L.FormBuilder.extend({
 
     options: {
@@ -749,6 +767,14 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         height: {handler: 'Range', min:0,max:300,step:1,label: '高度'},
         helpX:  {handler: 'IntInput', label: '辅助X'},
         helpY:  {handler: 'IntInput', label: '辅助Y'},
+
+        //护栏部分
+        gbt: {handler: 'GuardbarTypeSwitcher', label: '类型'},
+        gbl: {handler: 'FloatInput', label: '总长'},
+        gbs: {handler: 'FloatInput', label: '间距'},
+        gbn: {handler: 'IntInput', label: '数量'},
+        gbss: {handler: 'FloatInput', label: '起始桩号'},
+        gbse: {handler: 'FloatInput', label: '结束桩号'},
     },
 
     initialize: function (obj, fields, options) {
