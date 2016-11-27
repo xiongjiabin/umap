@@ -1,38 +1,39 @@
 .storage-rect-icon {
     border: 1px solid white;
     border-radius: 5px 5px 5px 5px;
-    height: 60px;
-    width: 60px;
+
     text-align: center;
 }
 
 .storage-square-icon {
     border: 1px solid white;
     border-radius: 5px 5px 5px 5px;
-    height: 60px;
-    width: 60px;
+
     text-align: center;
 }
 
 .storage-opaque-icon {
-    height: 60px;
-    width: 60px;
+
 }
 
 
 .storage-pillar-icon {
-  height:150px;
-  width: 150px;
+
 }
 .storage-pillar-icon img{
-  height:150px;
-  width: 150px;
+
 }
 
 .storage-lmdcircle-icon {
     border: 1px solid white;
     border-radius: 50px 50px 50px 50px;
-    height: 60px;
-    width: 60px;
+
     text-align: center;
+}
+.leaflet-interactive {
+   border: 1px solid white
+}
+
+svg text{
+   text-decoration:underline;
 }

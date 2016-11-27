@@ -247,7 +247,7 @@ L.Storage.Map.include({
         });
         this._controls.measure = new L.MeasureControl();
         this._controls.more = new L.S.MoreControls();
-        this._controls.scale = L.control.scale();
+        this._controls.scale = new L.Storage.Scale({imperial: false});
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();

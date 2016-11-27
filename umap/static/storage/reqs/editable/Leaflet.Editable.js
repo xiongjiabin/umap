@@ -234,7 +234,7 @@
         },
 
         //xiongjaibin looks likes no used ,use L.storage.control's code
-        /*createPolyline: function (latlngs, options) {
+        createPolyline: function (latlngs, options) {
             options = L.Util.extend({editOptions: {editTools: this}}, options);
             var line = new this.options.polylineClass(latlngs, options);
             this.fireAndForward('editable:created', {layer: line});
@@ -253,7 +253,7 @@
             var marker = new this.options.markerClass(latlng, options);
             this.fireAndForward('editable:created', {layer: marker});
             return marker;
-        }*/
+        }
 
     });
 

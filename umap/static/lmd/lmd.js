@@ -4,10 +4,11 @@ var lmd = {
     //init the latlng show events
     L.control.coordinates({
       position: "bottomleft",
-      decimals: 6,
+      decimals: 4,
       decimalSeperator: ".",
-      labelTemplateLat: "纬度: {y}",
-      labelTemplateLng: "经度: {x}"
+      labelTemplateLat: "纬:{y}",
+      labelTemplateLng: "经:{x}",
+      labelTemplateSub: "桩号:{subno}"
     }).addTo(map);
   },
 
@@ -25,10 +26,15 @@ L.Storage.Map.include({
   _SUBNO_BUFFER: [null],//需要清空在删除lay的清空下,存在一个bug,xiongjiabin
   getAnchorLatLngBySubNo: function( subNo ) {
     var i = 0, j = 0, len = 0, len1 = 0, subHelp = null
-    var newSubNo = Math.round(parseFloat(subNo) * 10)
-    if (this._SUBNO_BUFFER[newSubNo]) {
-      return this._SUBNO_BUFFER[newSubNo]
+    var scaleSubNo = parseFloat(subNo) * 10
+
+    if (this._SUBNO_BUFFER[scaleSubNo]) {
+      return this._SUBNO_BUFFER[scaleSubNo]
     }
+    var floorSubNo = Math.floor( scaleSubNo )
+    var ceilSubNo  = Math.ceil( scaleSubNo )
+    var floorData = null
+    var ceilData = null
 
     for (i = 0, len = this.datalayers_index.length; i < len; i++) {
       var subHelpData = this.datalayers_index[i].options &&
@@ -36,11 +42,35 @@ L.Storage.Map.include({
       if(!subHelpData) continue
       for(j = 0, len1 = subHelpData.length; j < len1; j++){
         subHelp = subHelpData[j]
-        if(newSubNo >= subHelp.min && newSubNo <= subHelp.max){
-          this._SUBNO_BUFFER[newSubNo]  = [subHelp['data'][newSubNo][1],subHelp['data'][newSubNo][0]]
-          return this._SUBNO_BUFFER[newSubNo]
+        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max){
+          floorData  = [subHelp['data'][floorSubNo][1],subHelp['data'][floorSubNo][0]]
+        }
+        if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max){
+          ceilData  = [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
         }
       }
+    }
+
+    if(floorData && ceilData){
+       if(floorSubNo === ceilSubNo) {
+         this._SUBNO_BUFFER[scaleSubNo] = floorData
+         return this._SUBNO_BUFFER[scaleSubNo]
+       }
+       //就平均值
+       var diff1 = scaleSubNo - floorSubNo
+       var diff2 = ceilSubNo - scaleSubNo
+       var lat, lng, ratio
+       if(diff1 < diff2){
+         ratio = diff1 / (ceilSubNo - floorSubNo )
+         lat = floorData[0] + (ceilData[0] - floorData[0]) * ratio
+         lng = floorData[1] + (ceilData[1] - floorData[1]) * ratio
+       }else{
+         ratio = diff2 / (ceilSubNo - floorSubNo )
+         lat = ceilData[0] - (ceilData[0] - floorData[0]) * ratio
+         lng = ceilData[1] - (ceilData[1] - floorData[1]) * ratio
+       }
+       this._SUBNO_BUFFER[scaleSubNo] = [lat,lng]
+       return this._SUBNO_BUFFER[scaleSubNo]
     }
 
     console.log('no found this sub ' + subNo)
@@ -49,8 +79,21 @@ L.Storage.Map.include({
 
   latLngBetween : function(latlng, leftLatLng, rightLatLng){
     var bounds = L.latLngBounds(leftLatLng,rightLatLng)
+    var found = false
+    var leftDistance = 0, rightDistance = 0, ratio = 0
     if (bounds.isValid() ){
-      return bounds.contains(latlng)
+      found = bounds.contains(latlng)
+      if(found){
+        leftDistance = latlng.distanceTo(leftLatLng)
+        rightDistance = latlng.distanceTo(rightLatLng)
+        if(leftDistance <= rightDistance){
+          ratio = leftDistance / (leftDistance + rightDistance)
+          return [1, ratio]
+        } else {
+          ratio = rightDistance / (leftDistance + rightDistance)
+          return [0, ratio]
+        }
+      }
     }
     return false
   },
@@ -62,6 +105,7 @@ L.Storage.Map.include({
     var leftLatLng = null,rightLatLng = null
     var nextIndex = 0
     var bFound = false
+    var newSubNo = 0
     if( !Array.isArray(subLatLngs) ) return null
     for(;; ){
       if(subLatLngs[ii]){
@@ -78,7 +122,14 @@ L.Storage.Map.include({
           leftLatLng = L.latLng(subLatLngs[ii][0],subLatLngs[ii][1])
           rightLatLng = L.latLng(subLatLngs[nextIndex][0],subLatLngs[nextIndex][1])
           bFound = this.latLngBetween(latlng,leftLatLng,rightLatLng)
-          if(bFound) break
+          if(bFound) {
+            if(bFound[0]){
+              newSubNo = ii + bFound[1] * (nextIndex - ii) //using left
+            }else{
+              newSubNo = nextIndex - bFound[1] * (nextIndex - ii)
+            }
+            break
+          }
         }
         ii = nextIndex
       }else{
@@ -89,7 +140,7 @@ L.Storage.Map.include({
     }
 
     if(bFound){
-      return [ii, nextIndex]
+      return [ii, nextIndex,newSubNo]
     }
     return null
   },
@@ -202,7 +253,7 @@ L.Storage.Map.include({
     //console.log(markerShowIndex)
     results = null
     //console.timeEnd('showmarker')
-  }
+  },
 
 })
 

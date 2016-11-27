@@ -12,7 +12,7 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
     },
 
     _setColor: function() {
-        this.elements.main.style.backgroundColor = this._getColor();
+        //this.elements.main.style.backgroundColor = this._getColor();
     },
 
     getDefaultHeightWidth(){
@@ -27,8 +27,13 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
       var src = this._getIconUrl('icon');
       if (src) {
         this.elements.img.src = src;
-        var height = +(this._getOption('height'))
-        var width  = +(this._getOption('width'))
+
+        var zoom = this.map.getZoom()
+        var scaleZoom = this.map.getZoomScale(zoom,16)
+        scaleZoom = scaleZoom > 1? 1: scaleZoom
+
+        var height = +(this._getOption('height')) * scaleZoom
+        var width  = +(this._getOption('width')) * scaleZoom
         var rotate  = +(this._getOption('rotate'))
         if(height || width){
             if(width) this.elements.img.style.width = width + 'px'
@@ -38,14 +43,17 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
             this.elements.img.style.width = size[1] + 'px'
             this.elements.img.style.height = size[0] + 'px'
         }
-        if(rotate){
-          var rotateStr = 'rotate(' + rotate + 'deg)'
+
+
+        //if(rotate){
+          var rotateStr = ' rotate(' + rotate + 'deg)'
           this.elements.img.style['-webkit-transform'] = rotateStr
           this.elements.img.style['-moz-transform'] = rotateStr
           this.elements.img.style['-ms-transform'] = rotateStr
           this.elements.img.style['-o-transform'] = rotateStr
           this.elements.img.style['transform'] = rotateStr
-        }
+        //}
+
       }
       this._setColor();
       this._setIconStyles(this.elements.main, 'icon');

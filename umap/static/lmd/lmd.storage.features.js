@@ -150,15 +150,11 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     if(sn){
       var center = this.map.getAnchorLatLngBySubNo(sn)
       var latlngs = [center, latlng]
-      this.helpPath = L.polyline(latlngs, {
-        color: 'grey'
-      }).addTo(this.map);
+      this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
       var latlngPoint = this.map.latLngToLayerPoint(latlng);
       var centerPoint = this.map.latLngToLayerPoint(center);
-      this.properties._storage_options['helpX'] = Math.round(latlngPoint[
-        'x'] - centerPoint['x'])
-      this.properties._storage_options['helpY'] = Math.round(latlngPoint[
-        'y'] - centerPoint['y'])
+      this.properties._storage_options['helpX'] = Math.round(latlngPoint['x'] - centerPoint['x'])
+      this.properties._storage_options['helpY'] = Math.round(latlngPoint['y'] - centerPoint['y'])
     }
   },
 
@@ -198,19 +194,25 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   zoom: function() {
     var helpX = this.properties._storage_options['helpX'] || 0
     var helpY = this.properties._storage_options['helpY'] || 0
+    this._redraw()
     if (helpX || helpY) {
       var subNo = +this.getOption('sn')
       if(subNo > 0){
         var center = this.map.getAnchorLatLngBySubNo(subNo)
         if(center){
+          var zoom = this.map.getZoom()
+          var scaleZoom = this.map.getZoomScale(zoom,16)
+          scaleZoom = scaleZoom > 1? 1: scaleZoom
+
           var centerPoint = this.map.latLngToLayerPoint(center)
-          var destX = centerPoint['x'] + helpX
-          var destY = centerPoint['y'] + helpY
+          var destX = centerPoint['x'] + helpX * scaleZoom
+          var destY = centerPoint['y'] + helpY * scaleZoom
           var dest = this.map.layerPointToLatLng([destX, destY])
           this.setLatLng(dest)
         }
       }
     }
+
   },
 
   _getIconUrl: function(name) {
@@ -337,6 +339,13 @@ L.Storage.SVGObject = L.SVGObject.extend({
     }
   },
 
+  getEvents: function() {
+    return {
+      zoom: this._redraw,
+      viewreset: this.update
+    };
+  },
+
   _redraw: function() {
     if (this.datalayer && this.datalayer.isVisible()) {
       var color = this.getOption('color');
@@ -344,9 +353,15 @@ L.Storage.SVGObject = L.SVGObject.extend({
       var rotate = this.getOption('rotate');
       var options = {}
       if(color) options['color'] = color
-      options['scale'] = scale
+
+      var zoom = this.map.getZoom()
+      var scaleZoom = this.map.getZoomScale(zoom,16)
+      scaleZoom = scaleZoom > 1? 1: scaleZoom
+
+      options['scale'] = scale * scaleZoom
       options['rotate'] = rotate
       this.updateStyle(options)
+      this.update()
     }
   },
 
@@ -682,18 +697,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
     }
 });
-/*
-'smoothFactor',
-'color',
-'opacity',
-'stroke',
-'weight',
-'fill',
-'fillColor',
-'fillOpacity',
-'dashArray',
-'interactive'
-*/
+
 L.Storage.BarTypeRect  = function(options){
   options = options || {};
   var option;
@@ -757,3 +761,47 @@ L.Storage.BarTypeCustomize = function(options){
   this.parentClass.prototype.setStyle.call(this, options);
   this.updatePolyMarker();
 }
+
+L.Storage.Scale = L.Control.Scale.extend({
+
+  onAdd: function (map) {
+    var className = 'leaflet-control-scale',
+        container = L.DomUtil.create('div', className),
+        options = this.options;
+
+    this._addScales(options, className + '-line', container);
+
+    map.on('zoomend', this._update, this);
+    map.whenReady(this._update, this);
+
+    return container;
+  },
+
+  _addScales: function (options, className, container) {
+		if (options.metric) {
+      this._mLmdScale = L.DomUtil.create('div',className, container);
+      this._mLmdScale.style.height="5mm"
+			this._mScale = L.DomUtil.create('div', className, container);
+		}
+		if (options.imperial) {
+			this._iScale = L.DomUtil.create('div', className, container);
+		}
+	},
+
+  _updateMetric: function (maxMeters) {
+    var meters = this._getRoundNum(maxMeters),
+        label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
+    var ration = this.options.maxWidth / this._mLmdScale.offsetHeight * 5 / 1000,
+        lmdScale = this._getRoundNum(maxMeters/ration),
+        lmdScaleLable = lmdScale < 1000 ? lmdScale : (lmdScale /1000) + 'k';
+
+    this._updateScale(this._mScale, label, meters / maxMeters);
+
+    this._updateLmdScale(this._mLmdScale, lmdScaleLable);
+    console.log(ration,lmdScale)
+  },
+
+  _updateLmdScale: function (scale, text) {
+    scale.innerHTML = '1:' + text;
+  },
+})
