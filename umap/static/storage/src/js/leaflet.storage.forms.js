@@ -761,7 +761,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         mic: {handler:'MarkerIconClassSwitcher', label: '图形'},
 
         //旋转
-        rotate: {handler: 'Range', min:0,max: 360, step: 1, label: '旋转'},
+        rotate: {handler: 'Range', min:0,max:360, step: 1, label: '旋转'},
         scale:  {handler: 'Range', min:0,max:20,step: 1, label: '缩放'},//针对小数有一个bug,0.4 = 0,
         width:  {handler: 'Range', min:0,max:300,step:1,label: '宽度'},
         height: {handler: 'Range', min:0,max:300,step:1,label: '高度'},

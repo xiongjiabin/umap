@@ -158,6 +158,13 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     }
   },
 
+  del: function () {
+    L.Storage.FeatureMixin.del.call(this)
+    if (this.helpPath) {
+      this.helpPath.remove();
+      this.helpPath = null;
+    }
+  },
   //added by xiongjiabin
   getBasicOptions: function() {
     return [
@@ -186,15 +193,14 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
   getEvents: function() {
     return {
-      zoom: this.zoom,
+      zoom: this._redraw,
       viewreset: this.update
     };
   },
 
-  zoom: function() {
+  update: function(){
     var helpX = this.properties._storage_options['helpX'] || 0
     var helpY = this.properties._storage_options['helpY'] || 0
-    this._redraw()
     if (helpX || helpY) {
       var subNo = +this.getOption('sn')
       if(subNo > 0){
@@ -208,10 +214,20 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
           var destX = centerPoint['x'] + helpX * scaleZoom
           var destY = centerPoint['y'] + helpY * scaleZoom
           var dest = this.map.layerPointToLatLng([destX, destY])
-          this.setLatLng(dest)
+          this._latlng = dest
+
+          if (this.helpPath) {
+            this.helpPath.remove();
+            this.helpPath = null;
+            var latlngs = [center, dest]
+            this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
+          }
+
         }
       }
     }
+
+    this.parentClass.prototype.update.call(this)
 
   },
 
@@ -348,6 +364,13 @@ L.Storage.SVGObject = L.SVGObject.extend({
 
   _redraw: function() {
     if (this.datalayer && this.datalayer.isVisible()) {
+      this.updateStyle()
+      this.update()
+    }
+  },
+
+  updateStyle: function(){
+    if (this.datalayer && this.datalayer.isVisible()) {
       var color = this.getOption('color');
       var scale = this.getOption('scale');
       var rotate = this.getOption('rotate');
@@ -360,15 +383,16 @@ L.Storage.SVGObject = L.SVGObject.extend({
 
       options['scale'] = scale * scaleZoom
       options['rotate'] = rotate
-      this.updateStyle(options)
-      this.update()
+      this.parentClass.prototype.updateStyle.call(this,options)
     }
+    return this
   },
 
   _update: function(){
     if (this.datalayer && this.datalayer.isVisible()) {
       this.update()
     }
+    return this
   },
 
   getCenter: function() {
@@ -447,7 +471,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     if (!this.properties._storage_options.ps) {
       this.properties._storage_options = {
         ps: 1,
-        scale: 5,
+        scale: 3,
         rotate: 0,
         color: 'Yellow'
       }
@@ -771,10 +795,15 @@ L.Storage.Scale = L.Control.Scale.extend({
 
     this._addScales(options, className + '-line', container);
 
-    map.on('zoomend', this._update, this);
-    map.whenReady(this._update, this);
+    map.on('zoomend', this._update, this)
+    map.whenReady(this._delayUpdate, this)
 
     return container;
+  },
+
+  _delayUpdate: function(){
+    var that = this
+    setTimeout(function() { that._update()}, 7000)
   },
 
   _addScales: function (options, className, container) {
@@ -791,14 +820,16 @@ L.Storage.Scale = L.Control.Scale.extend({
   _updateMetric: function (maxMeters) {
     var meters = this._getRoundNum(maxMeters),
         label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
-    var ration = this.options.maxWidth / this._mLmdScale.offsetHeight * 5 / 1000,
+
+    this._updateScale(this._mScale, label, meters / maxMeters);
+    if(this._mLmdScale.offsetHeight) {
+      var ration = this.options.maxWidth / this._mLmdScale.offsetHeight * 5 / 1000,
         lmdScale = this._getRoundNum(maxMeters/ration),
         lmdScaleLable = lmdScale < 1000 ? lmdScale : (lmdScale /1000) + 'k';
 
-    this._updateScale(this._mScale, label, meters / maxMeters);
-
-    this._updateLmdScale(this._mLmdScale, lmdScaleLable);
-    console.log(ration,lmdScale)
+      this._updateLmdScale(this._mLmdScale, lmdScaleLable);
+      console.log(ration,lmdScale)
+    }
   },
 
   _updateLmdScale: function (scale, text) {

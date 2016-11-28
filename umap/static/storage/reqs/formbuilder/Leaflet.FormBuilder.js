@@ -261,7 +261,6 @@ L.FormBuilder.Input = L.FormBuilder.Element.extend({
         this.input.type = this.type();
         this.input.name = this.name;
         this.input._helper = this;
-        this.fetch();
         if (this.options.placeholder) {
             this.input.placeholder = this.options.placeholder;
         }
@@ -274,12 +273,14 @@ L.FormBuilder.Input = L.FormBuilder.Element.extend({
         if (this.options.step) {
             this.input.step = this.options.step;
         }
+        this.fetch();
         L.DomEvent.on(this.input, this.getSyncEvent(), this.sync, this);
         L.DomEvent.on(this.input, 'keydown', this.onKeyDown, this);
     },
 
     fetch: function () {
-        this.input.value = this.backup = (typeof this.toHTML() !== 'undefined' ? this.toHTML() : null);
+        var tmp = this.toHTML()
+        this.input.value = this.backup = (typeof tmp !== 'undefined' ? tmp : null);
     },
 
     getSyncEvent: function () {

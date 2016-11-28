@@ -245,7 +245,7 @@ L.Storage.Map.include({
           'title': results[index][2],
           'interactive': false,
           icon: myIcon
-      }).bindTooltip(results[index][2] + '').addTo(this)
+      }).bindTooltip(results[index][2] + '',{className:'padding1'}).addTo(this)
       temp.openTooltip()
       this._MARKER_SHOW.push(temp)
     }

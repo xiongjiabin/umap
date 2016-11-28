@@ -40,6 +40,7 @@ var locale = {
     "Do you want to display the scale control?": "是否显示比例尺控件？",
     "Do you want to display zoom control?": "是否显示缩放控件？",
     "Double-click to edit": "双击编辑",
+    "Click to edit": "点击编辑",
     "Download data": "下载数据",
     "Draw a line": "画线",
     "Draw a marker": "画标记",
