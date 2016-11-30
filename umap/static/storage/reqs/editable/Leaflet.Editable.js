@@ -215,7 +215,7 @@
           latlng = latlng || this.map.getCenter();
           var label = this.createLmdLabel(latlng, options);
           this.connectCreatedToMap(label);
-          var editor = pillar.enableEdit();
+          var editor = label.enableEdit();
           editor.startDrawing();
           return label;
         },

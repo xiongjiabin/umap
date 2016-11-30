@@ -101,11 +101,16 @@ L.Storage.Map.include({
   findSubNoInSubHelp : function(latlng, subLatLngs, subHelpNo ){
     var RANGE = 10
     var beginFind = (subHelpNo - RANGE) >= 0 ? (subHelpNo - RANGE): 0
+    if(beginFind >= subLatLngs.length){
+      beginFind = 0
+    }
     var ii = beginFind, len1 = subLatLngs.length
     var leftLatLng = null,rightLatLng = null
     var nextIndex = 0
     var bFound = false
     var newSubNo = 0
+    var safeCount = 0
+
     if( !Array.isArray(subLatLngs) ) return null
     for(;; ){
       if(subLatLngs[ii]){
@@ -137,6 +142,7 @@ L.Storage.Map.include({
       }
       if(ii >= len1) ii = 0
       if(ii === beginFind ) break
+      if(safeCount++ > len1) break
     }
 
     if(bFound){
@@ -184,7 +190,7 @@ L.Storage.Map.include({
           if( i === validI && validJ === j){
             continue
           }
-          result = this.findSubNoInSubHelp(latlng, subHelpData[j]['data'], helpSubNo)
+          result = this.findSubNoInSubHelp(latlng, subHelpData[j]['data'], 0)
           if(result) break
         }
       }
@@ -202,6 +208,7 @@ L.Storage.Map.include({
     var j, len1, k, len2;
     var latlng = null
     var result = []
+    var duplicate = []
     for (; i < len; i++) {
       var subHelpData = this.datalayers_index[i].options &&
                         this.datalayers_index[i].options.subHelpData
@@ -209,20 +216,23 @@ L.Storage.Map.include({
       for(j = 0,len1 = subHelpData.length; j < len1; j++){
         subHelp = subHelpData[j]
         for(k = subHelp.min, len2 = subHelp['data'].length; k < len2; k++){
-          if(!subHelp['data'][k]) contniue
+          if(!subHelp['data'][k]) continue
+          if(duplicate[k]) continue
           latlng = [subHelp['data'][k][1],subHelp['data'][k][0]]
           if(bounds.contains(latlng)){
             result.push([latlng[0],latlng[1],k])
+            duplicate[k] = 1
           }
         }
       }
     }
+    duplicate = []
     return result
   },
 
   _MARKER_SHOW: [],
   handleShowMarker: function(){
-    var MAX_SHOWED = 8
+    var MAX_SHOWED = 10
     //console.time('showmarker')
     var results = this.getLatLngsInBounds()
     var temp = null,index = 0
@@ -231,9 +241,10 @@ L.Storage.Map.include({
       this._MARKER_SHOW.pop().remove()
     }
     var markerShowIndex = []
+    if(results.length > 0) markerShowIndex.push(0)
     if(results.length > 1) markerShowIndex.push(results.length - 1)
     step = step || 1
-    for(i = 0; i < MAX_SHOWED - 1; i++){
+    for(i = 1; i < MAX_SHOWED - 1; i++){
       markerShowIndex[i] = step * i
     }
 
@@ -242,10 +253,10 @@ L.Storage.Map.include({
       index = markerShowIndex[i]
       if(!results[index]) continue
        temp = L.marker([results[index][0],results[index][1]],{
-          'title': results[index][2],
-          'interactive': false,
+          title: results[index][2],
+          interactive: false,
           icon: myIcon
-      }).bindTooltip(results[index][2] + '',{className:'padding1'}).addTo(this)
+      }).bindTooltip(results[index][2]/10 + '',{className:'padding1'}).addTo(this)
       temp.openTooltip()
       this._MARKER_SHOW.push(temp)
     }
