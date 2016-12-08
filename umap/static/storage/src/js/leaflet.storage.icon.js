@@ -15,8 +15,8 @@ L.Storage.Icon = L.DivIcon.extend({
     },
 
     _getIconUrl: function (name) {
-        var url;
-        if(this.feature && this.feature._getIconUrl(name)) url = this.feature._getIconUrl(name);
+        var url,tmpUrl;
+        if(this.feature && (tmpUrl = this.feature._getIconUrl(name)) ) url = tmpUrl;
         else url = this.options[name + 'Url'];
         return this.formatUrl(url, this.feature);
     },

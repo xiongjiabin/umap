@@ -15,9 +15,9 @@ L.FormBuilder = L.Evented.extend({
     initialize: function (obj, fields, options) {
         L.setOptions(this, options);
         this.obj = obj;
-        if(options && options.listenChange){
-            obj.xiongjiabin = this;
-        }
+        //if(options && options.listenChange){
+        //    obj.xiongjiabin = this;
+        //}// 没有必要监听这个change事件了
         this.form = L.DomUtil.create('form', this.options.className);
         this.setFields(fields);
         if (this.options.id) {
@@ -29,9 +29,9 @@ L.FormBuilder = L.Evented.extend({
 
         //listening the change event to do form level something if allowed
         //added by xiongjiabin on 10.10
-        if(this.options && this.options.listenChange) {
-          L.DomEvent.on(this.form , 'change', this.change , this);
-        }
+        //if(this.options && this.options.listenChange) {
+        //  L.DomEvent.on(this.form , 'change', this.change , this);
+        //}没有必要监听change事件 xiongjiabin  12月5
     },
 
     setFields: function (fields) {

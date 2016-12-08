@@ -51,6 +51,7 @@ function csv2geojson(x, options, callback) {
     }
 
     options.delimiter = options.delimiter || ',';
+    options.offset = options.offset || false; //谁否做偏移 xiongjiabin
 
     var latfield = options.latfield || '',
         lonfield = options.lonfield || '',
@@ -124,20 +125,32 @@ function csv2geojson(x, options, callback) {
                     delete parsed[i][latfield];
                 }
 
-                cj02 = coordtransform.wgs84togcj02(parseFloat(lonf), parseFloat(latf));
-                features.push({
+                if(options.offset){
+                  cj02 = coordtransform.wgs84togcj02(parseFloat(lonf), parseFloat(latf));
+                  features.push({
                     type: 'Feature',
                     properties: parsed[i],
                     geometry: {
                         type: 'Point',
                         coordinates: [
-                            //parseFloat(lonf),
-                            //parseFloat(latf)
                             cj02[0],
                             cj02[1]
                         ]
                     }
-                });
+                  });
+                }else{
+                  features.push({
+                    type: 'Feature',
+                    properties: parsed[i],
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            parseFloat(lonf),
+                            parseFloat(latf)
+                        ]
+                    }
+                  });
+                }
             }
         }
     }

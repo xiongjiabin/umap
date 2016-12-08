@@ -45,7 +45,6 @@ L.Storage.LmdFeatureMixin = {
     builder = new L.S.FormBuilder(this, properties, {
       id: 'storage-feature-properties',
       callback: this.resetTooltip,
-      listenChange: true
     });
     container.appendChild(builder.build());
     this.appendEditFieldsets(container);
@@ -109,6 +108,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       this.properties['className'] = this.getClassName()
     }
     if (!this.properties._storage_options.mt) {
+      var preOptions = this.getPreviousOptions()
       this.properties._storage_options = {
         mt: "" + lmd.MARKER_WARMING,
         mic: "1",
@@ -116,9 +116,10 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         mss: "1",
         lr: "1",
         ds: "1",
-        width: "60",
+        width:  "60",
         height: "60",
-        rotate: "0",
+        rotate: preOptions['rotate'] || "0",
+        sn: preOptions['sn'] || ''
       }
     }
   },
@@ -206,9 +207,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       if(subNo > 0){
         var center = this.map.getAnchorLatLngBySubNo(subNo)
         if(center){
-          var zoom = this.map.getZoom()
-          var scaleZoom = this.map.getZoomScale(zoom,16)
-          scaleZoom = scaleZoom > 1? 1: scaleZoom
+          var scaleZoom = lmd.getLmdZoom(this.map)
 
           var centerPoint = this.map.latLngToLayerPoint(center)
           var destX = centerPoint['x'] + helpX * scaleZoom
@@ -239,7 +238,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     if (!mt || !mic || !msh) {
       return baseUrl + 'marker.png'
     }
-    return baseUrl + [mt, mic, ''].join('/') + msh + '.jpg'
+    return baseUrl + [mt, mic, ''].join('/') + msh + '.png'
   },
 
   getIconClass: function() {
@@ -276,36 +275,85 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+    var reg = /^\W*\d*\s+(.+)$/
+    var msh = e.target.helpers['properties._storage_options.msh']
+    var name = e.target.helpers['properties.name']
+    var nameValue = name.value()
+    if(nameValue && nameValue.startsWith('@')) {
+      return
+    }
+    var value = msh.value()
+    var selectOptions = msh.getOptions()
+    var i = 0, len = selectOptions.length
+    var option = null, result = null
+    for(; i < len; i++){
+      option = selectOptions[i]
+      if(+option[0] === +value) {
+         result = option[1].trim().match(reg)
+         if(result){
+           this.properties.name = name.input.value = result[1]
+         }else{
+           this.properties.name = name.input.value = option[1].trim()
+         }
+         break
+      }
+    }
+    return
+  },
+
   //added by xiongjiabin
   //for listen the select change event for basic operations 2016-10-18
   //对应编辑框的select的变化是一个体系，之间都有一些错综复杂的关系
   //这个东西，可能就是react处理data的优势了，数据变化对应试图发生变化
-  change: function(e) {
-    //console.log(e);
-    if (!e.target) return;
-    var msh = this.xiongjiabin.helpers['properties._storage_options.msh']
-    var mic = this.xiongjiabin.helpers['properties._storage_options.mic']
-    var mss = this.xiongjiabin.helpers['properties._storage_options.mss']
+  resetTooltip: function(e) {
 
-    if (e.target.name === 'mt') {
-      //console.log('markerType changed, new value:', e.target.value)
-      var mshOptions = lmd.getMarkerCategorySecond(e.target.value)
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
+    //console.log(e);
+    if (!e) return;
+    var msh = e.target.helpers['properties._storage_options.msh']
+    var mic = e.target.helpers['properties._storage_options.mic']
+    var mss = e.target.helpers['properties._storage_options.mss']
+    var selfValue = e.helper.value()
+
+    if (e.helper.field === 'properties._storage_options.mt') {
+      //console.log('markerType changed, new value:', selfValue)
+      var mshOptions = lmd.getMarkerCategorySecond(selfValue)
+      this.properties._storage_options['mic'] = mic.select.value = '' //xiongjiabin 丑陋的代码 12/5
       mic.resetOptions(mshOptions);
-      mss.resetOptions(lmd.getMarkerCategoryThird(e.target.value,
-        mshOptions[0][0]))
-      msh.resetOptions(lmd.getMarkerCategoryThirdWife(e.target.value,
-        mshOptions[0][0]))
+      this.properties._storage_options['mss'] = mss.select.value = ''
+      mss.resetOptions(lmd.getMarkerCategoryThird(selfValue, mshOptions[0][0]))
+      this.properties._storage_options['msh'] = msh.select.value = ''
+      msh.resetOptions(lmd.getMarkerCategoryThirdWife(selfValue, mshOptions[0][0]))
+
+      this.properties._storage_options['mic'] = mic.value()
+      this.properties._storage_options['mss'] = mss.value()
+      this.properties._storage_options['msh'] = msh.value()
+
+      this.updateName(e)
       this._redraw();
-    } else if (e.target.name === 'mic') {
+    } else if (e.helper.field === 'properties._storage_options.mic') {
       var mt = this.getOption('mt');
-      mss.resetOptions(lmd.getMarkerCategoryThird(mt, e.target.value))
-      msh.resetOptions(lmd.getMarkerCategoryThirdWife(mt, e.target.value))
+      this.properties._storage_options['mss'] = mss.select.value = ''
+      mss.resetOptions(lmd.getMarkerCategoryThird(mt, selfValue))
+      this.properties._storage_options['msh'] = msh.select.value = ''
+      msh.resetOptions(lmd.getMarkerCategoryThirdWife(mt, selfValue))
+
+      this.properties._storage_options['mss'] = mss.value()
+      this.properties._storage_options['msh'] = msh.value()
+
+      this.updateName(e)
       this._redraw();
-    } else if (e.target.name === 'msh') {
+    } else if (e.helper.field === 'properties._storage_options.msh') {
+
+      this.updateName(e)
       this._redraw();
     } else {
 
     }
+
   }
 });
 
@@ -317,13 +365,15 @@ L.Storage.SVGObject = L.SVGObject.extend({
 
   addInteractions: function() {
     L.Storage.FeatureMixin.addInteractions.call(this);
-    this.on('dragend', function(e) {
-      this.isDirty = true;
-      this.edit(e);
-    }, this);
+    this.on('dragend', this._onDragEnd, this);
     if (!this.isReadOnly()) this.on('mouseover', this._enableDragging);
     this.on('mouseout', this._onMouseOut);
     this._popupHandlersAdded = true; // prevent Leaflet from binding event on bindPopup
+  },
+
+  _onDragEnd: function(e){
+    this.isDirty = true;
+    this.edit(e);
   },
 
   _onMouseOut: function() {
@@ -377,9 +427,7 @@ L.Storage.SVGObject = L.SVGObject.extend({
       var options = {}
       if(color) options['color'] = color
 
-      var zoom = this.map.getZoom()
-      var scaleZoom = this.map.getZoomScale(zoom,16)
-      scaleZoom = scaleZoom > 1? 1: scaleZoom
+      var scaleZoom = lmd.getLmdZoom(this.map)
 
       options['scale'] = scale * scaleZoom
       options['rotate'] = rotate
@@ -459,8 +507,20 @@ L.Storage.SVGObject = L.SVGObject.extend({
 L.Storage.LmdPillar = L.Storage.SVGObject.extend({
 
   initialize: function(map, latlng, options) {
-
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
+  },
+
+  _onDragEnd: function(e){
+    this.isDirty = true;
+    if(!this.getOption('sn')){
+      var latlng = this.getLatLng()
+      var result = this.map.getSubNoByLatLng([latlng.lng, latlng.lat])
+      if(result){
+        this.properties._storage_options['sn'] = parseInt(result[2] * 1000) / 1000
+        this.resetTooltip()
+      }
+    }
+    this.edit(e);
   },
 
   preInit: function() {
@@ -469,18 +529,23 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     }
 
     if (!this.properties._storage_options.ps) {
+      var preOptions = this.getSamePreviousOptions()
+      console.log(preOptions)
       this.properties._storage_options = {
         ps: 1,
-        scale: 3,
-        rotate: 0,
-        color: 'Yellow'
+        scale: preOptions['scale'] || 3,
+        rotate: preOptions['rotate'] || 0,
+        color: preOptions['color'] || 'Yellow',
+        sn: ''
       }
     }
 
     var options = {}
     var _storage_options = this.properties._storage_options
     if(_storage_options['ps']){
-      options.svgText = this.getSvgData(_storage_options['ps'])
+      options.svgText = this.getSvgData(
+                            _storage_options['ps'],
+                            _storage_options['sn'])
     }
     var validObj = {rotate:1,scale:1,color:1}
     for(var i in _storage_options){
@@ -491,18 +556,29 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     return options
   },
 
-  getSvgData(type) {
+  getSvgData(type,sn) {
     var typeSvg = {
-      1: '<circle cx="91.837326" cy="17.580078" r="14.5" /> <rect width="178" height="20" x="2" y="31.325439" />', //单柱式
-      2: '<circle cx="42.341717" cy="16.31813" r="14.5" /> <circle cx="129.88086" cy="15.88588" r="14.5" /> <rect width="178" height="25" x="2" y="30.106392" />', //双柱式
-      3: '<rect width="149" height="25" x="2" y="2" /><circle cx="166" cy="15" r="15" /> ', //单悬臂式
-      4: '<rect width="72.986015" height="25" x="106.27666" y="14.277634" /> <circle cx="90.311035" cy="16.431107" r="14.5" /> <rect width="72.478447" height="24.748737" x="2" y="14.679733" />', //双悬臂式
-      5: '<rect width="121.90018" height="25" x="31.11552" y="3.5418777" /> <circle cx="16.5" cy="15.179672" r="14.5" /> <circle cx="167.53844" cy="15.409348" r="14.5" />', //门架式
-      //5: ' <text font-family="Verdana" font-size="55"> 新建混泥土护栏 </text>'
+      1: '<circle cx="92" cy="17" r="15" /> <rect width="178" height="20" x="2" y="31" /><path stroke-width="1px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 320,0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单柱式
+      2: '<circle cx="42" cy="16" r="14"/><circle cx="129" cy="16" r="14" /> <rect width="178" height="25" x="2" y="30" /> <path stroke-width="1px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 320,0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双柱式
+      3: '<rect width="149" height="25" x="2" y="30" /><circle cx="166" cy="45" r="15" /><path stroke-width="1px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 320,0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单悬臂式
+      4: '<rect width="73" height="25" x="106" y="25" /> <circle cx="90" cy="25" r="15" /> <rect width="72" height="25" x="2" y="25"/><path stroke-width="1px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 320,0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双悬臂式
+      5: '<rect width="121" height="25" x="31" y="25" /> <circle cx="16" cy="35" r="15" /> <circle cx="167" cy="35" r="15" /><path stroke-width="1px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 320,0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //门架式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
+    if(sn){
+      var a = parseInt(sn)
+      var snStr = 'K' + a + '+' + (+sn * 1000 - a * 1000)
+      svgStr = svgStr.replace('{{桩号}}', snStr)
+    }
 
     return svgStr
+  },
+
+
+  resetTooltip: function(){
+    var ps = this.getOption('ps')
+    var sn = this.getOption('sn')
+    this.setSvgText(this.getSvgData(ps,sn))
   },
 
   //added by xiongjiabin
@@ -530,14 +606,6 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 
-  change: function(e) {
-    if (!e.target) return;
-    var ps = this.xiongjiabin.helpers['properties._storage_options.ps']
-    if (e.target.name === 'ps') {
-      var svgStr = this.getSvgData(e.target.value)
-      this.setSvgText(svgStr);
-    }
-  }
 });
 
 L.Storage.LmdLabel = L.Storage.SVGObject.extend({
@@ -554,7 +622,7 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
 
     if (!this.properties._storage_options.color) {
       this.properties._storage_options = {
-        scale: 1,
+        scale: 5,
         rotate: 0,
         color: 'Yellow'
       }
@@ -598,9 +666,6 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 
-  change: function(e) {
-    if (!e.target) return;
-  }
 });
 
 L.Storage.Guardbar = L.Storage.Polyline.extend({
@@ -710,15 +775,17 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     },
 
 
-    change: function(e) {
-      //console.log(e);
-      if (!e.target) return;
+    resetTooltip: function(e) {
 
-      if (e.target.name === 'gbt') {
+      L.Storage.FeatureMixin.resetTooltip.call(this,e)
+      if (!e) return;
+
+      if (e.helper.name === 'options.gbt') {
         this._redraw();
       } else {
 
       }
+
     }
 });
 

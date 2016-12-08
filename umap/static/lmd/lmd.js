@@ -18,7 +18,22 @@ var lmd = {
       fun1(that)
     }
     console.timeEnd('test')
-  }
+  },
+
+  getLmdZoom: function(map){
+    if(!map) return 1
+    var zoom,scaleZoom
+    var ZOOMS = { 16:0.6, 17:0.8, 18: 1}
+    zoom = map.getZoom()
+    if(zoom < 16){
+      scaleZoom = map.getZoomScale(zoom,16)
+      scaleZoom = scaleZoom > 1? 1: scaleZoom
+    }else{
+      scaleZoom = ZOOMS[zoom]
+    }
+    return scaleZoom
+  },
+
 };
 
 L.Storage.Map.include({
@@ -199,6 +214,7 @@ L.Storage.Map.include({
     if(result){
       this.HELP_SUBNO = result[1]
     }
+    if(result) result[2] = result[2]/10
     return result
   },
 
@@ -242,11 +258,11 @@ L.Storage.Map.include({
     }
     var markerShowIndex = []
     if(results.length > 0) markerShowIndex.push(0)
-    if(results.length > 1) markerShowIndex.push(results.length - 1)
     step = step || 1
     for(i = 1; i < MAX_SHOWED - 1; i++){
       markerShowIndex[i] = step * i
     }
+    if(results.length > 1) markerShowIndex.push(results.length - 1)
 
     var myIcon = L.divIcon({className: 'storage-circle-icon'});
     for(i = 0; i < markerShowIndex.length ; i++){

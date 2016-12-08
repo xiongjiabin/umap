@@ -969,6 +969,8 @@ L.Storage.Map.include({
         'tilelayersControl',
         'name',
         'description',
+        'speed',
+        'defaultLayer',
         'licence',
         'tilelayer',
         'limitBounds',
@@ -1092,12 +1094,27 @@ L.Storage.Map.include({
     },
 
     defaultDataLayer: function () {
-        var datalayer, fallback;
+        var datalayer, fallback, i;
+        var defaultLayerIndex = +this.getOption('defaultLayer')
+        if( defaultLayerIndex ) {
+            for (i in this.datalayers) {
+                if (this.datalayers.hasOwnProperty(i)) {
+                    if(this.datalayers[i].options['id'] === defaultLayerIndex){
+                        datalayer = this.datalayers[i]
+                        break
+                    }
+                }
+            }
+        }
+        if (datalayer && !datalayer.isRemoteLayer() && datalayer.isBrowsable() && datalayer.isVisible()) {
+            return datalayer;
+        }
+
         datalayer = this.lastUsedDataLayer;
         if (datalayer && !datalayer.isRemoteLayer() && datalayer.isBrowsable() && datalayer.isVisible()) {
             return datalayer;
         }
-        for (var i in this.datalayers) {
+        for (i in this.datalayers) {
             if (this.datalayers.hasOwnProperty(i)) {
                 datalayer = this.datalayers[i];
                 if (!datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
@@ -1134,11 +1151,19 @@ L.Storage.Map.include({
         var container = L.DomUtil.create('div'),
             metadataFields = [
                 'options.name',
-                'options.description'
+                'options.description',
+                'options.speed',
+                'options.defaultLayer'
             ],
             title = L.DomUtil.create('h4', '', container);
         title.innerHTML = L._('Edit map properties');
-        var builder = new L.S.FormBuilder(this, metadataFields);
+        var builder = new L.S.FormBuilder(this, metadataFields,{
+           callback: function (e) {
+              if (e.helper.field === 'options.defaultLayer') {
+                this.updateDatalayersControl();
+              }
+           }
+        });
         var form = builder.build();
         container.appendChild(form);
         var UIFields = [];

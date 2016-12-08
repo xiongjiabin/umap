@@ -28,9 +28,7 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
       if (src) {
         this.elements.img.src = src;
 
-        var zoom = this.map.getZoom()
-        var scaleZoom = this.map.getZoomScale(zoom,16)
-        scaleZoom = scaleZoom > 1? 1: scaleZoom
+        var scaleZoom = lmd.getLmdZoom(this.map)
 
         var height = +(this._getOption('height')) * scaleZoom
         var width  = +(this._getOption('width')) * scaleZoom

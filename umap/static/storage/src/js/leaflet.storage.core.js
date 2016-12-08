@@ -135,13 +135,26 @@ L.Util.greedyTemplate = function (str, data, ignore) {
     });
 };
 
+L.Util.classSortOrder = {
+  'lmdPillar': 2,
+  'lmdMarker': 3
+};
+
 L.Util.sortFeatures = function (features, sortKey) {
-    var sortKeys = (sortKey || 'name').split(',');
+    var sortKeys = (sortKey || 'sn,className').split(',');
 
     var sort = function (a, b, i) {
         var sortKey = sortKeys[i], score,
-            valA = a.properties[sortKey] || '',
-            valB = b.properties[sortKey] || '';
+            valA = a.properties._storage_options ? a.properties._storage_options[sortKey] : a.properties[sortKey] || '',
+            valB = b.properties._storage_options ? b.properties._storage_options[sortKey] : b.properties[sortKey] || '';
+        if(!valA) valA = a.properties[sortKey]
+        if(!valB) valB = b.properties[sortKey]
+
+        if(sortKey === 'className'){
+           valA = L.Util.classSortOrder[a.properties[sortKey]]
+           valB = L.Util.classSortOrder[b.properties[sortKey]]
+        }
+
         if (!valA) {
             score = -1;
         } else if (!valB) {
@@ -149,12 +162,14 @@ L.Util.sortFeatures = function (features, sortKey) {
         } else {
             score = valA.toString().toLowerCase().localeCompare(valB.toString().toLowerCase());
         }
-        if (score === 0 && sortKeys[i + 1]) return sort(a, b, i + 1);
+        if (score === 0 && sortKeys[i + 1]) {
+          return sort(a, b, i + 1);
+        }
         return score;
     };
 
     features.sort(function (a, b) {
-        if (!a.properties || !b.properties) {
+        if (!a.properties || !b.properties  ) {
             return 0;
         }
         return sort(a, b, 0);
@@ -412,7 +427,7 @@ L.Storage.Help = L.Class.extend({
     },
 
     formatURL: L._('Supported variables that will be dynamically replaced') + ': {bbox}, {lat}, {lng}, {zoom}, {east}, {north}..., {left}, {top}...',
-    formatIconURL: L._('You can use feature properties as variables: ex.: with "http://myserver.org/images/{name}.png", the {name} variable will be replaced by the "name" value of each markers.'),
+    formatIconURL: L._('You can use feature properties as variables: ex.: with "http://myserver.org/images/name.png", the name variable will be replaced by the "name" value of each markers.'),
     colorValue: L._('Must be a valid CSS value (eg.: DarkBlue or #123456)'),
     smoothFactor: L._('How much to simplify the polyline on each zoom level (more = better performance and smoother look, less = more accurate)'),
     dashArray: L._('A comma separated list of numbers that defines the stroke dash pattern. Ex.: "5, 10, 15".'),
@@ -428,7 +443,9 @@ L.Storage.Help = L.Class.extend({
     interactive: L._('If false, the polygon will act as a part of the underlying map.'),
     outlink: L._('Define link to open in a new window on polygon click.'),
     dynamicRemoteData: L._('Fetch data each time map view changes.'),
-    proxyRemoteData: L._('To use if remote server doesn\'t allow cross domain (slower)')
+    proxyRemoteData: L._('To use if remote server doesn\'t allow cross domain (slower)'),
+    defaultSpeed: '需要依靠速度做选择的时候默认认为是这个速度',
+    defaultLayer: '增加新元素的时候默认添加到这个层中;会在默认的层中查找上一个元素填充桩号，旋转角度等参数'
 });
 
 

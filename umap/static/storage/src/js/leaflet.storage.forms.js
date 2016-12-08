@@ -646,7 +646,8 @@ L.FormBuilder.MarkerTypeSwitcher = L.FormBuilder.Select.extend({
       ["1", L._('warming indication')],
       ["2", L._('forbid indication')],
       ["3", L._('point indication')],
-      ["4", L._('road indication')]
+      ["4", L._('road indication')],
+      ["5", '其他标志']
     ],
     build: function () {
         L.FormBuilder.Select.prototype.build.call(this);
@@ -696,6 +697,20 @@ L.FormBuilder.GuardbarTypeSwitcher = L.FormBuilder.Select.extend({
 
 });
 
+L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
+
+    getOptions: function () {
+        var options = [["0",'无']]; //select必须是字符串位收尾
+        this.builder.map.eachDataLayer(function (datalayer) {
+            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
+                options.push([datalayer.getOption('id') + "", datalayer.getName()]);
+            }
+        });
+        return options;
+    },
+
+});
+
 L.Storage.FormBuilder = L.FormBuilder.extend({
 
     options: {
@@ -719,6 +734,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         popupTemplate: {handler: 'PopupTemplate', label: L._('Popup style'), inheritable: true},
         popupContentTemplate: {label: L._('Popup content template'), handler: 'Textarea', helpEntries: ['dynamicProperties', 'textFormatting'], placeholder: '# {name}', inheritable: true},
         datalayer: {handler: 'DataLayerSwitcher', label: L._('Choose the layer of the feature')},
+        defaultLayer: {handler: 'DefaultDataLayerSwitcher', label: L._('Default Layer'), helpEntries:'defaultLayer'},
         moreControl: {handler: 'Switch', label: L._('Do you want to display the «more» control?')},
         scrollWheelZoom: {handler: 'Switch', label: L._('Allow scroll wheel zoom?')},
         miniMap: {handler: 'Switch', label: L._('Do you want to display a minimap?')},
@@ -743,7 +759,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         datalayersControl: {handler: 'DataLayersControl', label: L._('Display the data layers control')},
 
         //added by xiongjiabin 2016-09-30
-        sn: {label: L._('Sub Number')},
+        sn: {handler:'FloatInput',label: L._('Sub Number')},
         ds: {handler: 'DevStatusSwitcher', label: L._('Device Status')},
         lr: {handler: 'LeftRightChoice', label: L._('Direction')},
 
@@ -775,6 +791,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gbn: {handler: 'IntInput', label: '数量'},
         gbss: {handler: 'FloatInput', label: '起始桩号'},
         gbse: {handler: 'FloatInput', label: '结束桩号'},
+
+        speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
     },
 
     initialize: function (obj, fields, options) {

@@ -586,6 +586,9 @@ L.Storage.DataLayersControl = L.Control.extend({
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
 
         title.innerHTML = datalayer.options.name;
+        if(datalayer.options.id === +this.map.getOption('defaultLayer')){
+          title.innerHTML = '**' + title.innerHTML
+        }
     },
 
     newDataLayer: function () {

@@ -107,7 +107,7 @@ L.Storage.FeatureMixin = {
             {
                 id: 'storage-feature-properties',
                 callback: this.resetTooltip,
-                listenChange: true
+                //listenChange: true
             }
         );
         container.appendChild(builder.build());
@@ -284,11 +284,50 @@ L.Storage.FeatureMixin = {
     },
 
     getNext: function () {
-        return this.datalayer.getNextFeature(this);
+        if(this.datalayer){
+          return this.datalayer.getNextFeature(this);
+        }
+        return null
     },
 
     getPrevious: function () {
-        return this.datalayer.getPreviousFeature(this);
+        if(this.datalayer){
+          return this.datalayer.getPreviousFeature(this);
+        }
+        return null
+    },
+
+    getLmdPrevious: function ( obj ) {
+       if(obj && obj.datalayer){
+         return obj.datalayer.getPreviousFeature(obj)
+       } else {
+         var defaultLayer = obj.map.defaultDataLayer()
+         return defaultLayer.getFeatureByIndex(-1)
+       }
+       return null
+    },
+
+    getPreviousOptions: function(){
+        var pre = this.getLmdPrevious(this)
+        if(pre){
+          return pre.properties._storage_options
+        }
+        return []
+    },
+
+    getSamePreviousOptions: function(){
+        var className = this.getClassName()
+        var pre = this.getLmdPrevious(this)
+        while(pre){
+          if(className === pre.getClassName()){
+            break
+          }
+          pre = this.getLmdPrevious(pre)
+        }
+        if(pre){
+          return pre.properties._storage_options
+        }
+        return []
     },
 
     cloneProperties: function () {

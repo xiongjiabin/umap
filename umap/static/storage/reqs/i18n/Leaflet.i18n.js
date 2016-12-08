@@ -13,6 +13,7 @@ L.i18n = L._ = function translate(string, data) {
     try {
         // Do not fail if some data is missing
         // a bad translation should not break the app
+        data = data || [];
         string = L.Util.template(string, data);
     }
     catch (err) {/*pass*/}

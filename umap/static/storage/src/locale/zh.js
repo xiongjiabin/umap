@@ -34,6 +34,7 @@ var locale = {
     "Delete this feature": "删除对象",
     "Disable editing": "不可编辑",
     "Display on load": "加载时显示",
+    "Default Layer": "默认工作图层",
     "Do you want to display a minimap?": "是否想显示鹰眼图？",
     "Do you want to display popup footer?": "你是否想要显示页脚？",
     "Do you want to display the data layers control?": "是否显示图层控件？",
@@ -299,7 +300,9 @@ var locale = {
     "warming indication":"警告标志",
     "forbid indication":"禁令标志",
     "point indication":"指示标志",
-    "road indication":"指路标志"
+    "road indication":"指路标志",
+
+    "Versions": "历史版本",
 };
 L.registerLocale("zh", locale);
 L.setLocale("zh");

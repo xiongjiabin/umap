@@ -502,7 +502,8 @@ L.Storage.DataLayer = L.Class.extend({
             callback(GeoRSSToGeoJSON(toDom(c)));
         } else if (type === 'kml') {
             var newData = (toGeoJSON.kml(toDom(c)));
-            callback(newData);
+            var newNewData = this.notMarker(newData)
+            callback(newNewData);
         } else if (type === 'osm') {
             var d;
             try {
@@ -750,9 +751,11 @@ L.Storage.DataLayer = L.Class.extend({
                     this.resetLayer();
                     this.edit();
                 }
-                //color:level:1#0x1234,2#0x1111,3#0x33333
-                var colorMatch = this.options.description && this.options.description.match(/^color:(\w*):(.+)$/)
-                if(colorMatch){
+
+                if(e.helper.field === 'options.description'){
+                    //color:level:1#0x1234,2#0x1111,3#0x33333
+                    var colorMatch = this.options.description && this.options.description.match(/^color:(\w*):(.+)$/)
+                    if(colorMatch){
                     //xiongjiabin added for render with different colors
                     var colors = colorMatch[2].split(',')
                     var tempTest = colorMatch[2].split('#')
@@ -773,6 +776,7 @@ L.Storage.DataLayer = L.Class.extend({
                             this.addColorByLevelGeoJSON(classColor,colorMatch[1])
                         }
                     }
+                }
                 }
             }
         });
@@ -892,7 +896,7 @@ L.Storage.DataLayer = L.Class.extend({
 
         var appendVersion = function (data) {
             var date = new Date(parseInt(data.at, 10) * 1000);
-            var content = date.toLocaleFormat() + ' (' + parseInt(data.size) / 1000 + 'Kb)';
+            var content = date.toLocaleDateString() + ' (' + parseInt(data.size) / 1000 + 'Kb)';
             var el = L.DomUtil.create('div', 'storage-datalayer-version', versionsContainer);
             var a = L.DomUtil.create('a', '', el);
             L.DomUtil.add('span', '', el, content);
