@@ -318,8 +318,13 @@ L.Storage.FeatureMixin = {
     getSamePreviousOptions: function(){
         var className = this.getClassName()
         var pre = this.getLmdPrevious(this)
+        var count = 0
         while(pre){
           if(className === pre.getClassName()){
+            break
+          }
+          if(count++ > 10) {
+            pre = null
             break
           }
           pre = this.getLmdPrevious(pre)
@@ -452,14 +457,15 @@ L.Storage.FeatureMixin = {
     },
 
     resetTooltip: function () {
+        this.unbindTooltip();
+        if(!this.getOption('showLabel')) return
         var displayName = this.getDisplayName(),
             options = {
                 permanent: !this.getOption('labelHover'),
                 direction: this.getOption('labelDirection'),
                 interactive: this.getOption('labelInteractive')
             };
-        this.unbindTooltip();
-        if (this.getOption('showLabel') && displayName) this.bindTooltip(L.Util.escapeHTML(displayName), options);
+        if (displayName) this.bindTooltip(L.Util.escapeHTML(displayName), options);
     },
 
     matchFilter: function (filter, keys) {
@@ -495,7 +501,31 @@ L.Storage.FeatureMixin = {
             }
         }
         return this;
-    }
+    },
+
+    getStringMap: function(){
+      var stringMap = []
+      stringMap['name'] = L.Storage.FeatureMixin.getDisplayName.call(this) || ''
+
+      var sn = this.getOption('sn')
+      if(sn){
+        stringMap['sn'] = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
+      }else{
+        stringMap['sn'] = '';
+      }
+
+      var pos = this.getOption('lr') || L.FormBuilder.LeftRightChoice.prototype.default
+      stringMap['pos'] = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.choices)[pos] || ''
+
+      var ds = this.getOption('ds') || L.FormBuilder.DevStatusSwitcher.prototype.default
+      stringMap['ds'] = lmd.getOptionsToMap(L.FormBuilder.DevStatusSwitcher.prototype.choices)[ds] || ''
+
+
+      stringMap['description'] = this.properties.description || ''
+
+
+      return stringMap
+    },
 
 };
 

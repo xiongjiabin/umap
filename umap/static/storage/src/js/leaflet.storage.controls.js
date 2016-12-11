@@ -711,6 +711,7 @@ L.Storage.Map.include({
             filterValue = '',
             featuresContainer = L.DomUtil.create('div', 'storage-browse-features', browserContainer),
             filterKeys = (this.options.filterKey || this.options.sortKey || 'name').split(',');
+        var map = this
         filter.type = 'text';
         filter.placeholder = L._('Filter…');
 
@@ -777,12 +778,28 @@ L.Storage.Map.include({
         };
         L.bind(appendAll, this)();
         L.DomEvent.on(filter, 'input', appendAll, this);
+
+        var actions = []
         var link = L.DomUtil.create('li', '');
         L.DomUtil.create('i', 'storage-icon-16 storage-caption', link);
         var label = L.DomUtil.create('span', '', link);
         label.innerHTML = label.title = L._('About');
         L.DomEvent.on(link, 'click', this.displayCaption, this);
-        this.ui.openPanel({data: {html: browserContainer}, actions: [link]});
+        actions.push(link)
+
+        //xiongjiabin  添加统计的按钮生成xls文件
+        var tj,noti,label;
+        for(var i = 0, len = lmd.tjs.length; i < len; i++) { //lmd.tjs定义在lmd.tj.js
+            tj = lmd.tjs[i];
+            noti = L.DomUtil.create('li', '');
+            L.DomUtil.create('i', ' storage-caption', noti);
+            label = L.DomUtil.create('span', '', noti);
+            label.innerHTML = label.title = tj['label'];
+            L.DomEvent.on(noti, 'click', tj['process'], this);
+            actions.push(noti)
+        }
+
+        this.ui.openPanel({data: {html: browserContainer}, actions: actions});
     }
 
 });

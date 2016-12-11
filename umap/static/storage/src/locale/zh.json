@@ -299,7 +299,7 @@
   "Must be a valid CSS value (eg.: DarkBlue or #123456)": "Must be a valid CSS value (eg.: DarkBlue or #123456)",
   "No results": "No results",
   "Popup style": "Popup style",
-  "Replace layer content": "Replace layer content",
+  "Replace layer content": "替换本层的所有内容",
   "Save this location as new feature": "Save this location as new feature",
   "Search location": "Search location",
   "Set URL": "Set URL",

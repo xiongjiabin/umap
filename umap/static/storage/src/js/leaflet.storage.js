@@ -19,10 +19,10 @@ L.Map.mergeOptions({
     default_labelDirection: 'auto',
     attributionControl: false,
     allowEdit: true,
-    embedControl: true,
+    embedControl: false,
     zoomControl: true,
-    datalayersControl: true,
-    searchControl: true,
+    datalayersControl: 'expanded',
+    searchControl: false,
     editInOSMControl: false,
     editInOSMControlOptions: false,
     scaleControl: true,
@@ -687,6 +687,7 @@ L.Storage.Map.include({
             typeLabel = L.DomUtil.create('label', '', container),
             layerLabel = L.DomUtil.create('label', '', container),
             clearLabel = L.DomUtil.create('label', '', container),
+            offsetLabel = L.DomUtil.create('label','', container),//xiongjaibin  增加偏移处理
             submitInput = L.DomUtil.create('input', '', container),
             map = this, option,
             types = ['geojson', 'csv', 'gpx', 'kml', 'osm', 'georss', 'umap'];
@@ -710,6 +711,13 @@ L.Storage.Map.include({
         var clearFlag = L.DomUtil.create('input', '', clearLabel);
         clearFlag.type = 'checkbox';
         clearFlag.name = 'clear';
+
+        offsetLabel.textContent = '是否处理偏移'
+        var offsetFlag = L.DomUtil.create('input', '', offsetLabel);
+        offsetFlag.type = 'checkbox';
+        offsetFlag.name = 'offset';
+        this.help.button(offsetLabel, 'offsetHelp');
+
         this.eachDataLayer(function (datalayer) {
             if (datalayer.isLoaded()) {
                 var id = L.stamp(datalayer);
@@ -739,9 +747,13 @@ L.Storage.Map.include({
         var submit = function () {
             var type = typeInput.value,
                 layerId = layerInput[layerInput.selectedIndex].value,
-                layer;
+                layer,
+                options = {};
             if (layerId) layer = map.datalayers[layerId];
             if (layer && clearFlag.checked) layer.empty();
+            if (offsetFlag.checked) {
+                options['offset'] = true //需要处理偏移
+            }
             if (fileInput.files.length) {
                 var file;
                 for (var i = 0, file; file = fileInput.files[i]; i++) {
@@ -755,7 +767,7 @@ L.Storage.Map.include({
                     } else {
                         var importLayer = layer;
                         if (!layer) importLayer = this.createDataLayer({name: file.name});
-                        importLayer.importFromFile(file, type);
+                        importLayer.importFromFile(file, type, options);
                     }
                 }
             } else {

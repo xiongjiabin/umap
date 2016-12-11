@@ -461,14 +461,14 @@ L.Storage.DataLayer = L.Class.extend({
         this.geojsonToFeatures(geojson);
     },
 
-    addRawData: function (c, type) {
+    addRawData: function (c, type, options) {
         var self = this;
         this.rawToGeoJSON(c, type, function (geojson) {
             self.addData(geojson);
-        });
+        }, options);
     },
 
-    rawToGeoJSON: function (c, type, callback) {
+    rawToGeoJSON: function (c, type, callback, options) {
         var self = this;
         var toDom = function (x) {
                 return (new DOMParser()).parseFromString(x, 'text/xml');
@@ -476,8 +476,14 @@ L.Storage.DataLayer = L.Class.extend({
 
         // TODO add a duck typing guessType
         if (type === 'csv') {
+            var offset = false
+            if(options && options['offset']){
+                offset = options['offset']
+                console.log('offset is enabled')
+            }
             csv2geojson.csv2geojson(c, {
                 delimiter: 'auto',
+                offset: offset ,
                 includeLatLon: false
             }, function(err, result) {
                 if (err) {
@@ -617,8 +623,8 @@ L.Storage.DataLayer = L.Class.extend({
         );
     },
 
-    importRaw: function (raw, type) {
-        this.addRawData(raw, type);
+    importRaw: function (raw, type, options) {
+        this.addRawData(raw, type, options);
         this.isDirty = true;
         this.zoomTo();
     },
@@ -629,13 +635,13 @@ L.Storage.DataLayer = L.Class.extend({
         }
     },
 
-    importFromFile: function (f, type) {
+    importFromFile: function (f, type, options) {
         var reader = new FileReader(),
             self = this;
         type = type || L.Util.detectFileType(f);
         reader.readAsText(f);
         reader.onload = function (e) {
-            self.importRaw(e.target.result, type);
+            self.importRaw(e.target.result, type, options);
         };
     },
 

@@ -34,6 +34,22 @@ var lmd = {
     return scaleZoom
   },
 
+  //change
+  /*        [1, L._('left')],
+          [2, L._('right')],
+          [3, L._('middle')]
+  to [1]=L.left,[2]=l.right
+  */
+  getOptionsToMap: function( options ){
+      var results = []
+      if(!options) return results
+      var i = 0, len = options.length
+      for(; i < len; i++){
+          results[options[i][0]] = options[i][1]
+      }
+      return results
+  },
+
 };
 
 L.Storage.Map.include({

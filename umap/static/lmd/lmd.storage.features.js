@@ -99,6 +99,12 @@ L.Storage.LmdFeatureMixin = {
     this.addInteractions();
     this.parentClass.prototype.initialize.call(this, latlng, newOptiosn);
   },
+
+  showSubNice: function(sn){
+    var a = parseInt(sn)
+    var snStr = 'K' + a + '+' + (+sn * 1000 - a * 1000)
+    return snStr
+  }
 }
 
 L.Storage.LmdMarker = L.Storage.Marker.extend({
@@ -259,6 +265,20 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     return 'lmdMarker';
   },
 
+  getDisplayName: function(){
+    var displayName = L.Storage.FeatureMixin.getDisplayName.call(this) || ''
+    var sn = this.getOption('sn')
+    var pos = this.getOption('lr') || L.FormBuilder.LeftRightChoice.prototype.default
+    var posText = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.choices)
+    if(posText[pos]){
+      displayName = displayName + '_' +  posText[pos]
+    }
+    if(sn){
+      displayName = displayName + '_' +  L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
+    }
+    return displayName
+  },
+
   edit: function(e) {
     //通过改变对应的select的prototype的selectOptions来改变需要变化的options值
     //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
@@ -353,8 +373,19 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     } else {
 
     }
+  },
 
-  }
+  getStringMap: function(){
+    var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
+
+    var mt = this.getOption('mt')
+    stringMap['mt'] = lmd.getOptionsToMap(L.FormBuilder.MarkerTypeSwitcher.prototype.selectOptions)[mt] || ''
+
+    
+
+    return stringMap
+  },
+
 });
 
 L.Storage.SVGObject = L.SVGObject.extend({
@@ -566,8 +597,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     }
     var svgStr = typeSvg[type] || typeSvg[1]
     if(sn){
-      var a = parseInt(sn)
-      var snStr = 'K' + a + '+' + (+sn * 1000 - a * 1000)
+      snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
       svgStr = svgStr.replace('{{桩号}}', snStr)
     }
 
@@ -602,8 +632,41 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     return 'lmdPillar';
   },
 
+  getTypeName: function(){
+    var typeNames = lmd.getOptionsToMap(L.FormBuilder.PillSuppSwitcher.prototype.selectOptions)
+    var type = this.getOption('ps')
+    return typeNames[type] || ''
+  },
+
+  getDisplayName: function(){
+    var displayName = L.Storage.FeatureMixin.getDisplayName.call(this) || this.getTypeName()
+    var sn = this.getOption('sn')
+    var pos = this.getOption('lr') || L.FormBuilder.LeftRightChoice.prototype.default
+    var posText = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.choices)
+    if(posText[pos]){
+      displayName = displayName + '_' +  posText[pos]
+    }
+    if(sn){
+      displayName = displayName + '_' +  L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
+    }
+    return displayName
+  },
+
   edit: function(e) {
     L.Storage.LmdFeatureMixin.edit.call(this, e)
+  },
+
+  getStringMap: function(){
+    var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
+
+    stringMap['pt'] = this.getTypeName()
+
+    stringMap['pd'] = this.getOption('pd')
+    stringMap['pt'] = this.getOption('pt')
+    stringMap['ph'] = this.getOption('ph')
+    stringMap['pb'] = this.getOption('pb')
+
+    return stringMap
   },
 
 });

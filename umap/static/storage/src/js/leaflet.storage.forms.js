@@ -594,7 +594,8 @@ L.FormBuilder.DevStatusSwitcher = L.FormBuilder.MultiChoice.extend({
     default: 1,
     choices: [
         [1, L._('Add device')],
-        [2, L._('Change device')],
+        //[2, L._('Change device')],
+        [2, '保留'],
         [3, L._('Remove device')],
         [4, L._('Remove to other palace')],
     ]
@@ -647,7 +648,10 @@ L.FormBuilder.MarkerTypeSwitcher = L.FormBuilder.Select.extend({
       ["2", L._('forbid indication')],
       ["3", L._('point indication')],
       ["4", L._('road indication')],
-      ["5", '其他标志']
+      ["5", '辅助标志'],
+      ["6", '道路安全标志'],
+      ["7", '告示标志'],
+      ["8", '旅游景区标志']
     ],
     build: function () {
         L.FormBuilder.Select.prototype.build.call(this);

@@ -4,7 +4,11 @@ lmd.MARKER_WARMING = 1; //警告标志
 lmd.MARKER_FORBID  = 2; //禁令标志
 lmd.MARKER_INDICATION = 3;//指示标志
 lmd.MARKER_ROAD = 4;//指路标志
-lmd.MARKER_OTHER = 5; //其他标志
+lmd.MARKER_HELP = 5;//辅助标志
+lmd.MARKER_SAFE = 6;//道路安全标志
+lmd.MARKER_NOTIFICATION = 7;//告示标志
+lmd.MARKER_TOUR = 8;//旅游景区标志
+lmd.MARKER_OTHER = 99; //其他标志
 
 //定义对应的class处理对象
 lmd.MARKER_CLASS_RECT = 'Rect'; //矩形
@@ -551,9 +555,9 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 
-lmd.marker.push({name: '其他标志',childs:[null]});
-lmd.marker[lmd.MARKER_OTHER]['childs'].push({name:'辅助标志',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
-lmd.marker[lmd.MARKER_OTHER]['childs'][1]['childs'].push({size:'自定义',customize: true})
+lmd.marker.push({name: '辅助标志',childs:[null]});
+lmd.marker[lmd.MARKER_HELP]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_HELP]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"辅助1 时间范围1-模版",
 	"辅助1 时间范围2",
@@ -595,11 +599,13 @@ temp = [
 	"辅助22 组合辅助"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
-  lmd.marker[lmd.MARKER_OTHER]['childs'][1]['wife'].push(temp[i])
+  lmd.marker[lmd.MARKER_HELP]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_OTHER]['childs'].push({name:'道路安全施工标志',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
-lmd.marker[lmd.MARKER_OTHER]['childs'][2]['childs'].push({size:'自定义',customize: true})
+
+lmd.marker.push({name: '道路安全施工标志',childs:[null]});
+lmd.marker[lmd.MARKER_SAFE]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_SAFE]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"中间封闭",
 	"锥形交通标2",
@@ -630,11 +636,12 @@ temp = [
 	"左道封闭"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
-  lmd.marker[lmd.MARKER_OTHER]['childs'][2]['wife'].push(temp[i])
+  lmd.marker[lmd.MARKER_SAFE]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_OTHER]['childs'].push({name:'告示标志',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
-lmd.marker[lmd.MARKER_OTHER]['childs'][3]['childs'].push({size:'自定义',customize: true})
+lmd.marker.push({name: '告示标志',childs:[null]});
+lmd.marker[lmd.MARKER_NOTIFICATION]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_NOTIFICATION]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"告示1 驾驶时禁用手机标志",
 	"告示2 严禁酒后驾车标志",
@@ -648,11 +655,12 @@ temp = [
 	"告示10 校车停靠站点"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
-  lmd.marker[lmd.MARKER_OTHER]['childs'][3]['wife'].push(temp[i])
+  lmd.marker[lmd.MARKER_NOTIFICATION]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_OTHER]['childs'].push({name:'旅游景区标志',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
-lmd.marker[lmd.MARKER_OTHER]['childs'][4]['childs'].push({size:'自定义',customize: true})
+lmd.marker.push({name: '旅游景区标志',childs:[null]});
+lmd.marker[lmd.MARKER_TOUR]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_TOUR]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"旅游1 旅游区距离",
 	"旅游2 旅游区方向（右前）",
@@ -674,7 +682,7 @@ temp = [
 	"旅游17 滑冰"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
-  lmd.marker[lmd.MARKER_OTHER]['childs'][4]['wife'].push(temp[i])
+  lmd.marker[lmd.MARKER_TOUR]['childs'][1]['wife'].push(temp[i])
 }
 
 

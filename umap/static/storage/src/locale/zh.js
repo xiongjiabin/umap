@@ -303,6 +303,7 @@ var locale = {
     "road indication":"指路标志",
 
     "Versions": "历史版本",
+    "Replace layer content": "替换本层的所有内容",
 };
 L.registerLocale("zh", locale);
 L.setLocale("zh");
