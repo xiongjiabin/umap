@@ -179,6 +179,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       'properties._storage_options.mic',
       'properties._storage_options.msh',
       'properties._storage_options.mss',
+      'properties._storage_options.size',
       'properties._storage_options.lr',
       'properties._storage_options.sn',
       'properties._storage_options.ds'
@@ -284,15 +285,19 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
     var mt = this.getOption('mt') || 1
     var mtOptions = lmd.getMarkerCategorySecond(mt)
-    L.FormBuilder.MarkerIconClassSwitcher.prototype.selectOptions =
-      mtOptions;
+    L.FormBuilder.MarkerIconClassSwitcher.prototype.selectOptions =  mtOptions;
     var mic = this.getOption('mic') || mtOptions[0][0] || 1
-    L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(
-      mt, mic);
-    L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(
-      mt, mic);
+    L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(mt, mic);
+    L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(mt, mic);
 
     L.Storage.LmdFeatureMixin.edit.call(this, e)
+
+    //做些恶心的事情，xiongjiabin 已知bug，暂时没找到合适方法解决
+    //默认size会显示出来
+    //var result = lmd.getMarkerCategoryValue(this.properties._storage_options)
+    //result['customize'] ? this.helpXiongjiabin['helpers']['properties._storage_options.size'].show()
+    //                      : this.helpXiongjiabin['helpers']['properties._storage_options.size'].clear().hide()
+    //delete this.helpXiongjiabin
   },
 
   //name是自动生成的，依据所选择的参数
@@ -336,6 +341,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     var msh = e.target.helpers['properties._storage_options.msh']
     var mic = e.target.helpers['properties._storage_options.mic']
     var mss = e.target.helpers['properties._storage_options.mss']
+    var size = e.target.helpers['properties._storage_options.size']
+    var result = null, needToProcessSize = false
     var selfValue = e.helper.value()
 
     if (e.helper.field === 'properties._storage_options.mt') {
@@ -354,6 +361,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
       this.updateName(e)
       this._redraw();
+      needToProcessSize = true
+
     } else if (e.helper.field === 'properties._storage_options.mic') {
       var mt = this.getOption('mt');
       this.properties._storage_options['mss'] = mss.select.value = ''
@@ -366,22 +375,41 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
       this.updateName(e)
       this._redraw();
+      needToProcessSize = true
+
     } else if (e.helper.field === 'properties._storage_options.msh') {
 
       this.updateName(e)
       this._redraw();
-    } else {
 
+      needToProcessSize = true
+
+    } else  if (e.helper.field === 'properties._storage_options.mss') {
+      needToProcessSize = true
+    }else{
+      //noting to process
+    }
+
+    if(needToProcessSize){
+      result = lmd.getMarkerCategoryValue(this.properties._storage_options)
+      result['customize'] ? size.show(): size.clear().hide()
     }
   },
+
 
   getStringMap: function(){
     var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
 
-    var mt = this.getOption('mt')
-    stringMap['mt'] = lmd.getOptionsToMap(L.FormBuilder.MarkerTypeSwitcher.prototype.selectOptions)[mt] || ''
-
-    
+    var result = lmd.getMarkerCategoryValue(this.properties._storage_options)
+    stringMap['mt'] = result['mt']
+    stringMap['mic'] = result['mic']
+    stringMap['msh'] = result['msh']
+    if(!result['customize']){
+        stringMap['mss'] = result['mss']
+    }else{
+        stringMap['mss'] = this.getOption('size') || ''
+    }
+    stringMap['num'] = 1
 
     return stringMap
   },
@@ -662,7 +690,6 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     stringMap['pt'] = this.getTypeName()
 
     stringMap['pd'] = this.getOption('pd')
-    stringMap['pt'] = this.getOption('pt')
     stringMap['ph'] = this.getOption('ph')
     stringMap['pb'] = this.getOption('pb')
 

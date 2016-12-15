@@ -78,15 +78,17 @@ lmd.getTjData = function(feature, no, titles){
   return tempData
 }
 
+
 //返回标志
 lmd.tjIndicators = function(){
   var data = []
   var titles = {no:'序号',
                 sn: '桩号',
                 pos: '位置',
-                type:'标志类型',
+                mt:'标志类型',
                 name:'标志内容',
-                size:'版面尺寸(cm)',
+                mic: '图形',
+                mss:'版面尺寸(cm)',
                 pillarType: '支撑型式',
                 num:'数量(块)',
                 description:'备注'
@@ -95,15 +97,27 @@ lmd.tjIndicators = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null
+  var i = 1,className = null,pillars = {},tmp = null,len = 0
   this.eachDataLayer(function (datalayer) {
     datalayer.eachFeature(function (feature) {
-        if(feature.getClassName() === 'lmdMarker'){
+        className = feature.getClassName()
+        if(className === 'lmdMarker'){
           data.push(lmd.getTjData(feature,i,titles))
           i++
+        }else if(className === 'lmdPillar'){
+          tmp = feature.getStringMap()
+          pillars[tmp['pos'] + tmp['sn']] = tmp['pt']
         }
     })
   })
+
+  var sn = 0,pos = 0
+  for(i = 1,len = data.length; i < len; i++){
+     sn = data[i][1]
+     pos = data[i][2]
+     data[i][7] = pillars[pos+sn] || '无支撑'
+  }
+  pillars = null
 
   new CsvGenerator(data,  '标志一览表.csv').download(true);
 }

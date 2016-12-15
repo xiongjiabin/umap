@@ -99,7 +99,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_WARMING]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({speed:'40-70',size:'120*170'})
 lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({speed:'<40',size:'90*130'})
 //警告标志之矩形
@@ -122,7 +122,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 //警告斜杠符号
-lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'斜杠','class':lmd.MARKER_CLASS_OPAQUE,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'斜杠','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_WARMING]['childs'][3]['childs'].push({size:'45*78'})
 temp = [
 	"警31 斜杠符号-一道",
@@ -134,7 +134,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 //警告交叉符号
-lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'叉形','class':lmd.MARKER_CLASS_OPAQUE,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'叉形','class':lmd.MARKER_CLASS_OPAQUE,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_WARMING]['childs'][4]['childs'].push({speed:'>=70',size:'120*120'})
 lmd.marker[lmd.MARKER_WARMING]['childs'][4]['childs'].push({speed:'<70',size:'90*90'})
 temp = [
@@ -226,7 +226,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_FORBID]['childs'][3]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_FORBID]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_FORBID]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_FORBID]['childs'][4]['childs'].push({speed:'40-70',size:'120*170',icon:'2-4-1.png'})
 lmd.marker[lmd.MARKER_FORBID]['childs'][4]['childs'].push({speed:'<40',size:'90*130', icon:'2-4-2.png'})
 var temp = [
@@ -283,7 +283,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 
-lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'长方形','class':lmd.MARKER_CLASS_RECT,prex:'W*H', childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'长方形','class':lmd.MARKER_CLASS_RECT, childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'100-120',size:'190*140',icon:'3-3-1.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'71-99',size:'160*120',icon:'3-3-2.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'40-70',size:'140*100',icon:'3-3-3.png'})
@@ -312,7 +312,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'单行线-长方形','class':lmd.MARKER_CLASS_RECT,prex:'L', childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'单行线-长方形','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,prex:'L', childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'100-120',size:'120*60'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'71-99',size:'100*50'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'40-70',size:'80*40'})
@@ -328,7 +328,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 
 
 lmd.marker.push({name: '指路标志',childs:[null]});
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(横向)',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(横向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'>=80',size:'600*800'})
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'400*600'})
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'220*400'})
@@ -343,7 +343,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(纵向)','class':lmd.MARKER_CLASS_RECT,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(纵向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][2]['childs'].push({speed:'0-120',size:'600*1200'})
 temp = [
 	"指路38 两侧通行",
@@ -354,7 +354,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][2]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'普通公路&城市道路','class':lmd.MARKER_CLASS_RECT,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'普通公路&城市道路','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][3]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"指路1 四车道及以上公路交叉路口预告-模板",
@@ -417,7 +417,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][3]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'告诉公路&城市快速路','class':lmd.MARKER_CLASS_RECT,prex:'W*H',childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'告诉公路&城市快速路','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][4]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"指路41 两条高速公路共线时入口预告1",
@@ -556,7 +556,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 
 
 lmd.marker.push({name: '辅助标志',childs:[null]});
-lmd.marker[lmd.MARKER_HELP]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_HELP]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_HELP]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"辅助1 时间范围1-模版",
@@ -604,7 +604,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 
 
 lmd.marker.push({name: '道路安全施工标志',childs:[null]});
-lmd.marker[lmd.MARKER_SAFE]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_SAFE]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_SAFE]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"中间封闭",
@@ -640,7 +640,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 lmd.marker.push({name: '告示标志',childs:[null]});
-lmd.marker[lmd.MARKER_NOTIFICATION]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_NOTIFICATION]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_NOTIFICATION]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"告示1 驾驶时禁用手机标志",
@@ -659,7 +659,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 }
 
 lmd.marker.push({name: '旅游景区标志',childs:[null]});
-lmd.marker[lmd.MARKER_TOUR]['childs'].push({name:'矩形',prex:'W*H','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_TOUR]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_TOUR]['childs'][1]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"旅游1 旅游区距离",
@@ -728,7 +728,7 @@ lmd.getMarkerCategoryThirdWife = function( category,level ){
   var second = first['childs'][level]
   if(!second) return []
   var result = []
-  var unit = second['prex']
+  var unit = second['prex'] || ''
   for(var i = 1, len = second['wife'].length; i < len; i++){
     var wife = second['wife'][i]
     if(wife){
@@ -744,7 +744,7 @@ lmd.getMarkerCategoryThird = function( category, level){
   var second = first['childs'][level]
   if(!second) return []
   var result = []
-  var unit = second['prex']
+  var unit = second['prex'] || ''
   for(var i = 1, len = second['childs'].length; i < len; i++){
     var grandson = second['childs'][i]
     if(grandson){
@@ -752,4 +752,29 @@ lmd.getMarkerCategoryThird = function( category, level){
     }
   }
   return result
+}
+
+lmd.getMarkerCategoryValue = function( options ){
+  var mt = options['mt'] || 1
+  var mic = options['mic'] || 1
+  var msh = options['msh'] || 1
+  var mss = options['mss'] || 1
+  var result = {mt:'',mic:'',msh:'',mss:''}
+  var temp = lmd.marker[mt]
+  if( temp ){
+      result['mt'] = temp['name'] // 那种告示牌
+      temp = temp['childs'][mic]
+      if(temp){
+        result['mic'] = temp['shape'] || temp['name'] //图形
+        result['msh'] = temp['wife'][msh] || '' //内容
+
+        var child = temp['childs'][mss]
+        if(child && child['customize']){
+          result['customize'] = true
+        }else if(child && !child['customize']){
+          result['mss'] = (temp['prex'] || '') + (child['size'] || '') //尺寸
+        }
+      }
+   }
+   return result
 }

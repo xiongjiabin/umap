@@ -37,6 +37,7 @@ L.FormBuilder.Element.include({
 
     clear: function () {
         this.input.value = '';
+        return this
     },
 
     get: function (own) {
@@ -58,6 +59,20 @@ L.FormBuilder.Element.include({
                 }, this);
             }
         }
+    },
+
+    show: function(){
+        if(this.wrapper) {
+            this.wrapper.style.display = "block"
+        }
+        return this
+    },
+
+    hide: function(){
+        if(this.wrapper){
+            this.wrapper.style.display = "none"
+        }
+        return this
     }
 
 });
@@ -779,6 +794,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         msh:{handler:'MarkerShapeSwitcher', label: '内容'},
         mss:{handler:'MarkerSpeedSizeSwitcher', label: '速度&尺寸'},
         mic: {handler:'MarkerIconClassSwitcher', label: '图形'},
+        size: {},
 
         //旋转
         rotate: {handler: 'Range', min:0,max:360, step: 1, label: '旋转'},
