@@ -178,6 +178,42 @@
             line.enableEdit().newShape(latlng);
             return line;
         },
+        startBiaoxian: function (latlng, options) {
+            var line = this.createBiaoxian([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+        startLunkuo: function (latlng, options) {
+            var line = this.createLunkuo([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+        startFangxuan: function (latlng, options) {
+            var line = this.createFangxuan([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+        startJiansu: function (latlng, options) {
+            var line = this.createJiansu([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+        startLicheng: function (latlng, options) {
+            var line = this.createLicheng([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
+        startBiangou: function (latlng, options) {
+            var line = this.createBiangou([], options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().newShape(latlng);
+            return line;
+        },
 
         startPolyline: function (latlng, options) {
             var line = this.createPolyline([], options);

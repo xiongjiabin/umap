@@ -15,19 +15,25 @@ L.SVG.include({
 
   _initPredefinedMarkers: function(){
     this._defs = L.SVG.create('defs')
-    this._defs.innerHTML = '<g id="m_cross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>'
+    this._defs.innerHTML = '<g id="lmdcross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>'
+                        +  '<g id="lmdtrian"><path d="M 0,8 L -8,-8 8,-8 0,8"></path></g>'
+
     //add other markers
     this._container.appendChild(this._defs)
   },
 
+  _delPolyMarker: function( layer ){
+    if(layer._polyMarker){
+      L.DomUtil.remove(layer._polyMarker)
+      layer._polyMarker  = null
+    }
+  },
+
   _updatePolyMarker: function( layer, options ){
-    var i = 0, len = 0
+    var i = 0, len = 0, j = 0, jlen = 0
     var point = null
     options = options || {}
-    var parts = null
-    if(layer._parts && layer._parts[0]){
-      parts = layer._parts[0]
-      len = parts.length
+    if(layer._parts && layer._parts.length > 0){
     }else{
       return
     }
@@ -37,17 +43,26 @@ L.SVG.include({
       layer._polyMarker  = null
     }
 
-    if(len < 1) return
     layer._polyMarker = L.SVG.create('g')
-    layer._polyMarker.setAttribute('stroke', options.color || 'red');
-    layer._polyMarker.setAttribute('stroke-width', options.weight || 4);
-    layer._polyMarker.setAttribute('fill', 'none');
+
+    if(options.fill){
+      layer._polyMarker.setAttribute('stroke-width', 1);
+      layer._polyMarker.setAttribute('fill', options.fillColor);
+    }else{
+      layer._polyMarker.setAttribute('stroke-width', options.weight || 4);
+      layer._polyMarker.setAttribute('fill', 'none');
+      layer._polyMarker.setAttribute('stroke', options.color || 'red');
+    }
+
+    var lmdtype = options['lmdtype'] || 'lmdcross'
 
     //<use xlink:href="#m_cross" x="962" y="180"></use>
-    for(; i < len; i++){
-      point = parts[i]
-      layer._polyMarker.innerHTML +=
-            '<use xlink:href="#m_cross" x="' + point.x + '" y="' + point.y + '"></use>'
+    for (i = 0, len = layer._rings.length; i < len; i++) {
+      for(j = 0, jlen = layer._rings[i].length; j < jlen; j++){
+        point = layer._rings[i][j]
+        layer._polyMarker.innerHTML +=
+            '<use xlink:href="#' + lmdtype + '" x="' + point.x + '" y="' + point.y + '"></use>'
+      }
     }
     this._rootGroup.appendChild(layer._polyMarker)
   },
@@ -133,6 +148,12 @@ L.SVG.include({
 })
 
 L.Polyline.include({
+  delPolyMakrer: function() {
+    if(this._renderer){
+      this._renderer._delPolyMarker(this)
+    }
+  },
+
   updatePolyMarker: function(options){
     if(this._renderer){
       this._renderer._updatePolyMarker(this, options)

@@ -601,7 +601,13 @@ L.Storage.DataLayer = L.Class.extend({
     _lineToLayer: function(geojson, latlngs) {
         var lineClass = {
           'polyline': L.Storage.Polyline,
-          'guardbar': L.Storage.Guardbar
+          'guardbar': L.Storage.Guardbar,
+          'biaoxian': L.Storage.Biaoxian,
+          'lunkuo'  : L.Storage.Lunkuo,
+          'fangxuan': L.Storage.Fangxuan,
+          'jiansu'  : L.Storage.Jiansu,
+          'licheng' : L.Storage.Licheng,
+          'biangou' : L.Storage.Biangou
         }
         var Class = (geojson.properties && lineClass[geojson.properties.className]) || L.Storage.Polyline;
         return new Class(
@@ -798,6 +804,7 @@ L.Storage.DataLayer = L.Class.extend({
             'options.fill',
             'options.fillColor',
             'options.fillOpacity',
+            'options.zIndex'
         ];
 
         shapeOptions = shapeOptions.concat(this.layer.getEditableOptions());
@@ -953,6 +960,20 @@ L.Storage.DataLayer = L.Class.extend({
         if(!this.isLoaded()) this.fetchData();
         this.map.addLayer(this.layer);
         this.fire('show');
+
+        //熊佳斌,某些情况下需要修改z-inxdex
+        if(this.pane){
+            var zIndex = +this.getOption('zIndex')
+            if(zIndex > 0){
+                this.pane.style.zIndex = zIndex
+            }else{
+              var name = this.getOption('name')
+              if(name.indexOf('底图') >= 0){
+                this.pane.style.zIndex = 399
+              }
+            }
+        }
+
     },
 
     hide: function () {

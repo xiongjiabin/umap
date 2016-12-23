@@ -762,6 +762,7 @@ L.Storage.PathMixin = {
         // this.map.off('hidemeasure', this.removeTooltip, this);
         if (this.editing && this.editing.enabled()) this.editing.removeHooks();
         L.S.FeatureMixin.onRemove.call(this, map);
+        this.parentClass.prototype.delPolyMakrer.call(this, map);
     },
 
     getBestZoom: function () {
@@ -1125,4 +1126,56 @@ L.Storage.Polygon = L.Polygon.extend({
         return items;
     }
 
+});
+
+
+L.Storage.Scale = L.Control.Scale.extend({
+
+  onAdd: function (map) {
+    var className = 'leaflet-control-scale',
+        container = L.DomUtil.create('div', className),
+        options = this.options;
+
+    this._addScales(options, className + '-line', container);
+
+    map.on('zoomend', this._update, this)
+    map.whenReady(this._delayUpdate, this)
+
+    return container;
+  },
+
+  _delayUpdate: function(){
+    var that = this
+    setTimeout(function() { that._update()}, 7000)
+  },
+
+  _addScales: function (options, className, container) {
+		if (options.metric) {
+      this._mLmdScale = L.DomUtil.create('div',className, container);
+      this._mLmdScale.style.height="5mm"
+			this._mScale = L.DomUtil.create('div', className, container);
+		}
+		if (options.imperial) {
+			this._iScale = L.DomUtil.create('div', className, container);
+		}
+	},
+
+  _updateMetric: function (maxMeters) {
+    var meters = this._getRoundNum(maxMeters),
+        label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
+
+    this._updateScale(this._mScale, label, meters / maxMeters);
+    if(this._mLmdScale.offsetHeight) {
+      var ration = this.options.maxWidth / this._mLmdScale.offsetHeight * 5 / 1000,
+        lmdScale = this._getRoundNum(maxMeters/ration),
+        lmdScaleLable = lmdScale < 1000 ? lmdScale : (lmdScale /1000) + 'k';
+
+      this._updateLmdScale(this._mLmdScale, lmdScaleLable);
+      console.log(ration,lmdScale)
+    }
+  },
+
+  _updateLmdScale: function (scale, text) {
+    scale.innerHTML = '1:' + text;
+  },
 });

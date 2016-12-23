@@ -135,11 +135,83 @@ L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
   options: {
       helpMenu: true,
       className: 'storage-draw-guard dark',
-      tooltip: '护栏'
+      tooltip: '防护设施'
   },
 
   addHooks: function () {
       this.map.startGuardbar();
+  }
+});
+
+L.Storage.DrawBiaoxianAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-biaoxian dark',
+      tooltip: '标线'
+  },
+
+  addHooks: function () {
+      this.map.startBiaoxian();
+  }
+});
+
+L.Storage.DrawLunkuoAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-lunkuo dark',
+      tooltip: '轮廓线'
+  },
+
+  addHooks: function () {
+      this.map.startLunkuo();
+  }
+});
+
+L.Storage.DrawFangxuanAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-fangxuan dark',
+      tooltip: '防炫设施'
+  },
+
+  addHooks: function () {
+      this.map.startFangxuan();
+  }
+});
+
+L.Storage.DrawJiansuAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-jiansu dark',
+      tooltip: '减速路面'
+  },
+
+  addHooks: function () {
+      this.map.startJiansu();
+  }
+});
+
+L.Storage.DrawLichengAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-licheng dark',
+      tooltip: '里程桩'
+  },
+
+  addHooks: function () {
+      this.map.startLicheng();
+  }
+});
+
+L.Storage.DrawBiangouAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-biangou dark',
+      tooltip: '边沟'
+  },
+
+  addHooks: function () {
+      this.map.startBiangou();
   }
 });
 
@@ -380,6 +452,12 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdMarkerAction);
         this.options.actions.push(L.S.DrawLmdPillarAction);
         this.options.actions.push(L.S.DrawLmdGuardAction);
+        this.options.actions.push(L.S.DrawBiaoxianAction);
+        this.options.actions.push(L.S.DrawLunkuoAction);
+        this.options.actions.push(L.S.DrawFangxuanAction);
+        this.options.actions.push(L.S.DrawJiansuAction);
+        this.options.actions.push(L.S.DrawLichengAction);
+        this.options.actions.push(L.S.DrawBiangouAction);
         this.options.actions.push(L.S.DrawLmdLabelAction);
 
         if (this.map.options.enableMarkerDraw) {
@@ -1159,6 +1237,24 @@ L.S.Editable = L.Editable.extend({
     //xiongjiabin 创建护栏类型
     createGuardbar: function(latlngs) {
         return new  L.Storage.Guardbar(this.map, latlngs);
+    },
+    createBiaoxian: function(latlngs) {
+        return new  L.Storage.Biaoxian(this.map, latlngs);
+    },
+    createLunkuo: function(latlngs) {
+        return new  L.Storage.Lunkuo(this.map, latlngs);
+    },
+    createFangxuan: function(latlngs) {
+        return new  L.Storage.Fangxuan(this.map, latlngs);
+    },
+    createJiansu: function(latlngs) {
+        return new  L.Storage.Jiansu(this.map, latlngs);
+    },
+    createLicheng: function(latlngs) {
+        return new  L.Storage.Licheng(this.map, latlngs);
+    },
+    createBiangou: function(latlngs) {
+        return new  L.Storage.Biangou(this.map, latlngs);
     },
 
     createPolyline: function (latlngs) {

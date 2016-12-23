@@ -281,6 +281,10 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   },
 
   edit: function(e) {
+
+    if(!this.map.editEnabled) {
+        return false
+    }
     //通过改变对应的select的prototype的selectOptions来改变需要变化的options值
     //初始化的情况下，其实js中的class也是一个value,可以随便去改变其值 10-20 aftrer third debate of trump&hilary
     var mt = this.getOption('mt') || 1
@@ -304,28 +308,20 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   updateName: function(e){
     if(!e) return
     var reg = /^\W*\d*\s+(.+)$/
-    var msh = e.target.helpers['properties._storage_options.msh']
     var name = e.target.helpers['properties.name']
     var nameValue = name.value()
     if(nameValue && nameValue.startsWith('@')) {
       return
     }
-    var value = msh.value()
-    var selectOptions = msh.getOptions()
-    var i = 0, len = selectOptions.length
-    var option = null, result = null
-    for(; i < len; i++){
-      option = selectOptions[i]
-      if(+option[0] === +value) {
-         result = option[1].trim().match(reg)
-         if(result){
-           this.properties.name = name.input.value = result[1]
-         }else{
-           this.properties.name = name.input.value = option[1].trim()
-         }
-         break
-      }
+    var msh = e.target.helpers['properties._storage_options.msh']
+    var text = msh.getSelectText()
+    var result = text.trim().match(reg)
+    if(result){
+        this.properties.name = name.input.value = result[1]
+    }else{
+        this.properties.name = name.input.value = option[1].trim()
     }
+
     return
   },
 
@@ -757,239 +753,3 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
   },
 
 });
-
-L.Storage.Guardbar = L.Storage.Polyline.extend({
-
-
-    preInit: function() {
-      if (!this.properties['className']) {
-        this.properties['className'] = this.getClassName()
-      }
-
-      if (!this.properties._storage_options.gbt) {
-        this.properties._storage_options = {
-          gbt: "1",
-          color: "yellow",
-          weight:"10"
-        }
-      }
-    },
-
-    edit: function(e) {
-      L.Storage.LmdFeatureMixin.edit.call(this, e)
-    },
-
-    //added by xiongjiabin
-    getBasicOptions: function () {
-        return [
-          'properties._storage_options.gbt',//类型
-          'properties._storage_options.lr',
-          'properties._storage_options.gbss',//起始桩号
-          'properties._storage_options.gbse',
-          'properties._storage_options.gbl',//总长
-          'properties._storage_options.gbs',//间距
-          'properties._storage_options.gbn',//数量
-          'properties._storage_options.ds',
-        ];
-    },
-
-    getShapeOptions: function () {
-        return [
-            'properties._storage_options.color',
-            'properties._storage_options.weight',
-        ];
-    },
-
-    getAdvancedOptions: function () {
-        return [
-            'properties._storage_options.smoothFactor',
-            'properties._storage_options.zoomTo'
-        ];
-    },
-
-    setStyle: function (options) {
-      var gbtype = +this.getOption('gbt')
-      if(gbtype === 1){
-        L.Storage.BarTypeRect.call(this,options)
-      }else if(gbtype === 3){
-        L.Storage.BarTypeCircle.call(this,options)
-      }else if(gbtype === 2){
-        L.Storage.BarTypeLine.call(this,options)
-      }else if(gbtype === 4){
-        L.Storage.BarTypeCustomize.call(this,options)
-      }
-    },
-
-    _updatePath: function(){
-      this.parentClass.prototype._updatePath.call(this);
-      var gbtype = +this.getOption('gbt')
-      if(gbtype === 4){
-        L.Storage.BarTypeCustomize.call(this,null)
-      }
-    },
-
-    getClassName: function () {
-        return 'guardbar';
-    },
-
-    getContextMenuEditItems: function (e) {
-        var items = L.S.PathMixin.getContextMenuEditItems.call(this, e),
-            vertexClicked = e.vertex, index;
-        if (vertexClicked) {
-            index = e.vertex.getIndex();
-            if (index !== 0 && index !== e.vertex.getLastIndex()) {
-                items.push({
-                    text: L._('Split line'),
-                    callback: e.vertex.split,
-                    context: e.vertex
-                });
-            } else if (index === 0 || index === e.vertex.getLastIndex()) {
-                items.push({
-                    text: L._('Continue line (Ctrl-click)'),
-                    callback: e.vertex.continue,
-                    context: e.vertex.continue
-                });
-            }
-        }
-        return items;
-    },
-
-    getContextMenuMultiItems: function (e) {
-        var items = L.S.PathMixin.getContextMenuMultiItems.call(this, e);
-        items.push({
-            text: L._('Merge lines'),
-            callback: this.mergeShapes,
-            context: this
-        });
-        return items;
-    },
-
-
-    resetTooltip: function(e) {
-
-      L.Storage.FeatureMixin.resetTooltip.call(this,e)
-      if (!e) return;
-
-      if (e.helper.name === 'options.gbt') {
-        this._redraw();
-      } else {
-
-      }
-
-    }
-});
-
-L.Storage.BarTypeRect  = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '20,10';
-  if(options['weight'] < 15) options['weight'] = 15;
-  options['opacity'] = 1;
-  options['lineCap'] = 'butt';
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-
-L.Storage.BarTypeCircle = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '0,25';
-  if(options['weight'] < 15) options['weight'] = 15;
-  options['opacity'] = 1;
-  options['lineCap'] = 'round';
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-
-L.Storage.BarTypeLine = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '5,20';
-  options['lineCap'] = 'butt';
-  options['opacity'] = 1;
-  options['weight'] = 20;
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-L.Storage.BarTypeCustomize = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '';
-  options['lineCap'] = 'round';
-  options['opacity'] = 0.4;
-  options['weight'] = 5;
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-  this.updatePolyMarker();
-}
-
-L.Storage.Scale = L.Control.Scale.extend({
-
-  onAdd: function (map) {
-    var className = 'leaflet-control-scale',
-        container = L.DomUtil.create('div', className),
-        options = this.options;
-
-    this._addScales(options, className + '-line', container);
-
-    map.on('zoomend', this._update, this)
-    map.whenReady(this._delayUpdate, this)
-
-    return container;
-  },
-
-  _delayUpdate: function(){
-    var that = this
-    setTimeout(function() { that._update()}, 7000)
-  },
-
-  _addScales: function (options, className, container) {
-		if (options.metric) {
-      this._mLmdScale = L.DomUtil.create('div',className, container);
-      this._mLmdScale.style.height="5mm"
-			this._mScale = L.DomUtil.create('div', className, container);
-		}
-		if (options.imperial) {
-			this._iScale = L.DomUtil.create('div', className, container);
-		}
-	},
-
-  _updateMetric: function (maxMeters) {
-    var meters = this._getRoundNum(maxMeters),
-        label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
-
-    this._updateScale(this._mScale, label, meters / maxMeters);
-    if(this._mLmdScale.offsetHeight) {
-      var ration = this.options.maxWidth / this._mLmdScale.offsetHeight * 5 / 1000,
-        lmdScale = this._getRoundNum(maxMeters/ration),
-        lmdScaleLable = lmdScale < 1000 ? lmdScale : (lmdScale /1000) + 'k';
-
-      this._updateLmdScale(this._mLmdScale, lmdScaleLable);
-      console.log(ration,lmdScale)
-    }
-  },
-
-  _updateLmdScale: function (scale, text) {
-    scale.innerHTML = '1:' + text;
-  },
-})

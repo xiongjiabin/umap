@@ -175,7 +175,7 @@ ul.photon-autocomplete {
     background-size: auto auto;
 }
 .leaflet-control-toolbar li .leaflet-toolbar-icon.dark {
-    background-image: url("../img/24-white.png");
+    background-image: url("../img/24-white.svg");
 }
 .leaflet-control-toolbar .leaflet-toolbar-icon.dark:hover {
     background-color: #353c3e;
@@ -249,6 +249,25 @@ ul.photon-autocomplete {
 .storage-draw-label,
 .storage-toolbar .storage-draw-label {
    background-position: 0 0;
+}
+
+.storage-draw-biaoxian {
+   background-position: 0 -40px;
+}
+.storage-draw-lunkuo {
+   background-position: 0px -120px;
+}
+.storage-draw-fangxuan {
+  background-position: -40px 0;
+}
+.storage-draw-jiansu {
+  background-position: -160px -120px;
+}
+.storage-draw-licheng {
+  background-position:0px -80px;
+}
+.storage-draw-biangou {
+  background-position: 0 -160px
 }
 
 /* ********************************* */

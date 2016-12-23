@@ -91,6 +91,7 @@ lmd.tjIndicators = function(){
                 mss:'版面尺寸(cm)',
                 pillarType: '支撑型式',
                 num:'数量(块)',
+                ds:'状态',
                 description:'备注'
               }
   data.push(lmd.objectToArray(titles))
@@ -153,11 +154,45 @@ lmd.tjPillars = function(){
   new CsvGenerator(data,  '立柱一览表.csv').download(true);
 }
 
+//轮廓
+lmd.tjLunkuo = function(){
+  var data = []
+  var titles = {no:'序号',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                gbl: '长度(m)',
+                gbn: '单位(个)',
+                pos: '侧别',
+                gbd: '方向',
+                gbc: '类型',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1,stringMap = null,tempData = null,temp = null
+  this.eachDataLayer(function (datalayer) {
+    datalayer.eachFeature(function (feature) {
+      if(feature.getClassName() === 'lunkuo'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+    })
+  })
+
+  new CsvGenerator(data,  '轮廓设施表.csv').download(true);
+}
+
 lmd.tjs = [{
     label: '标志一览表',
     process: lmd.tjIndicators
   },{
     label: '立柱一览表',
     process: lmd.tjPillars
+  },{
+    label: '轮廓设施表',
+    process: lmd.tjLunkuo
   }
 ]

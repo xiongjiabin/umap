@@ -622,9 +622,20 @@ L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
     choices: [
         [1, L._('left')],
         [2, L._('right')],
-        [3, L._('middle')]
+        [3, L._('middle')],
+        [4, '俩侧']
     ],
 });
+
+L.FormBuilder.DirectionChoice = L.FormBuilder.MultiChoice.extend({
+
+    default: 2,
+    choices: [
+        [1, '单向'],
+        [2, '双向']
+    ],
+});
+
 
 L.FormBuilder.PillSuppSwitcher = L.FormBuilder.Select.extend({
 
@@ -698,22 +709,27 @@ L.FormBuilder.MarkerShapeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 L.FormBuilder.MarkerSpeedSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 L.FormBuilder.MarkerIconClassSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
-L.FormBuilder.GuardbarTypeSwitcher = L.FormBuilder.Select.extend({
+L.FormBuilder.GuardbarCatSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
-    ["1", '石墩'],
-    ["2", '竖线'],
-    ["3", '圆形'],
-    ["4", '叉叉']
-  ],
-  build: function() {
-    L.FormBuilder.Select.prototype.build.call(this);
-    L.DomEvent.on(this.select, 'change', this.sync, this);
-  },
+    ["1","横向减速标线"],
+    ["2","纵向减速标线"],
+    ["3","收费站广场减速标线"],
+    ["4","行人横穿设施"]
+  ]
+});
 
-  sync: function() {
-    L.FormBuilder.Select.prototype.sync.call(this);
-  },
-
+L.FormBuilder.MaterialSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["0","无"],
+    ["1","溶剂型"],
+    ["2","热熔普通型"],
+    ["3","热熔反光型"],
+    ["4","热熔突起型"],
+    ["5","双组分"],
+    ["6","水性"],
+    ["7","树脂防滑型"],
+    ["8","预成型标线带标线"]
+  ]
 });
 
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
@@ -805,14 +821,18 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         helpY:  {handler: 'IntInput', label: '辅助Y'},
 
         //护栏部分
-        gbt: {handler: 'GuardbarTypeSwitcher', label: '类型'},
-        gbl: {handler: 'FloatInput', label: '总长'},
-        gbs: {handler: 'FloatInput', label: '间距'},
+        gbc: {handler: 'GuardbarCatSwitcher', label: '类别'},
+        gbl: {handler: 'FloatInput', label: '总长(m)'},
+        gbs: {handler: 'FloatInput', label: '间距(m)'},
         gbn: {handler: 'IntInput', label: '数量'},
         gbss: {handler: 'FloatInput', label: '起始桩号'},
         gbse: {handler: 'FloatInput', label: '结束桩号'},
+        gbm:  {handler: 'MaterialSwitcher',label: '材料'},
+        gba: {handler: 'FloatInput', label: '面积(m2)'},
+        gbd: {handler: 'DirectionChoice',label: '方向'},
 
         speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
+        zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'}
     },
 
     initialize: function (obj, fields, options) {

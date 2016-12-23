@@ -1480,6 +1480,27 @@ L.Storage.Map.include({
         return this.editTools.startGuardbar();
     },
 
+    startBiaoxian: function(){
+        return this.editTools.startBiaoxian();
+    },
+
+    startLunkuo: function(){
+        return this.editTools.startLunkuo();
+    },
+
+    startFangxuan: function(){
+        return this.editTools.startFangxuan();
+    },
+    startJiansu: function(){
+        return this.editTools.startJiansu();
+    },
+    startLicheng: function(){
+        return this.editTools.startLicheng();
+    },
+    startBiangou: function(){
+        return this.editTools.startBiangou();
+    },
+
     startMarker: function () {
         return this.editTools.startMarker();
     },

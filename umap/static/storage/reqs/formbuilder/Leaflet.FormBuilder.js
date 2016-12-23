@@ -412,6 +412,16 @@ L.FormBuilder.Select = L.FormBuilder.Element.extend({
         return this.options.selectOptions || this.selectOptions;
     },
 
+    getSelectText: function() {
+        var value = this.value();
+        for(var i = 0, len = this.select.options.length; i < len; i++ ){
+            if(this.select.options[i].value == value){
+                return this.select.options[i].text;
+            }
+        }
+        return ""
+    },
+
     fetch: function () {
         this.buildOptions();
     },
