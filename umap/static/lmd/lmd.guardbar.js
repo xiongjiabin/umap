@@ -10,7 +10,7 @@ L.Storage.GB_TYPE_HULAN = 2
 L.Storage.GB_TYPE_LUNKUO = 3
 L.Storage.GB_TYPE_FANGXUAN = 4
 L.Storage.GB_TYPE_JIANSU = 5
-L.Storage.GB_TYPE_LICHENG = 6
+L.Storage.GB_TYPE_JIANSUQIU = 6
 L.Storage.GB_TYPE_BIANGOU = 7
 
 L.Storage.guardbarData = [
@@ -48,17 +48,22 @@ L.Storage.guardbarData = [
   ]},
   {name:'减速路面', childs: [
     null,
-    {name:'彩色防滑路面',type: L.Storage.GB_NORMAL_LINE},
-  ]},
-  {name:'边沟',childs: [
-    null,
-    {name:'边沟处置',type: L.Storage.GB_NORMAL_LINE},
+    {name:'急弯',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'过村',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'事故多发',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'隧道洞口',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'学校',type: L.Storage.GB_VERTICAL_LINE},
   ]},
   {name:'减速丘',childs: [
     null,
     {name:'大型减速丘',type: L.Storage.GB_NORMAL_LINE},
     {name:'预制减速垄',type: L.Storage.GB_NORMAL_LINE},
     {name:'预制断开式减速垄',type: L.Storage.GB_NORMAL_LINE},
+  ]},
+  {name:'边沟',childs: [
+    null,
+    {name:'浅碟形边沟',type: L.Storage.GB_NORMAL_LINE},
+    {name:'加铺盖板',type: L.Storage.GB_NORMAL_LINE}
   ]}
 ];
 
@@ -157,7 +162,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           return
       }
       var type = classObject['type']
-      var optionsDefault = Object.assign({},classObject['defaultOptions'])
+      var optionsDefault = JSON.parse(JSON.stringify(classObject['defaultOptions']||{}))
       if(optionsDefault && options){
           for(var i in optionsDefault){
             if(options[i] === undefined) {
@@ -248,6 +253,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       stringMap['gbl'] = this.getOption('gbl');//长度
       stringMap['gbn'] = this.getOption('gbn');//数量
+      stringMap['gba'] = this.getOption('gba');//面积
+      stringMap['gbw'] = this.getOption('gbw');//宽度
 
 
       var gbd = gbd || L.FormBuilder.DirectionChoice.prototype.default
@@ -305,6 +312,16 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           var gblControl = e.target.helpers['properties._storage_options.gbl']
           if(gblControl) {
               this.properties._storage_options.gbl = gblControl.input.value = distance
+
+              var gbaControl = e.target.helpers['properties._storage_options.gba']
+              if(gbaControl){
+                  var gbl = +this.getOption('gbl')
+                  var gbw = +this.getOption('gbw')
+                  if(gbl > 0 && gbw > 0) {
+                      var area = (gbl * gbw).toFixed(2)
+                      this.properties._storage_options.gba = gbaControl.input.value = area
+                  }
+              }
           }
 
           var gbs = +this.getOption('gbs')
@@ -326,7 +343,16 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn
             }
         }
-
+      }else if(e.helper.name in {'gbl':0, 'gbw':0}){
+          var gbaControl = e.target.helpers['properties._storage_options.gba']
+          if(gbaControl){
+              var gbl = +this.getOption('gbl')
+              var gbw = +this.getOption('gbw')
+              if(gbl > 0 && gbw > 0) {
+                  var area = (gbl * gbw).toFixed(2)
+                  this.properties._storage_options.gba = gbaControl.input.value = area
+              }
+          }
       }
       this.updateName(e)
 
@@ -378,22 +404,64 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
   getClassName: function () {
       return 'jiansu';
   },
+
+  //added by xiongjiabin
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        'properties._storage_options.gbw',//宽度
+        'properties._storage_options.gba',//面积
+        'properties._storage_options.ds',
+      ];
+  },
+
 });
 
-L.Storage.Licheng = L.Storage.Guardbar.extend({
-  gbType: L.Storage.GB_TYPE_LICHENG,
+L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
+  gbType: L.Storage.GB_TYPE_JIANSUQIU,
 
   getClassName: function () {
-      return 'licheng';
+      return 'jiansuqiu';
   },
 });
 
 L.Storage.Biangou = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIANGOU,
 
+  preInit: function() {
+    if (!this.properties['className']) {
+      this.properties['className'] = this.getClassName()
+    }
+
+    if (!this.properties._storage_options.gbc) {
+      this.properties._storage_options = {
+        gbc: "1",
+        color: "blue",
+        weight:"10"
+      }
+
+    }
+  },
+
   getClassName: function (){
       return 'biangou'
   },
+
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        'properties._storage_options.ds',
+      ];
+  },
+
 });
 
 
@@ -477,7 +545,7 @@ L.Storage.BarTypeCustomize = function(options){
       return
   }
   var type = classObject['type']
-  var optionsDefault = Object.assign({},classObject['defaultOptions'])
+  var optionsDefault = JSON.parse(JSON.stringify(classObject['defaultOptions']||{}))
   optionsDefault['color'] = optionsDefault['fillColor'] = this.getOption('color')
   this.updatePolyMarker(optionsDefault);
 }

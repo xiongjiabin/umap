@@ -606,7 +606,7 @@ L.Storage.DataLayer = L.Class.extend({
           'lunkuo'  : L.Storage.Lunkuo,
           'fangxuan': L.Storage.Fangxuan,
           'jiansu'  : L.Storage.Jiansu,
-          'licheng' : L.Storage.Licheng,
+          'jiansuqiu' : L.Storage.JianSuQiu,
           'biangou' : L.Storage.Biangou
         }
         var Class = (geojson.properties && lineClass[geojson.properties.className]) || L.Storage.Polyline;
@@ -622,7 +622,12 @@ L.Storage.DataLayer = L.Class.extend({
         // for (var i = latlngs.length - 1; i > 0; i--) {
         //     if (!latlngs.slice()[i].length) latlngs.splice(i, 1);
         // }
-        return new L.Storage.Polygon(
+        var polygonClass = {
+          'polygon': L.Storage.Polygon,
+          'lmdArea': L.Storage.LmdArea
+        }
+        var Class = (geojson.properties && polygonClass[geojson.properties.className]) || L.Storage.Polygon;
+        return new Class(
             this.map,
             latlngs,
             {'geojson': geojson, 'datalayer': this}

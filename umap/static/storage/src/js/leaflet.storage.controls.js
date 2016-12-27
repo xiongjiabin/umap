@@ -191,15 +191,15 @@ L.Storage.DrawJiansuAction = L.Storage.BaseAction.extend({
   }
 });
 
-L.Storage.DrawLichengAction = L.Storage.BaseAction.extend({
+L.Storage.DrawJianSuQiuAction = L.Storage.BaseAction.extend({
   options: {
       helpMenu: true,
-      className: 'storage-draw-licheng dark',
-      tooltip: '里程桩'
+      className: 'storage-draw-jiansuqiu dark',
+      tooltip: '减速丘'
   },
 
   addHooks: function () {
-      this.map.startLicheng();
+      this.map.startJianSuQiu();
   }
 });
 
@@ -213,6 +213,20 @@ L.Storage.DrawBiangouAction = L.Storage.BaseAction.extend({
   addHooks: function () {
       this.map.startBiangou();
   }
+});
+
+L.Storage.DrawLmdAreaAction = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'storage-draw-polygon dark',
+        tooltip: '清除内侧障碍物'
+    },
+
+    addHooks: function () {
+        this.map.startLmdArea();
+    }
+
 });
 
 L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
@@ -456,8 +470,9 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLunkuoAction);
         this.options.actions.push(L.S.DrawFangxuanAction);
         this.options.actions.push(L.S.DrawJiansuAction);
-        this.options.actions.push(L.S.DrawLichengAction);
+        this.options.actions.push(L.S.DrawJianSuQiuAction);
         this.options.actions.push(L.S.DrawBiangouAction);
+        this.options.actions.push(L.S.DrawLmdAreaAction);
         this.options.actions.push(L.S.DrawLmdLabelAction);
 
         if (this.map.options.enableMarkerDraw) {
@@ -1250,8 +1265,8 @@ L.S.Editable = L.Editable.extend({
     createJiansu: function(latlngs) {
         return new  L.Storage.Jiansu(this.map, latlngs);
     },
-    createLicheng: function(latlngs) {
-        return new  L.Storage.Licheng(this.map, latlngs);
+    createJianSuQiu: function(latlngs) {
+        return new  L.Storage.JianSuQiu(this.map, latlngs);
     },
     createBiangou: function(latlngs) {
         return new  L.Storage.Biangou(this.map, latlngs);
@@ -1264,6 +1279,11 @@ L.S.Editable = L.Editable.extend({
     createPolygon: function (latlngs) {
         var polygon = new L.Storage.Polygon(this.map, latlngs);
         return polygon;
+    },
+
+    createLmdArea: function( latlngs) {
+       var lmdarea = new L.Storage.LmdArea(this.map, latlngs);
+       return lmdarea;
     },
 
     createMarker: function (latlng) {

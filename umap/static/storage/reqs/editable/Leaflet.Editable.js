@@ -202,12 +202,13 @@
             line.enableEdit().newShape(latlng);
             return line;
         },
-        startLicheng: function (latlng, options) {
-            var line = this.createLicheng([], options);
+        startJianSuQiu: function (latlng, options) {
+            var line = this.createJianSuQiu([], options);
             this.connectCreatedToMap(line);
             line.enableEdit().newShape(latlng);
             return line;
         },
+
         startBiangou: function (latlng, options) {
             var line = this.createBiangou([], options);
             this.connectCreatedToMap(line);
@@ -227,6 +228,13 @@
             this.connectCreatedToMap(polygon);
             polygon.enableEdit().newShape(latlng);
             return polygon;
+        },
+
+        startLmdArea: function(latlng, options){
+          var polygon = this.createLmdArea([], options);
+          this.connectCreatedToMap(polygon);
+          polygon.enableEdit().newShape(latlng);
+          return polygon;
         },
 
         startLmdMarker: function (latlng, options) {

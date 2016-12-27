@@ -1494,11 +1494,15 @@ L.Storage.Map.include({
     startJiansu: function(){
         return this.editTools.startJiansu();
     },
-    startLicheng: function(){
-        return this.editTools.startLicheng();
+    startJianSuQiu: function(){
+        return this.editTools.startJianSuQiu();
     },
     startBiangou: function(){
         return this.editTools.startBiangou();
+    },
+
+    startLmdArea: function(){
+        return this.editTools.startLmdArea();  
     },
 
     startMarker: function () {

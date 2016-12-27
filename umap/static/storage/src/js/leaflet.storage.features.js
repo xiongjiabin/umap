@@ -606,8 +606,11 @@ L.Storage.Marker = L.Marker.extend({
     },
 
     getIcon: function () {
-        var Class = L.Storage.Icon[this.getIconClass()] || L.Storage.Icon.Default;
-        return new Class(this.map, {feature: this});
+        if(L.Storage.Icon){
+          var Class = L.Storage.Icon[this.getIconClass()] || L.Storage.Icon.Default;
+          return new Class(this.map, {feature: this});
+        }
+        return L.Storage.Icon.Default
     },
 
     getCenter: function () {

@@ -141,7 +141,7 @@ L.Util.classSortOrder = {
 };
 
 L.Util.sortFeatures = function (features, sortKey) {
-    var sortKeys = (sortKey || 'sn,className').split(',');
+    var sortKeys = (sortKey || 'sn,gbss,className').split(',');
 
     var sort = function (a, b, i) {
         var sortKey = sortKeys[i], score,

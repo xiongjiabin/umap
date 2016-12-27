@@ -732,6 +732,16 @@ L.FormBuilder.MaterialSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+L.FormBuilder.XiujianSwitch = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1","修剪树木"],
+    ["2","削挖土坡"],
+    ["3","拆除广告牌"],
+    ["4","移除大石"],
+    ["99","其他"]
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -823,6 +833,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //护栏部分
         gbc: {handler: 'GuardbarCatSwitcher', label: '类别'},
         gbl: {handler: 'FloatInput', label: '总长(m)'},
+        gbw: {handler: 'FloatInput', label: '宽度(m)'},
         gbs: {handler: 'FloatInput', label: '间距(m)'},
         gbn: {handler: 'IntInput', label: '数量'},
         gbss: {handler: 'FloatInput', label: '起始桩号'},
@@ -832,7 +843,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gbd: {handler: 'DirectionChoice',label: '方向'},
 
         speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
-        zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'}
+        zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'},
+
+        //修建
+        at: {handler: 'XiujianSwitch', label: '修剪类型'},
     },
 
     initialize: function (obj, fields, options) {

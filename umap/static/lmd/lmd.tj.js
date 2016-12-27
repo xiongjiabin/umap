@@ -151,7 +151,7 @@ lmd.tjPillars = function(){
     })
   })
 
-  new CsvGenerator(data,  '立柱一览表.csv').download(true);
+  new CsvGenerator(data,  '立柱.csv').download(true);
 }
 
 //轮廓
@@ -185,14 +185,113 @@ lmd.tjLunkuo = function(){
   new CsvGenerator(data,  '轮廓设施表.csv').download(true);
 }
 
+//减速路面
+lmd.tjJiansu = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '类型',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                pos: '侧别',
+                gbl: '长度(m)',
+                gbw: '宽度(m)',
+                gba: '面积(m2)',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1,stringMap = null,tempData = null,temp = null
+  this.eachDataLayer(function (datalayer) {
+    datalayer.eachFeature(function (feature) {
+      if(feature.getClassName() === 'jiansu'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+    })
+  })
+
+  new CsvGenerator(data,  '减速路面.csv').download(true);
+}
+
+//边沟
+lmd.tjBiangou = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '类型',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                pos: '侧别',
+                gbl: '长度(m)',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1,stringMap = null,tempData = null,temp = null
+  this.eachDataLayer(function (datalayer) {
+    datalayer.eachFeature(function (feature) {
+      if(feature.getClassName() === 'biangou'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+    })
+  })
+
+  new CsvGenerator(data,  '边沟.csv').download(true);
+}
+
+
+//修剪
+lmd.tjXiujian = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '类型',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                pos: '侧别',
+                gbn: '数量(棵,m3,个)',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1,stringMap = null,tempData = null,temp = null
+  this.eachDataLayer(function (datalayer) {
+    datalayer.eachFeature(function (feature) {
+      if(feature.getClassName() === 'lmdArea'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+    })
+  })
+
+  new CsvGenerator(data,  '修剪内侧.csv').download(true);
+}
+
 lmd.tjs = [{
-    label: '标志一览表',
+    label: '标志',
     process: lmd.tjIndicators
   },{
-    label: '立柱一览表',
+    label: '立柱',
     process: lmd.tjPillars
   },{
-    label: '轮廓设施表',
+    label: '轮廓设施',
     process: lmd.tjLunkuo
+  },{
+    label: '减速路面',
+    process: lmd.tjJiansu
+  },{
+    label: '边沟',
+    process: lmd.tjBiangou
+  },{
+    label: '修剪内侧',
+    process: lmd.tjXiujian
   }
 ]
