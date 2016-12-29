@@ -63,7 +63,7 @@ SOCIAL_AUTH_BACKEND_ERROR_URL = "/"
 # UMAP_DEMO_PK = 204
 # UMAP_SHOWCASE_PK = 1156
 LEAFLET_STORAGE_ALLOW_ANONYMOUS = True
-UMAP_DEMO_SITE = True
+UMAP_DEMO_SITE = False
 
 # This setting will exclude empty maps (in fact, it will exclude all maps where
 # the default center has not been updated)
@@ -87,7 +87,7 @@ SHORT_SITE_URL = "http://s.hort"
 # POSTGIS_VERSION = (2, 1, 0)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# You need to unable accent extension before using UMAP_USE_UNACCENT 
+# You need to unable accent extension before using UMAP_USE_UNACCENT
 # python manage.py dbshell
 # CREATE EXTENSION unaccent;
 UMAP_USE_UNACCENT = False

@@ -158,7 +158,7 @@ LEAFLET_STORAGE_EXTRA_URLS = {
     'ajax_proxy': '/ajax-proxy/?url={url}'
 }
 SITE_URL = "http://umap.org"
-SITE_NAME = 'uMap'
+SITE_NAME = "交通安全辅助设计"
 UMAP_DEMO_SITE = False
 UMAP_EXCLUDE_DEFAULT_MAPS = False
 UMAP_MAPS_PER_PAGE = 5

@@ -28,7 +28,7 @@
     !(function() {
     var ui = new L.S.UI(document.body);
     var xhr = new L.S.Xhr(ui);
-    var login = document.querySelector('a.login');
+    /*var login = document.querySelector('a.login');
     if (login) {
       L.DomEvent.on(login, 'click', function (e) {
         L.DomEvent.stop(e);
@@ -37,7 +37,7 @@
             "redirect": "/"
         });
       });
-    }
+    }*/
     var logout = document.querySelector('a.logout');
     if (logout) {
       L.DomEvent.on(logout, 'click', function (e) {
