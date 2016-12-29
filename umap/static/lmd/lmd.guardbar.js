@@ -22,14 +22,24 @@ L.Storage.guardbarData = [
     {name:'收费站广场减速标线',type: L.Storage.GB_RECT},
     {name:'行人横穿设施',type: L.Storage.GB_NORMAL_LINE,defaultOptions:{lineCap:'butt'}}
   ]},
-  {name: '防护设施', childs: [
+  { name: '防护设施',
+    defaultData:{
+      gbc: "10", //默认示警墩
+      weight:"10",
+    },
+    childs: [
     null,
-    {name:'波形梁护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'混凝土护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'缆索护栏',   type: L.Storage.GB_NORMAL_LINE},
-    {name:'中分带护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'示警墩', type: L.Storage.GB_NORMAL_LINE},
-    {name:'示警桩', type: L.Storage.GB_NORMAL_LINE},
+    {name:'波形梁钢护栏', type: L.Storage.GB_NORMAL_LINE},
+    {name:'路基混泥土护栏', type: L.Storage.GB_NORMAL_LINE},
+    {name:'强梁混泥土护栏',   type: L.Storage.GB_NORMAL_LINE},
+    {name:'金属梁柱式护栏', type: L.Storage.GB_NORMAL_LINE},
+    {name:'组合式护栏', type: L.Storage.GB_NORMAL_LINE},
+    {name:'缆索护栏', type: L.Storage.GB_CIRCLE},
+    {name:'波形梁护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
+    {name:'外展示警墩', type:L.Storage.GB_NORMAL_LINE},
+    {name:'中央分隔带混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
+    {name:'示警墩', type: L.Storage.GB_CIRCLE},
+    {name:'示警桩', type: L.Storage.GB_RECT},
     {name:'中间隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
@@ -56,9 +66,9 @@ L.Storage.guardbarData = [
   ]},
   {name:'减速丘',childs: [
     null,
-    {name:'大型减速丘',type: L.Storage.GB_NORMAL_LINE},
-    {name:'预制减速垄',type: L.Storage.GB_NORMAL_LINE},
-    {name:'预制断开式减速垄',type: L.Storage.GB_NORMAL_LINE},
+    {name:'大型减速丘',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'预制减速垄',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'预制断开式减速垄',type: L.Storage.GB_VERTICAL_LINE},
   ]},
   {name:'边沟',childs: [
     null,
@@ -90,6 +100,14 @@ L.Storage.getGBClass = function(gbt, gbc){
   return temp['childs'][gbc]
 }
 
+L.Storage.getGBDefaultData = function(gbt){
+  if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
+    return {}
+  }
+  var temp = L.Storage.guardbarData[gbt]
+  return temp['defaultData']
+}
+
 
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
@@ -100,10 +118,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
 
       if (!this.properties._storage_options.gbc) {
+        var defaultData = L.Storage.getGBDefaultData(this.gbType) || {}
         this.properties._storage_options = {
           gbc: "1",
-          color: "red",
           weight:"10"
+        }
+        for(var i in defaultData){
+          this.properties._storage_options[i] = defaultData[i]
         }
 
       }
@@ -117,7 +138,20 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           var gbcOptions = L.Storage.getGBOptions(gbt)
           L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
 
-          L.Storage.LmdFeatureMixin.edit.call(this, e);
+          var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
+
+          if(this.gbType === L.Storage.GB_TYPE_HULAN){
+            var gbc = +this.getOption('gbc')
+            var gbsControl = builder.helpers['properties._storage_options.gbs']
+            var gbnControl = builder.helpers['properties._storage_options.gbn']
+            if(gbc === 10 || gbc === 11 ){
+              gbsControl.show()
+              gbnControl.show()
+            }else{
+              gbsControl.clear().hide()
+              gbnControl.clear().hide()
+            }
+        }
       }
     },
 
@@ -129,9 +163,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           'properties._storage_options.gbss',//起始桩号
           'properties._storage_options.gbse',
           'properties._storage_options.gbl',//总长
-          'properties._storage_options.gba',//面积
-          //'properties._storage_options.gbs',//间距
-          //'properties._storage_options.gbn',//数量
+          //'properties._storage_options.gba',//面积
+          'properties._storage_options.gbs',//间距
+          'properties._storage_options.gbn',//数量
+          'properties._storage_options.gblev',//级别
           'properties._storage_options.gbm', //材料
           'properties._storage_options.ds',
         ];
@@ -255,6 +290,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       stringMap['gbn'] = this.getOption('gbn');//数量
       stringMap['gba'] = this.getOption('gba');//面积
       stringMap['gbw'] = this.getOption('gbw');//宽度
+      stringMap['gblev'] = this.getOption('gblev');//级别
 
 
       var gbd = gbd || L.FormBuilder.DirectionChoice.prototype.default
@@ -297,6 +333,20 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       if(e.helper.name === 'gbc') {
           this._redraw();
+
+          if(this.gbType === L.Storage.GB_TYPE_HULAN){
+              var gbc = +this.getOption('gbc')
+              var gbsControl = e.target.helpers['properties._storage_options.gbs']
+              var gbnControl = e.target.helpers['properties._storage_options.gbn']
+              if(gbc === 10 || gbc === 11 ){
+                gbsControl.show()
+                gbnControl.show()
+              }else{
+                gbsControl.clear().hide()
+                gbnControl.clear().hide()
+              }
+          }
+
       } else if(e.helper.name in {'gbss':0,'gbse':0}){
           //计算长度
           var gbss = this.getOption('gbss') * 1000
@@ -427,6 +477,21 @@ L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
   getClassName: function () {
       return 'jiansuqiu';
   },
+
+  //added by xiongjiabin
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        'properties._storage_options.gbs',//间距
+        'properties._storage_options.gbn',//数量
+        'properties._storage_options.ds',
+      ];
+  },
+
 });
 
 L.Storage.Biangou = L.Storage.Guardbar.extend({
@@ -483,7 +548,6 @@ L.Storage.BarTypeRect  = function(options){
       options[option] = this.getOption(option);
   }
   options['dashArray'] = '10,5';
-  if(options['weight'] < 15) options['weight'] = 10;
   options['opacity'] = 1;
   options['lineCap'] = 'butt';
   if (options.interactive) this.options.pointerEvents = 'visiblePainted';
@@ -499,7 +563,6 @@ L.Storage.BarTypeCircle = function(options){
       options[option] = this.getOption(option);
   }
   options['dashArray'] = '0,25';
-  if(options['weight'] < 15) options['weight'] = 15;
   options['opacity'] = 1;
   options['lineCap'] = 'round';
   if (options.interactive) this.options.pointerEvents = 'visiblePainted';

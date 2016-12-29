@@ -275,6 +275,39 @@ lmd.tjXiujian = function(){
   new CsvGenerator(data,  '修剪内侧.csv').download(true);
 }
 
+
+//防护栏
+lmd.tjFanghu = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '类型',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                gbl: '长度',
+                pos: '侧别',
+                gblev: '级别',
+                gbs: '间距',
+                gbn: '数量',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1,stringMap = null,tempData = null,temp = null
+  this.eachDataLayer(function (datalayer) {
+    datalayer.eachFeature(function (feature) {
+      if(feature.getClassName() === 'guardbar'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+    })
+  })
+
+  new CsvGenerator(data,  '防护栏.csv').download(true);
+}
+
 lmd.tjs = [{
     label: '标志',
     process: lmd.tjIndicators
@@ -293,5 +326,8 @@ lmd.tjs = [{
   },{
     label: '修剪内侧',
     process: lmd.tjXiujian
+  },{
+    label: '防护栏',
+    process: lmd.tjFanghu
   }
 ]

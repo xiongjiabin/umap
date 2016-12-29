@@ -219,7 +219,7 @@ L.Storage.DrawLmdAreaAction = L.Storage.BaseAction.extend({
 
     options: {
         helpMenu: true,
-        className: 'storage-draw-polygon dark',
+        className: 'storage-draw-clear dark',
         tooltip: '清除内侧障碍物'
     },
 

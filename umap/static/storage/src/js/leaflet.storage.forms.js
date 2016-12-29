@@ -742,6 +742,22 @@ L.FormBuilder.XiujianSwitch = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+L.FormBuilder.LevelSwitch = L.FormBuilder.Select.extend({
+
+  selectOptions: [
+    [undefined,"无"],
+    ["A","A"],
+    ["B","B"],
+    ["C","C"],
+    ["Am,","Am"],
+    ["SB","SB"],
+    ["SBm","SBm"],
+    ["SS,","SS"],
+    ["HB","HB"],
+    ["HA","HA"],
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -841,12 +857,14 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gbm:  {handler: 'MaterialSwitcher',label: '材料'},
         gba: {handler: 'FloatInput', label: '面积(m2)'},
         gbd: {handler: 'DirectionChoice',label: '方向'},
+        gblev: {handler: 'LevelSwitch', label:'级别'},
 
         speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
         zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'},
 
         //修建
         at: {handler: 'XiujianSwitch', label: '修剪类型'},
+
     },
 
     initialize: function (obj, fields, options) {

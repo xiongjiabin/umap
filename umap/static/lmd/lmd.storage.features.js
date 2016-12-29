@@ -60,6 +60,7 @@ L.Storage.LmdFeatureMixin = {
     this.map.editedFeature = this;
     if (!this.isOnScreen()) this.bringToCenter(e);
 
+    return builder
   },
 
   initialize: function(map, latlng, options) {
