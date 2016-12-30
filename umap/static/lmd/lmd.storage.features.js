@@ -292,17 +292,18 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     var mtOptions = lmd.getMarkerCategorySecond(mt)
     L.FormBuilder.MarkerIconClassSwitcher.prototype.selectOptions =  mtOptions;
     var mic = this.getOption('mic') || mtOptions[0][0] || 1
-    L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThird(mt, mic);
+    var mssResult = lmd.getMarkerCategoryThird(mt, mic, this.getOption('speed'))
+    L.FormBuilder.MarkerSpeedSizeSwitcher.prototype.selectOptions = mssResult[0];
     L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(mt, mic);
 
-    L.Storage.LmdFeatureMixin.edit.call(this, e)
+    var builder = L.Storage.LmdFeatureMixin.edit.call(this, e)
 
     //做些恶心的事情，xiongjiabin 已知bug，暂时没找到合适方法解决
     //默认size会显示出来
-    //var result = lmd.getMarkerCategoryValue(this.properties._storage_options)
-    //result['customize'] ? this.helpXiongjiabin['helpers']['properties._storage_options.size'].show()
-    //                      : this.helpXiongjiabin['helpers']['properties._storage_options.size'].clear().hide()
-    //delete this.helpXiongjiabin
+    //已经找到方法做这个问题
+    var result = lmd.getMarkerCategoryValue(this.properties._storage_options)
+    result['customize'] ? builder.helpers['properties._storage_options.size'].show()
+                          : builder.helpers['properties._storage_options.size'].clear().hide()
   },
 
   //name是自动生成的，依据所选择的参数
@@ -347,8 +348,14 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       var mshOptions = lmd.getMarkerCategorySecond(selfValue)
       this.properties._storage_options['mic'] = mic.select.value = '' //xiongjiabin 丑陋的代码 12/5
       mic.resetOptions(mshOptions);
+
       this.properties._storage_options['mss'] = mss.select.value = ''
-      mss.resetOptions(lmd.getMarkerCategoryThird(selfValue, mshOptions[0][0]))
+      var mssResult = lmd.getMarkerCategoryThird(selfValue, mshOptions[0][0],this.getOption('speed'))
+      mss.resetOptions(mssResult[0])
+      if(mssResult[1] > 1){
+          this.properties._storage_options['mss'] = mss.select.value = mssResult[1]
+      }
+
       this.properties._storage_options['msh'] = msh.select.value = ''
       msh.resetOptions(lmd.getMarkerCategoryThirdWife(selfValue, mshOptions[0][0]))
 
@@ -362,8 +369,14 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
     } else if (e.helper.field === 'properties._storage_options.mic') {
       var mt = this.getOption('mt');
+
       this.properties._storage_options['mss'] = mss.select.value = ''
-      mss.resetOptions(lmd.getMarkerCategoryThird(mt, selfValue))
+      var mssResult = lmd.getMarkerCategoryThird(mt, selfValue,this.getOption('speed'))
+      mss.resetOptions(mssResult[0])
+      if(mssResult[1] > 1){
+          this.properties._storage_options['mss'] = mss.select.value = mssResult[1]
+      }
+
       this.properties._storage_options['msh'] = msh.select.value = ''
       msh.resetOptions(lmd.getMarkerCategoryThirdWife(mt, selfValue))
 

@@ -738,20 +738,44 @@ lmd.getMarkerCategoryThirdWife = function( category,level ){
   return result
 }
 
-lmd.getMarkerCategoryThird = function( category, level){
+lmd.getMarkerCategoryThird = function( category, level, defaultSpeed ){
   var first = lmd.marker[category]
   if(!first) return []
   var second = first['childs'][level]
   if(!second) return []
-  var result = []
+  defaultSpeed = defaultSpeed || 0
+  var result = [],temp = null,defaultIndex = 0
   var unit = second['prex'] || ''
   for(var i = 1, len = second['childs'].length; i < len; i++){
     var grandson = second['childs'][i]
     if(grandson){
       result.push(['' + i, (grandson['speed'] || '无') + '____' + unit + grandson['size'],grandson]);
+      if(grandson['speed'] && defaultSpeed > 0 && defaultIndex === 0){
+          temp = grandson['speed'].split('-')
+          if(temp.length >= 2){
+              if(defaultSpeed >= temp[0] && defaultSpeed <= temp[1]){
+                  defaultIndex = result.length
+              }
+          }else if(grandson['speed'].startsWith('>')){
+              temp = grandson['speed'].split('>')
+              if(temp.length >= 2){
+                  if(defaultSpeed >= temp[1]){
+                      defaultIndex = result.length
+                  }
+              }
+          }else if(grandson['speed'].startsWith('<')){
+            temp = grandson['speed'].split('<')
+            if(temp.length >= 2){
+                if(defaultSpeed <= temp[1]){
+                    defaultIndex = result.length
+                }
+            }
+          }
+      }
     }
   }
-  return result
+
+  return [result,defaultIndex]
 }
 
 lmd.getMarkerCategoryValue = function( options ){
