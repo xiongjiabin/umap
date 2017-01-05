@@ -62,46 +62,107 @@ L.Storage.Map.include({
     if (this._SUBNO_BUFFER[scaleSubNo]) {
       return this._SUBNO_BUFFER[scaleSubNo]
     }
-    var floorSubNo = Math.floor( scaleSubNo )
-    var ceilSubNo  = Math.ceil( scaleSubNo )
+    var floorOldSubNo = floorSubNo = Math.floor( scaleSubNo )
+    var ceilOldSubNo = ceilSubNo  = Math.ceil( scaleSubNo )
     var floorData = null
     var ceilData = null
+    var floorOldData = null
+    var result = {}
+
+    if(floorSubNo === ceilSubNo) {
+      floorSubNo = floorSubNo - 1
+      ceilSubNo = ceilSubNo + 1
+    }
 
     for (i = 0, len = this.datalayers_index.length; i < len; i++) {
       var subHelpData = this.datalayers_index[i].options &&
                         this.datalayers_index[i].options.subHelpData
       if(!subHelpData) continue
-      for(j = 0, len1 = subHelpData.length; j < len1; j++){
+      for(j = 0, len1 = subHelpData.length; j < len1; j++) {
         subHelp = subHelpData[j]
-        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max){
+        //得一段路必须在一个完整的地方，交叉的情况暂时不考虑
+        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max) {
           floorData  = [subHelp['data'][floorSubNo][1],subHelp['data'][floorSubNo][0]]
+
+          if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
+            ceilData  = [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
+          }
+
+          if(floorOldSubNo >= subHelp.min && floorOldSubNo <= subHelp.max) {
+            floorOldData  = [subHelp['data'][floorOldSubNo][1],subHelp['data'][floorOldSubNo][0]]
+          }
         }
-        if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max){
-          ceilData  = [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
+
+        if(floorData && ceilData) {
+            break
+        }else{
+            floorData = ceilData = null
         }
+      }
+
+      if(floorData && ceilData){
+          break //退出，并且知道属于哪一个layer
       }
     }
 
-    if(floorData && ceilData){
-       if(floorSubNo === ceilSubNo) {
-         this._SUBNO_BUFFER[scaleSubNo] = floorData
-         return this._SUBNO_BUFFER[scaleSubNo]
+    if(floorData && ceilData) {
+       if(floorOldSubNo === ceilOldSubNo) {
+         result['point'] = floorOldData
        }
-       //就平均值
-       var diff1 = scaleSubNo - floorSubNo
-       var diff2 = ceilSubNo - scaleSubNo
-       var lat, lng, ratio
-       if(diff1 < diff2){
-         ratio = diff1 / (ceilSubNo - floorSubNo )
-         lat = floorData[0] + (ceilData[0] - floorData[0]) * ratio
-         lng = floorData[1] + (ceilData[1] - floorData[1]) * ratio
-       }else{
-         ratio = diff2 / (ceilSubNo - floorSubNo )
-         lat = ceilData[0] - (ceilData[0] - floorData[0]) * ratio
-         lng = ceilData[1] - (ceilData[1] - floorData[1]) * ratio
-       }
-       this._SUBNO_BUFFER[scaleSubNo] = [lat,lng]
-       return this._SUBNO_BUFFER[scaleSubNo]
+
+       //采用新的turf算法解决有弯曲的时候寻找到的点可能不在线上的问题
+       //从layer中找到这条线，然后使用long函数去沿着线去寻找这个点
+       var floorPoint = turf.point([floorData[1],floorData[0]])
+       var ceilPoint  = turf.point([ceilData[1],ceilData[0]])
+       var feature = null
+       var layer = this.datalayers_index[i]
+       var factor = 0, along = null,lineGeojson,sliced, newCoordinates = []
+       for (var k = 0; k < layer._index.length; k++) {
+           feature = layer._layers[layer._index[k]];
+
+           if(feature.properties &&
+              feature.properties._storage_options &&
+              feature.properties._storage_options['road']){
+               //如果是条路的话
+               lineGeojson = feature.toGeoJSON()
+               sliced = turf.lineSlice(floorPoint,ceilPoint,lineGeojson)
+               if(sliced){
+                 var temp = turf.point(sliced.geometry.coordinates[0])
+                 if((turf.distance(temp,floorPoint) * 1000) > 5){
+                   for(var j = sliced.geometry.coordinates.length - 1; j >= 0; j--){
+                       newCoordinates.push(sliced.geometry.coordinates[j])
+                   }
+                   sliced.geometry.coordinates = newCoordinates
+                 }
+               }
+
+
+               if(result['point']) {
+                   factor = turf.distance(floorPoint,ceilPoint) * 5 // *1000 / 200
+               }else{
+                   factor = turf.distance(floorPoint,ceilPoint) * 10 // * 1000 / 100
+                   //实际的距离可能不是100米，俩个桩号之间，所以要生成一个factor
+                   along = turf.along(sliced, (scaleSubNo - floorSubNo )/10 * factor )
+                   if(along) {
+                       temp = along.geometry.coordinates
+                       result['point'] = [temp[1],temp[0]]
+                   }
+               }
+
+               var m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
+               var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
+               var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
+               var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)
+               console.log('m1-a1:right:' + right )
+               console.log('a1-m1:left :' + left )
+
+               result['left'] = left
+               result['right'] = right
+
+               this._SUBNO_BUFFER[scaleSubNo] = result
+               return this._SUBNO_BUFFER[scaleSubNo]
+            }
+        }
     }
 
     console.log('no found this sub ' + subNo)

@@ -446,7 +446,8 @@ L.Storage.Help = L.Class.extend({
     proxyRemoteData: L._('To use if remote server doesn\'t allow cross domain (slower)'),
     defaultSpeed: '需要依靠速度做选择的时候默认认为是这个速度',
     defaultLayer: '增加新元素的时候默认添加到这个层中;会在默认的层中查找上一个元素填充桩号，旋转角度等参数',
-    offsetHelp: '如果需要转化成国内的坐标，请选择需要处理偏移'
+    offsetHelp: '如果需要转化成国内的坐标，请选择需要处理偏移',
+    roadHelp: '如果这个是导入的路，请选择他为主路，用来帮助查找某个点，计算垂直的角度，和自动旋转'
 });
 
 

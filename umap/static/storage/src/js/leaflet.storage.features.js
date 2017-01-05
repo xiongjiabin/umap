@@ -720,6 +720,9 @@ L.Storage.PathMixin = {
             'properties._storage_options.opacity',
             'properties._storage_options.weight',
             'properties._storage_options.iconUrl',
+            //xiongjiabin 2017-01-04
+            //增加一个road属性，用来判断这个线是不是一条路，路有很多属性，需要被别人利用到，比如桩号啥的
+            'properties._storage_options.road'
         ];
     },
 

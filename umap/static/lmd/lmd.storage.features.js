@@ -156,13 +156,16 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     var latlng = this.getLatLng()
     var sn = +this.getOption('sn')
     if(sn){
-      var center = this.map.getAnchorLatLngBySubNo(sn)
-      var latlngs = [center, latlng]
-      this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
-      var latlngPoint = this.map.latLngToLayerPoint(latlng);
-      var centerPoint = this.map.latLngToLayerPoint(center);
-      this.properties._storage_options['helpX'] = Math.round(latlngPoint['x'] - centerPoint['x'])
-      this.properties._storage_options['helpY'] = Math.round(latlngPoint['y'] - centerPoint['y'])
+      var data = this.map.getAnchorLatLngBySubNo(sn)
+      if(data['point']){
+          var center = [data['point'][0],data['point'][1]]
+          var latlngs = [center, latlng]
+          this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
+          var latlngPoint = this.map.latLngToLayerPoint(latlng);
+          var centerPoint = this.map.latLngToLayerPoint(center);
+          this.properties._storage_options['helpX'] = Math.round(latlngPoint['x'] - centerPoint['x'])
+          this.properties._storage_options['helpY'] = Math.round(latlngPoint['y'] - centerPoint['y'])
+      }
     }
   },
 
@@ -213,8 +216,9 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     if (helpX || helpY) {
       var subNo = +this.getOption('sn')
       if(subNo > 0){
-        var center = this.map.getAnchorLatLngBySubNo(subNo)
-        if(center){
+        var data = this.map.getAnchorLatLngBySubNo(subNo)
+        if(data && data['point']){
+          var center = [data['point'][0],data['point'][1]]
           var scaleZoom = lmd.getLmdZoom(this.map)
 
           var centerPoint = this.map.latLngToLayerPoint(center)
@@ -394,10 +398,23 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
       needToProcessSize = true
 
-    } else  if (e.helper.field === 'properties._storage_options.mss') {
+    } else if (e.helper.field === 'properties._storage_options.mss') {
+
       needToProcessSize = true
-    }else{
-      //noting to process
+
+    } else if (e.helper.field === 'properties._storage_options.sn' ||
+               e.helper.field === 'properties._storage_options.lr') {
+      var lr = +this.getOption('lr')
+      var sn = this.getOption('sn')
+      var data = this.map.getAnchorLatLngBySubNo(sn)
+      var pos = lr == 2 ? 'right' : 'left'
+      if(data && data[pos]){
+          this.properties._storage_options['rotate'] = data[pos]
+          this.caculateHelpXY()
+          this._redraw();
+      }
+    } else {
+       //noting to process
     }
 
     if(needToProcessSize){
@@ -643,10 +660,26 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
   },
 
 
-  resetTooltip: function(){
+  resetTooltip: function(e){
     var ps = this.getOption('ps')
     var sn = this.getOption('sn')
     this.setSvgText(this.getSvgData(ps,sn))
+
+    if(!e) return
+
+    if (e.helper.field === 'properties._storage_options.sn' ||
+        e.helper.field === 'properties._storage_options.lr') {
+      var lr = +this.getOption('lr')
+      var data = this.map.getAnchorLatLngBySubNo(sn)
+      var pos = lr == 2 ? 'right' : 'left'
+      if(data && data[pos]){
+          this.properties._storage_options['rotate'] = data[pos]
+          this.updateStyle()
+          if(data.point){
+              this.setLatLng(data.point)
+          }
+      }
+    }
   },
 
   //added by xiongjiabin

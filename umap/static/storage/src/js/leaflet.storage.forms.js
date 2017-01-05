@@ -865,6 +865,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //修建
         at: {handler: 'XiujianSwitch', label: '修剪类型'},
 
+        //road
+        road: {handler: 'Switch', label: '是否定义为主路',helpEntries:'roadHelp'},
+
     },
 
     initialize: function (obj, fields, options) {

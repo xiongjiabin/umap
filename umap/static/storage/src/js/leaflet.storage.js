@@ -212,7 +212,7 @@ L.Storage.Map.include({
         this.backup();
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
-        this.on('moveend',this.handleShowMarker);
+        this.on('click moveend',this.handleShowMarker);
     },
 
     initControls: function () {
@@ -1502,7 +1502,7 @@ L.Storage.Map.include({
     },
 
     startLmdArea: function(){
-        return this.editTools.startLmdArea();  
+        return this.editTools.startLmdArea();
     },
 
     startMarker: function () {
