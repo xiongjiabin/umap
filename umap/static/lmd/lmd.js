@@ -349,7 +349,8 @@ L.Storage.Map.include({
           title: results[index][2],
           interactive: false,
           icon: myIcon
-      }).bindTooltip(results[index][2]/10 + '',{className:'padding1'}).addTo(this)
+      }).bindTooltip(results[index][2]/10 + '',{className:'padding1', permanent:true}).addTo(this)
+      //xiongjiabin  添加permanent：true，让其不去监听preclick事件，不去发生变化当点击等事件的时候
       temp.openTooltip()
       this._MARKER_SHOW.push(temp)
     }

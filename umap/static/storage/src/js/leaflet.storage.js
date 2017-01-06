@@ -212,7 +212,7 @@ L.Storage.Map.include({
         this.backup();
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
-        this.on('click moveend',this.handleShowMarker);
+        this.on('moveend',this.handleShowMarker);
     },
 
     initControls: function () {
