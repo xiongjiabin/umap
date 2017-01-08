@@ -257,9 +257,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               //console.time('get line between sub :', gbss + '->' + gbse)
               //var oldLatlngs = this.getLatLngs()
               var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
-              var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
-              this.setLatLngs(offsetLatLngs)
-              this.editor && this.editor.reset();
+              if(newCoordinates) {
+                  var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
+                  this.setLatLngs(offsetLatLngs)
+                  this.editor && this.editor.reset();
+              }else{
+                  console.error('没有找到对应的桩号坐标，是不是没有设置为路?')
+              }
               //console.timeEnd('get line between sub :', gbss + '->' + gbse)
           }
       }
@@ -458,10 +462,14 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
             //console.time('get line between sub :', gbss + '->' + gbse)
             //var oldLatlngs = this.getLatLngs()
             var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
-            var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
-            this.setLatLngs(offsetLatLngs)
-            this._redraw()
-            this.editor && this.editor.reset();
+            if(newCoordinates){
+                var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
+                this.setLatLngs(offsetLatLngs)
+                this._redraw()
+                this.editor && this.editor.reset();
+            }else{
+                console.error('没有找到对应的桩号坐标，是不是没有设置为路?')
+            }
             //console.timeEnd('get line between sub :', gbss + '->' + gbse)
         }
       }
