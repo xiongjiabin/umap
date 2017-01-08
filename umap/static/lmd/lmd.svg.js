@@ -560,7 +560,7 @@ L.PolylineOffset = {
 
   L.Polyline.include({
     getOffSetLatlngs: function(offset, latlngs, tolerance){
-      if(!offset) return this._latlngs
+      if(!offset) return latlngs
       tolerance = tolerance || 1
       latlngs  = latlngs || this._latlngs
       var results = []
@@ -603,12 +603,3 @@ L.PolylineOffset = {
       }
     }
   });
-
-
-L.Polyline.include({
-  setOffset: function(offset) {
-    this.options.offset = offset;
-    this.redraw();
-    return this;
-  }
-});

@@ -15,7 +15,14 @@ L.Storage.GB_TYPE_BIANGOU = 7
 
 L.Storage.guardbarData = [
   null,
-  {name: '标线', childs: [
+  {name: '标线',
+   defaultData: {
+     color: 'LightCyan',
+
+     weight: 20,
+     opacity: 1
+   },
+   childs: [
     null,
     {name:'横向减速标线',type: L.Storage.GB_RECT, defaultOptions: {}},
     {name:'纵向减速标线',type: L.Storage.GB_RECT},
@@ -34,7 +41,7 @@ L.Storage.guardbarData = [
     {name:'强梁混泥土护栏',   type: L.Storage.GB_NORMAL_LINE},
     {name:'金属梁柱式护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'组合式护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'缆索护栏', type: L.Storage.GB_CIRCLE},
+    {name:'缆索护栏', type: L.Storage.GB_CIRCLE,defaultOptions:{weight:20}},
     {name:'波形梁护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
     {name:'外展示警墩', type:L.Storage.GB_NORMAL_LINE},
     {name:'中央分隔带混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
@@ -46,8 +53,8 @@ L.Storage.guardbarData = [
   ]},
   {name:'轮廓标', childs: [
     null,
-    {name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',width:2,fill:true}},
-    {name:'柱状轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',width:2,fill:true}},
+    {name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
+    {name:'柱状轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
   {name: '防眩设施', childs: [
     null,
@@ -238,13 +245,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     },
 
     _redraw: function (e) {
-      
+
       if(e && e.helper.name in {'offset': 0}){
           var gbss = this.getOption('gbss')
           var gbse = this.getOption('gbse')
           if(gbss && gbse && gbse > gbss){
               var gl   = +this.getOption('lr') || 1
-              var offset = this.getOption('offset') || 40
+              var offset = this.getOption('offset')
               if(gl !== 2) offset = 0 - offset
 
               //console.time('get line between sub :', gbss + '->' + gbse)
