@@ -121,7 +121,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         var defaultData = L.Storage.getGBDefaultData(this.gbType) || {}
         this.properties._storage_options = {
           gbc: "1",
-          weight:"10"
+          weight:"10",
+          offset: 40
         }
         for(var i in defaultData){
           this.properties._storage_options[i] = defaultData[i]
@@ -177,6 +178,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
             'properties._storage_options.color',
             'properties._storage_options.opacity',
             'properties._storage_options.weight',
+            'properties._storage_options.offset'
         ];
     },
 
@@ -233,6 +235,30 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           L.Storage.BarTypeCustomize.call(this,this.options)
         }
       }
+    },
+
+    _redraw: function (e) {
+      
+      if(e && e.helper.name in {'offset': 0}){
+          var gbss = this.getOption('gbss')
+          var gbse = this.getOption('gbse')
+          if(gbss && gbse && gbse > gbss){
+              var gl   = +this.getOption('lr') || 1
+              var offset = this.getOption('offset') || 40
+              if(gl !== 2) offset = 0 - offset
+
+              //console.time('get line between sub :', gbss + '->' + gbse)
+              //var oldLatlngs = this.getLatLngs()
+              var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
+              var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
+              this.setLatLngs(offsetLatLngs)
+              this.editor && this.editor.reset();
+              //console.timeEnd('get line between sub :', gbss + '->' + gbse)
+          }
+      }
+
+      this.setStyle();
+      this.resetTooltip();
     },
 
     getClassName: function () {
@@ -330,6 +356,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       L.Storage.FeatureMixin.resetTooltip.call(this,e)
       if (!e) return;
+      var needDrawAgain = false
 
       if(e.helper.name === 'gbc') {
           this._redraw();
@@ -382,6 +409,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
                   this.properties._storage_options.gbn = gbnControl.input.value = gbn
               }
           }
+
+          needDrawAgain = true
       }else if(e.helper.name in {'gbs': 0}){
 
         var gbs = +this.getOption('gbs')
@@ -403,8 +432,32 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
                   this.properties._storage_options.gba = gbaControl.input.value = area
               }
           }
+      }else if(e.helper.name in {'lr': 0}){
+          needDrawAgain = true
+      }else{
+        //nothing to do
       }
+
       this.updateName(e)
+
+      if(needDrawAgain){
+        var gbss = this.getOption('gbss')
+        var gbse = this.getOption('gbse')
+        if(gbss && gbse && gbse > gbss){
+            var gl   = +this.getOption('lr') || 1
+            var offset = this.getOption('offset') || 40
+            if(gl !== 2) offset = 0 - offset
+
+            //console.time('get line between sub :', gbss + '->' + gbse)
+            //var oldLatlngs = this.getLatLngs()
+            var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
+            var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
+            this.setLatLngs(offsetLatLngs)
+            this._redraw()
+            this.editor && this.editor.reset();
+            //console.timeEnd('get line between sub :', gbss + '->' + gbse)
+        }
+      }
 
     }
 });

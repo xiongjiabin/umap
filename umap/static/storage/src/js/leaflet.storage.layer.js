@@ -458,7 +458,7 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     addData: function (geojson) {
-        this.geojsonToFeatures(geojson);
+        return this.geojsonToFeatures(geojson);
     },
 
     addRawData: function (c, type, options) {

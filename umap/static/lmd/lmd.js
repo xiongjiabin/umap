@@ -116,7 +116,7 @@ L.Storage.Map.include({
        var ceilPoint  = turf.point([ceilData[1],ceilData[0]])
        var feature = null
        var layer = this.datalayers_index[i]
-       var factor = 0, along = null,lineGeojson,sliced, newCoordinates = []
+       var factor = 0, along = null,lineGeojson,sliced
        for (var k = 0; k < layer._index.length; k++) {
            feature = layer._layers[layer._index[k]];
 
@@ -129,10 +129,7 @@ L.Storage.Map.include({
                if(sliced){
                  var temp = turf.point(sliced.geometry.coordinates[0])
                  if((turf.distance(temp,floorPoint) * 1000) > 5){
-                   for(var j = sliced.geometry.coordinates.length - 1; j >= 0; j--){
-                       newCoordinates.push(sliced.geometry.coordinates[j])
-                   }
-                   sliced.geometry.coordinates = newCoordinates
+                     sliced.geometry.coordinates.reverse()
                  }
                }
 
@@ -166,6 +163,92 @@ L.Storage.Map.include({
     }
 
     console.log('no found this sub ' + subNo)
+    return null
+  },
+
+  getLineBetweenSubNos: function( beginSubNo, endSubNo ) {
+    var i = 0, j = 0, len = 0, len1 = 0, subHelp = null
+    var beginScaleSubNo = parseFloat(beginSubNo) * 10
+    var endScaleSubNo = parseFloat(endSubNo) * 10
+    var beginPoint = null, endPoint = null
+    var beginData = null, endData = null
+
+    beginData = this.getAnchorLatLngBySubNo(beginSubNo)
+    if(!beginData || !beginData['point']) return null
+    beginPoint = beginData['point']
+    endData = this.getAnchorLatLngBySubNo(endSubNo)
+    if(!endData || !endData['point']) return null
+    endPoint = endData['point']
+
+    var beginFloorSubNo = Math.floor( beginScaleSubNo )
+    var beginCeilSubNo  = Math.ceil( beginScaleSubNo )
+    var endFloorSubNo = Math.floor( endScaleSubNo )
+    var endCeilSubNo  = Math.ceil( endScaleSubNo )
+    var floorSubNo = beginFloorSubNo < endFloorSubNo ? beginFloorSubNo : endFloorSubNo
+    var ceilSubNo  = beginCeilSubNo  < endCeilSubNo  ? endCeilSubNo    : beginCeilSubNo
+
+    var found = false
+    for (i = 0, len = this.datalayers_index.length; i < len; i++) {
+      var subHelpData = this.datalayers_index[i].options &&
+                        this.datalayers_index[i].options.subHelpData
+      if(!subHelpData) continue
+      for(j = 0, len1 = subHelpData.length; j < len1; j++) {
+        subHelp = subHelpData[j]
+        //得一段路必须在一个完整的地方，交叉的情况暂时不考虑
+        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max) {
+          if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
+              found  = true
+          }
+        }
+        if( found ) break
+      }
+      if( found ) break //退出，并且知道属于哪一个layer
+    }
+
+    if( found ) {
+       var beginPointGeojson = turf.point([beginPoint[1],beginPoint[0]])
+       var endPointGeojson   = turf.point([endPoint[1],endPoint[0]])
+       var feature = null
+       var layer = this.datalayers_index[i]
+       var lineGeojson,sliced,  k = 0
+       for ( len1 = layer._index.length; k < len1; k++) {
+           feature = layer._layers[layer._index[k]];
+           if(feature.properties &&
+              feature.properties._storage_options &&
+              feature.properties._storage_options['road']){
+               //如果是条路的话
+               lineGeojson = feature.toGeoJSON()
+               sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,lineGeojson)
+               if( sliced ){
+                 var temp = turf.point(sliced.geometry.coordinates[0])
+                 if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
+                   sliced.geometry.coordinates.reverse()
+                 }
+
+                 //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
+                 var temp1 = null, temp2 = null
+                 var newCoordinates = []
+                 for(j = 0; j < sliced.geometry.coordinates.length; j++){
+                     temp2 = sliced.geometry.coordinates[j]
+                     if(!temp1 ){
+                         newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
+                     }else{
+                         if(temp1[0] === temp2[0] && temp1[1] === temp2[1] && temp1[2] === temp2[2]){
+
+                         }else{
+                            newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
+                         }
+                     }
+                    temp1 = temp2
+                 }
+
+                 return newCoordinates
+               }
+            }
+        }
+    }
+
+    console.log('no found this line ' + beginSubNo + ':' + endSubNo )
     return null
   },
 

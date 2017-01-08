@@ -846,6 +846,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         helpX:  {handler: 'IntInput', label: '辅助X'},
         helpY:  {handler: 'IntInput', label: '辅助Y'},
 
+
         //护栏部分
         gbc: {handler: 'GuardbarCatSwitcher', label: '类别'},
         gbl: {handler: 'FloatInput', label: '总长(m)'},
@@ -858,6 +859,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gba: {handler: 'FloatInput', label: '面积(m2)'},
         gbd: {handler: 'DirectionChoice',label: '方向'},
         gblev: {handler: 'LevelSwitch', label:'级别'},
+        offset: {handler: 'Range', min: 10, max: 200, step: 1, label: '中线偏移'},
 
         speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
         zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'},
