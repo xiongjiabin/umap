@@ -869,6 +869,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //road
         road: {handler: 'Switch', label: '是否定义为主路',helpEntries:'roadHelp'},
+        tail: {handler: 'Range', min:220, max:600, step:10,label: '尾巴'},
 
     },
 

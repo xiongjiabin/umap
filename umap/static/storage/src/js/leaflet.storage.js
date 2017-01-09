@@ -1317,7 +1317,7 @@ L.Storage.Map.include({
             this.handleLimitBounds();
         }, this);
 
-        /*var slideshow = L.DomUtil.createFieldset(container, L._('Slideshow'));
+        var slideshow = L.DomUtil.createFieldset(container, L._('Slideshow'));
         var slideshowFields = [
             ['options.slideshow.delay', {handler: 'IntInput', placeholder: L._('Set a value for adding a slideshow'), helpText: L._('Delay between elements (in milliseconds)')}],
             ['options.slideshow.autoplay', {handler: 'Switch', label: L._('Autostart when map is loaded')}]
@@ -1332,7 +1332,7 @@ L.Storage.Map.include({
         });
         slideshow.appendChild(slideshowBuilder.build());
 
-        var credits = L.DomUtil.createFieldset(container, L._('Credits'));
+        /*var credits = L.DomUtil.createFieldset(container, L._('Credits'));
         var creditsFields = [
             ['options.licence', {handler: 'LicenceChooser', label: L._('licence')}],
             ['options.shortCredit', {handler: 'Input', label: L._('Short credits'), helpEntries: ['shortCredit', 'textFormatting']}],
