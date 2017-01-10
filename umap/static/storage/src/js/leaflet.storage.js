@@ -590,15 +590,30 @@ L.Storage.Map.include({
         });
         var iframeOptions = L.DomUtil.createFieldset(container, L._('Iframe export options'));
         iframeOptions.appendChild(builder.build());
-        if (this.options.shortUrl) {
+        //去掉shorturl这个功能 xiongjiabin
+        /*if (this.options.shortUrl) {
             L.DomUtil.create('hr', '', container);
             L.DomUtil.add('h4', '', container, L._('Short URL'));
             var shortUrl = L.DomUtil.create('input', 'storage-short-url', container);
             shortUrl.type = 'text';
             shortUrl.value = this.options.shortUrl;
-        }
+        }*/
         L.DomUtil.create('hr', '', container);
         L.DomUtil.add('h4', '', container, L._('Download data'));
+        var layerInput = L.DomUtil.create('select','',container);
+        layerInput.name = 'layer'
+        option = L.DomUtil.create('option', '', layerInput);
+        option.value = 0;
+        option.innerHTML = '全部';
+
+        this.eachDataLayer(function (datalayer) {
+            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
+                option = L.DomUtil.create('option', '', layerInput);
+                option.value = L.stamp(datalayer);
+                option.innerHTML = datalayer.getName();
+            }
+        });
+
         var typeInput = L.DomUtil.create('select', '', container);
         typeInput.name = 'format';
         var exportCaveat = L.DomUtil.add('small', 'help-text', container, L._('Only visible features will be downloaded.'));
@@ -609,23 +624,31 @@ L.Storage.Map.include({
         }, this);
         var types = {
             geojson: {
-                formatter: function (map) {return JSON.stringify(map.toGeoJSON(), null, 2);},
+                formatter: function (map,layerid) {
+                  return JSON.stringify(map.toGeoJSON(layerid), null, 2);
+                },
                 ext: '.geojson',
                 filetype: 'application/json'
             },
             gpx: {
-                formatter: function (map) {return togpx(map.toGeoJSON());},
+                formatter: function (map,layerid) {
+                  return togpx(map.toGeoJSON(layerid));
+                },
                 ext: '.gpx',
                 filetype: 'application/xml'
             },
             kml: {
-                formatter: function (map) {return tokml(map.toGeoJSON());},
+                formatter: function (map,layerid) {
+                  return tokml(map.toGeoJSON(layerid));
+                },
                 ext: '.kml',
                 filetype: 'application/vnd.google-earth.kml+xml'
             },
             umap: {
                 name: L._('Raw uMap data'),
-                formatter: function (map) {return map.serialize();},
+                formatter: function (map,layerid) {
+                  return map.serialize(layerid);
+                },
                 ext: '.umap',
                 filetype: 'application/json'
             }
@@ -640,10 +663,11 @@ L.Storage.Map.include({
         var download = L.DomUtil.create('a', 'button', container);
         download.innerHTML = L._('Download data');
         L.DomEvent.on(download, 'click', function () {
+            var layerid = layerInput.value;
             var type = types[typeInput.value],
-                content = type.formatter(this),
+                content = type.formatter(this,layerid),
                 name = this.options.name || 'data';
-            name = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            //name = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             download.download = name + type.ext;
             window.URL = window.URL || window.webkitURL;
             var blob = new Blob([content], {type: type.filetype});
@@ -652,10 +676,11 @@ L.Storage.Map.include({
         this.ui.openPanel({data: {html: container}});
     },
 
-    toGeoJSON: function () {
+    toGeoJSON: function ( layerid ) {
+        layerid = +layerid || 0
         var features = [];
         this.eachDataLayer(function (datalayer) {
-            if (datalayer.isVisible()) {
+            if (datalayer.isVisible() && (!layerid || layerid === L.stamp(datalayer))) {
                 features = features.concat(datalayer.featuresToGeoJSON());
             }
         });

@@ -12,6 +12,7 @@ L.Util.queryString = function (name, fallback) {
     var decode = function (s) { return decodeURIComponent(s.replace(/\+/g, ' ')); };
     var qs = window.location.search.slice(1).split('&'), qa = {};
     for (var i in qs) {
+        if(!qs[i]) continue;
         var key = qs[i].split('=');
         if (!key) continue;
         qa[decode(key[0])] = key[1] ? decode(key[1]) : 1;
