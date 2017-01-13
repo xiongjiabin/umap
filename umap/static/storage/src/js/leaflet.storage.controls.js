@@ -490,6 +490,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
                 this.options.actions.push(L.S.AddPolygonShapeAction);
             }
         }
+
         L.Toolbar.Control.prototype.appendToContainer.call(this, container);
     },
 

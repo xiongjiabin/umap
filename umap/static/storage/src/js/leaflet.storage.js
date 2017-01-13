@@ -234,6 +234,7 @@ L.Storage.Map.include({
             if (this.options.urls.map_update_permissions) editActions.push(L.Storage.UpdatePermsAction);
             new L.S.SettingsToolbar({actions: editActions}).addTo(this);
         }
+
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});
         this._controls.datalayers = new L.Storage.DataLayersControl(this);
         this._controls.locate = new L.S.LocateControl();
@@ -1465,6 +1466,53 @@ L.Storage.Map.include({
         disable.href = '#';
         disable.title = disable.innerHTML = L._('Disable editing');
 
+        var drawControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        drawControl.href = '#';
+        drawControl.innerHTML = '隐藏设计按钮';
+
+        var settingControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        settingControl.href = '#';
+        settingControl.innerHTML = '隐藏地图设置';
+
+        L.DomEvent
+            .addListener(settingControl,'click',L.DomEvent.stop)
+            .addListener(settingControl,'click',function (e) {
+                var displayCss = 'display:block'
+                if(settingControl.innerHTML === '隐藏地图设置'){
+                  settingControl.innerHTML = '显示地图设置'
+                  displayCss = 'display:none'
+                }else{
+                  settingControl.innerHTML = '隐藏地图设置'
+                }
+
+                var topright = this._controlCorners['topright']
+                var ul = topright.getElementsByClassName('leaflet-control-toolbar')
+                var toolbar1 = ul[1]
+                var lis = toolbar1.getElementsByTagName('li')
+                for(var i = 3, len = lis.length; i < len; i++){
+                  lis[i].style = displayCss
+                }
+            },this);
+
+        L.DomEvent
+            .addListener(drawControl,'click',L.DomEvent.stop)
+            .addListener(drawControl,'click',function (e) {
+                var displayCss = 'display:block'
+                if(drawControl.innerHTML === '隐藏设计按钮'){
+                  drawControl.innerHTML = '显示设计按钮'
+                  displayCss = 'display:none'
+                }else{
+                  drawControl.innerHTML = '隐藏设计按钮'
+                }
+
+                var topright = this._controlCorners['topright']
+                var ul = topright.getElementsByClassName('leaflet-control-toolbar')
+                var toolbar1 = ul[0]
+                var lis = toolbar1.getElementsByTagName('li')
+                for(var i = 3, len = lis.length; i < len; i++){
+                  lis[i].style = displayCss
+                }
+            },this);
 
         L.DomEvent
             .addListener(disable, 'click', L.DomEvent.stop)
