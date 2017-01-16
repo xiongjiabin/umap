@@ -513,6 +513,7 @@ L.Storage.FeatureMixin = {
       }else{
         stringMap['sn'] = '';
       }
+      stringMap['key'] = +sn
 
       var pos = this.getOption('lr') || L.FormBuilder.LeftRightChoice.prototype.default
       stringMap['pos'] = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.choices)[pos] || ''

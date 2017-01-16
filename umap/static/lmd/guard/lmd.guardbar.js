@@ -18,7 +18,6 @@ L.Storage.guardbarData = [
   {name: '标线',
    defaultData: {
      color: 'LightCyan',
-
      weight: 20,
      opacity: 1
    },
@@ -322,6 +321,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         stringMap['gbss'] = sneString
         stringMap['gbse'] = snsString
       }
+
+      stringMap['key'] = +sns
 
       stringMap['gbl'] = this.getOption('gbl');//长度
       stringMap['gbn'] = this.getOption('gbn');//数量

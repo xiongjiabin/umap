@@ -72,12 +72,28 @@ lmd.objectToArray = function(obj){
 lmd.getTjData = function(feature, no, titles){
   var tempData = [no]
   var stringMap = feature.getStringMap()
-  for(var temp in titles){
+  for(var temp in titles) {
     tempData.push(stringMap[temp] || '')
   }
+  tempData['key'] = stringMap['key'] || 0
   return tempData
 }
 
+lmd.processData = function(data){
+  data.sort(function(a,b){
+    if(a.key && b.key){
+      return a.key - b.key
+    }else{
+      return a.no - b.no
+    }
+  })
+
+  for(var i = 1; i < data.length; i++){
+    data[i][0] = i
+  }
+
+  return data
+}
 
 //返回标志
 lmd.tjIndicators = function(){
@@ -141,15 +157,15 @@ lmd.tjPillars = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
-      if(feature.getClassName() === 'lmdPillar'){
-        data.push(lmd.getTjData(feature,i,titles))
-        i++
-      }
-    })
+  var i = 1
+  this.eachLayerFeature(function (feature) {
+    if(feature.getClassName() === 'lmdPillar'){
+      data.push(lmd.getTjData(feature,i,titles))
+      i++
+    }
   })
+
+  lmd.processData(data)
 
   new CsvGenerator(data,  '立柱.csv').download(true);
 }
@@ -172,15 +188,15 @@ lmd.tjLunkuo = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
-      if(feature.getClassName() === 'lunkuo'){
-        data.push(lmd.getTjData(feature,i,titles))
-        i++
-      }
-    })
+  var i = 1
+  this.eachLayerFeature(function(feature){
+    if(feature.getClassName() === 'lunkuo'){
+      data.push(lmd.getTjData(feature,i,titles))
+      i++
+    }
   })
+
+  lmd.processData(data)
 
   new CsvGenerator(data,  '轮廓设施表.csv').download(true);
 }
@@ -203,15 +219,15 @@ lmd.tjJiansu = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
+  var i = 1
+  this.eachLayerFeature(function (feature) {
       if(feature.getClassName() === 'jiansu'){
-        data.push(lmd.getTjData(feature,i,titles))
-        i++
+          data.push(lmd.getTjData(feature,i,titles))
+          i++
       }
-    })
   })
+
+  lmd.processData(data)
 
   new CsvGenerator(data,  '减速路面.csv').download(true);
 }
@@ -232,15 +248,15 @@ lmd.tjBiangou = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
+  var i = 1
+  this.eachLayerFeature(function (feature) {
       if(feature.getClassName() === 'biangou'){
         data.push(lmd.getTjData(feature,i,titles))
         i++
       }
-    })
   })
+
+  lmd.processData(data)
 
   new CsvGenerator(data,  '边沟.csv').download(true);
 }
@@ -262,15 +278,15 @@ lmd.tjXiujian = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
+  var i = 1
+  this.eachLayerFeature(function (feature) {
       if(feature.getClassName() === 'lmdArea'){
         data.push(lmd.getTjData(feature,i,titles))
         i++
       }
-    })
   })
+
+  lmd.processData(data)
 
   new CsvGenerator(data,  '修剪内侧.csv').download(true);
 }
@@ -295,16 +311,15 @@ lmd.tjFanghu = function(){
   delete titles.no
 
   //this means map
-  var i = 1,stringMap = null,tempData = null,temp = null
-  this.eachDataLayer(function (datalayer) {
-    datalayer.eachFeature(function (feature) {
+  var i = 1
+  this.eachLayerFeature(function (feature) {
       if(feature.getClassName() === 'guardbar'){
         data.push(lmd.getTjData(feature,i,titles))
         i++
       }
-    })
   })
 
+  lmd.processData(data)
   new CsvGenerator(data,  '防护栏.csv').download(true);
 }
 

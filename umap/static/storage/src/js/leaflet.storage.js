@@ -953,6 +953,15 @@ L.Storage.Map.include({
         }
     },
 
+    //xiongjiabin 增加一个针对每个layer的每个feature的轮训
+    eachLayerFeature: function(method, context) {
+        this.eachDataLayer(function (datalayer) {
+            datalayer.eachFeature(function (feature) {
+                method.call(context, feature)
+            })
+        })
+    },
+
     backup: function () {
         this.backupOptions();
         this._datalayers_index_bk = [].concat(this.datalayers_index);
