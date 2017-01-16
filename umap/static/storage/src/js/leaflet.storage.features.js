@@ -506,6 +506,9 @@ L.Storage.FeatureMixin = {
     getStringMap: function(){
       var stringMap = []
       stringMap['name'] = L.Storage.FeatureMixin.getDisplayName.call(this) || ''
+      if(stringMap['name'].startsWith('@')){
+          stringMap['name'] = stringMap['name'].substr(1)
+      }
 
       var sn = this.getOption('sn')
       if(sn){
