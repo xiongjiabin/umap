@@ -130,8 +130,7 @@ L.Storage.SVGObject = L.SVGObject.extend({
   },
 
   _onMouseOut: function() {
-    if (this.dragging && this.dragging._draggable && !this.dragging._draggable
-      ._moving) {
+    if (this.dragging && this.dragging._draggable && !this.dragging._draggable._moving) {
       // Do not disable if the mouse went out while dragging
       this._disableDragging();
     }

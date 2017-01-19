@@ -52,7 +52,7 @@ L.Map.mergeOptions({
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
+    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', /*'editinosm',*/ 'datalayers'],
 
     initialize: function (el, geojson) {
 
@@ -242,10 +242,10 @@ L.Storage.Map.include({
         this._controls.search = new L.Storage.SearchControl();
         this._controls.embed = new L.Control.Embed(this, this.options.embedOptions);
         this._controls.tilelayers = new L.Storage.TileLayerControl();
-        this._controls.editinosm = new L.Control.EditInOSM({
-            position: 'topleft',
-            widgetOptions: {helpText: L._('Open this map extent in a map editor to provide more accurate data to OpenStreetMap')}
-        });
+        //this._controls.editinosm = new L.Control.EditInOSM({
+        //    position: 'topleft',
+        //    widgetOptions: {helpText: L._('Open this map extent in a map editor to provide more accurate data to OpenStreetMap')}
+        //});
         this._controls.measure = new L.MeasureControl();
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = new L.Storage.Scale({imperial: false});

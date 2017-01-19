@@ -151,6 +151,10 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
   },
 
   edit: function(e) {
+    if(!this.map.editEnabled) {
+        return false
+    }
+
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 

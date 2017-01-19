@@ -140,9 +140,14 @@ L.SVG.include({
     }
     path.setAttribute('pointer-events', 'auto')
 
-    var transformStr =  (scale ? ' scale(' + scale/10 + ')' : '') +
-                        (rotate ? ' rotate(' + rotate + ')' : '');
-    pathChild.setAttribute('transform', transformStr)
+    var transformStr =  (scale ? ' scale(' + scale/10 + ')' : '')
+    //pathChild.setAttribute('transform', transformStr)
+    var rotateStr = (rotate ? ' rotate(' + rotate + 'deg)' : '');
+    if(transformStr || rotateStr) {
+      pathChild.style['transform'] = transformStr + ' '+ rotateStr
+      //pathChild.style['transform-origin'] = "left top"
+      //path.style['transform'] += ' ' + rotateStr
+    }
   },
 
 })
@@ -167,7 +172,7 @@ L.SVGObject = L.Layer.extend({
   // @aka Polyline options
   options: {
     stroke: false,
-    draggable: true,
+    draggable: false,
     interactive: true,
     svgText: '',
     scale: 10,
@@ -320,8 +325,7 @@ L.Handler.SVGObjectDrag = L.Handler.extend({
     }, this).disable();
 
     if (this._marker._svgObject) {
-      L.DomUtil.removeClass(this._marker._svgObject,
-        'leaflet-marker-draggable');
+      L.DomUtil.removeClass(this._marker._svgObject,  'leaflet-marker-draggable');
     }
   },
 
