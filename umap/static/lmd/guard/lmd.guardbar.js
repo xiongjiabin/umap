@@ -330,8 +330,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       stringMap['gbw'] = this.getOption('gbw');//宽度
       stringMap['gblev'] = this.getOption('gblev');//级别
 
-
-      var gbd = gbd || L.FormBuilder.DirectionChoice.prototype.default
+      var gbd = this.getOption('gbd')
+      gbd = gbd || L.FormBuilder.DirectionChoice.prototype.default
       stringMap['gbd'] = lmd.getOptionsToMap(L.FormBuilder.DirectionChoice.prototype.choices)[gbd] || ''
 
       var gbtype = this.gbType

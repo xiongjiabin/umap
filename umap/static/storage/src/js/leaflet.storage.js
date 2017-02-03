@@ -1587,6 +1587,10 @@ L.Storage.Map.include({
         return this.editTools.startLmdArea();
     },
 
+    startTuQiLuBiao: function(){
+        return this.editTools.startTuQiLuBiao();
+    },
+    
     startMarker: function () {
         return this.editTools.startMarker();
     },

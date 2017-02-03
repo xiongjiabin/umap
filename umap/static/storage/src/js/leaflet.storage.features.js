@@ -531,6 +531,11 @@ L.Storage.FeatureMixin = {
       return stringMap
     },
 
+    //默认情况下不是不显示元素
+    isHide: function(){
+      return false
+    }
+
 };
 
 L.Storage.Marker = L.Marker.extend({

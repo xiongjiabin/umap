@@ -758,6 +758,20 @@ L.FormBuilder.LevelSwitch = L.FormBuilder.Select.extend({
   ]
 });
 
+L.FormBuilder.ShaperSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1","圆形"],
+    ["2","方形"]
+  ]
+});
+
+L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1","白色"],
+    ["2","黄色"],
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -870,6 +884,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //road
         road: {handler: 'Switch', label: '是否定义为主路',helpEntries:'roadHelp'},
         tail: {handler: 'Range', min:220, max:600, step:10,label: '尾巴'},
+
+        //影藏元素
+        hShape: {handler: 'ShaperSwitcher', label: '形式'},
+        hColor: {handler: 'ColorSwitcher', label: '颜色'},
 
     },
 

@@ -587,7 +587,8 @@ L.Storage.DataLayer = L.Class.extend({
         var pointClass = { marker: L.Storage.Marker,
                            lmdMarker: L.Storage.LmdMarker,
                            lmdPillar: L.Storage.LmdPillar,
-                           lmdLabel: L.Storage.LmdLabel
+                           lmdLabel: L.Storage.LmdLabel,
+                           tqlb: L.Storage.TuQiLuBiao,
                          };
         var Class = (geojson.properties && pointClass[geojson.properties.className]) || L.Storage.Marker;
         return new Class(
