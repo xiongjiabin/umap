@@ -6,10 +6,27 @@ L.Storage.BaseAction = L.ToolbarAction.extend({
             className: this.options.className,
             tooltip: this.options.tooltip
         };
+        if(this.options.subActions){
+            this.options.subToolbar = new L.Toolbar({
+              actions: this.options.subActions
+            })
+        }
         L.ToolbarAction.prototype.initialize.call(this);
         if (this.options.helpMenu && !this.map.helpMenuActions[this.options.className]) this.map.helpMenuActions[this.options.className] = this;
     }
 
+});
+
+L.Storage.SubAction = L.ToolbarAction.extend({
+
+    initialize: function(map, myAction) {
+        this.map = map;
+        this.myAction = myAction;
+        L.ToolbarAction.prototype.initialize.call(this);
+    },
+    addHooks: function() {
+        this.myAction.disable();
+    }
 });
 
 L.Storage.ImportAction = L.Storage.BaseAction.extend({
@@ -123,7 +140,7 @@ L.Storage.DrawLmdLabelAction = L.Storage.BaseAction.extend({
   options: {
       helpMenu: true,
       className: 'storage-draw-label dark',
-      tooltip: '文字'
+      tooltip: '文字',
   },
 
   addHooks: function () {
@@ -155,78 +172,110 @@ L.Storage.DrawBiaoxianAction = L.Storage.BaseAction.extend({
   }
 });
 
-L.Storage.DrawLunkuoAction = L.Storage.BaseAction.extend({
+L.Storage.SubDrawLunkuoAction = L.Storage.SubAction.extend({
   options: {
-      helpMenu: true,
-      className: 'storage-draw-lunkuo dark',
-      tooltip: '轮廓线'
+      toolbarIcon: {
+          html: '轮廓线',
+          tooltip: '轮廓线'
+      }
   },
 
   addHooks: function () {
       this.map.startLunkuo();
+      L.Storage.SubAction.prototype.addHooks.call(this)
   }
 });
 
-L.Storage.DrawFangxuanAction = L.Storage.BaseAction.extend({
+L.Storage.SubDrawFangxuanAction = L.Storage.SubAction.extend({
   options: {
-      helpMenu: true,
-      className: 'storage-draw-fangxuan dark',
-      tooltip: '防炫设施'
+      toolbarIcon: {
+          html: '防炫设施',
+          tooltip: '防炫设施'
+      }
   },
 
   addHooks: function () {
       this.map.startFangxuan();
+      L.Storage.SubAction.prototype.addHooks.call(this)
   }
 });
 
-L.Storage.DrawJiansuAction = L.Storage.BaseAction.extend({
-  options: {
-      helpMenu: true,
-      className: 'storage-draw-jiansu dark',
-      tooltip: '减速路面'
-  },
+L.Storage.SubDrawJianSuQiuAction = L.Storage.SubAction.extend({
 
-  addHooks: function () {
-      this.map.startJiansu();
-  }
-});
-
-L.Storage.DrawJianSuQiuAction = L.Storage.BaseAction.extend({
   options: {
-      helpMenu: true,
-      className: 'storage-draw-jiansuqiu dark',
-      tooltip: '减速丘'
+      toolbarIcon: {
+          html: '减速丘',
+          tooltip: '减速丘'
+      }
   },
 
   addHooks: function () {
       this.map.startJianSuQiu();
+      L.Storage.SubAction.prototype.addHooks.call(this)
+  }
+
+});
+
+L.Storage.SubDrawJiansuAction = L.Storage.SubAction.extend({
+
+  options: {
+      toolbarIcon: {
+          html: '减速路面',
+          tooltip: '减速路面'
+      }
+  },
+
+  addHooks: function () {
+      this.map.startJiansu();
+      L.Storage.SubAction.prototype.addHooks.call(this)
   }
 });
 
-L.Storage.DrawBiangouAction = L.Storage.BaseAction.extend({
+
+L.Storage.SubDrawBiangouAction = L.Storage.SubAction.extend({
   options: {
-      helpMenu: true,
-      className: 'storage-draw-biangou dark',
-      tooltip: '边沟'
+      toolbarIcon: {
+        html: '边沟',
+        tooltip: '边沟'
+      }
   },
 
   addHooks: function () {
       this.map.startBiangou();
+      L.Storage.SubAction.prototype.addHooks.call(this)
   }
 });
 
-L.Storage.DrawLmdAreaAction = L.Storage.BaseAction.extend({
+L.Storage.SubDrawLmdAreaAction = L.Storage.SubAction.extend({
 
     options: {
-        helpMenu: true,
-        className: 'storage-draw-clear dark',
-        tooltip: '清除内侧障碍物'
+        toolbarIcon: {
+          html: '清除障碍物',
+          tooltip: '清除内侧障碍物'
+        }
     },
 
     addHooks: function () {
         this.map.startLmdArea();
+        L.Storage.SubAction.prototype.addHooks.call(this)
     }
 
+});
+
+L.Storage.DrawOtherAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-other dark',
+      tooltip: '其他基础设施,减速路面&减速丘',
+      subActions: [
+        L.Storage.SubDrawLunkuoAction,
+        L.Storage.SubDrawFangxuanAction,
+        L.Storage.SubDrawJiansuAction,
+        L.Storage.SubDrawJianSuQiuAction,
+        L.Storage.SubDrawBiangouAction,
+        L.Storage.SubDrawLmdAreaAction
+      ]
+  }
 });
 
 L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
@@ -467,13 +516,8 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdPillarAction);
         this.options.actions.push(L.S.DrawLmdGuardAction);
         this.options.actions.push(L.S.DrawBiaoxianAction);
-        this.options.actions.push(L.S.DrawLunkuoAction);
-        this.options.actions.push(L.S.DrawFangxuanAction);
-        this.options.actions.push(L.S.DrawJiansuAction);
-        this.options.actions.push(L.S.DrawJianSuQiuAction);
-        this.options.actions.push(L.S.DrawBiangouAction);
-        this.options.actions.push(L.S.DrawLmdAreaAction);
         this.options.actions.push(L.S.DrawLmdLabelAction);
+        this.options.actions.push(L.S.DrawOtherAction);
 
         if (this.map.options.enableMarkerDraw) {
             this.options.actions.push(L.S.DrawMarkerAction);
@@ -1149,6 +1193,7 @@ L.S.ContextMenu = L.Map.ContextMenu.extend({
     },
 
     _showAtPoint: function (pt, e) {
+        this.removeAllItems();
         this._items = [];
         this._container.innerHTML = '';
         this._createItems(e);

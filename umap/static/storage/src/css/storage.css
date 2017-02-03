@@ -233,7 +233,7 @@ ul.photon-autocomplete {
 
 .storage-draw-biaozhi,
 .storage-toolbar .storage-draw-biaozhi {
-    background-position: -120px -200px;
+    background-position: -160px -200px;
 }
 
 .storage-draw-guard,
@@ -254,24 +254,10 @@ ul.photon-autocomplete {
 .storage-draw-biaoxian {
    background-position: -80px -160px;
 }
-.storage-draw-lunkuo {
-   background-position: -160px -200px;
+.storage-draw-other {
+   background-position: -80px -240px;
 }
-.storage-draw-fangxuan {
-  background-position: 0px -200px;
-}
-.storage-draw-jiansu {
-  background-position: 0px -240px;
-}
-.storage-draw-jiansuqiu {
-  background-position: -40px -240px;
-}
-.storage-draw-biangou {
-  background-position: -80px -240px;
-}
-.storage-draw-clear {
-  background-position: -40px -200px;
-}
+
 
 /* ********************************* */
 /*   Third party plugin override     */
