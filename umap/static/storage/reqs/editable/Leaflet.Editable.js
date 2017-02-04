@@ -246,6 +246,15 @@
           return label;
         },
 
+        startDangTuQiang: function(latlng,options){
+          latlng = latlng || this.map.getCenter();
+          var label = this.createDangTuQiang(latlng, options);
+          this.connectCreatedToMap(label);
+          var editor = label.enableEdit();
+          editor.startDrawing();
+          return label;
+        },
+
         startLmdMarker: function (latlng, options) {
           latlng = latlng || this.map.getCenter();
           var marker = this.createLmdMarker(latlng, options);

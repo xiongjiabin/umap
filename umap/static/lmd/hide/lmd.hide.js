@@ -41,8 +41,52 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     return '<text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
   },
 
-  resetTooltip: function(){
+  resetTooltip: function(e){
+
     this.setSvgText(this.getSvgData())
+    if (!e) return;
+
+    if(e.helper.name in {'gbss':0,'gbse':0}){
+        //计算长度
+        var gbss = this.getOption('gbss') * 1000
+        var gbse = this.getOption('gbse') * 1000
+        var distance = 0
+        if(gbss > gbse){
+            distance = gbss - gbse
+        }else{
+            distance = gbse - gbss
+        }
+        distance = Math.ceil(distance)
+
+        var gblControl = e.target.helpers['properties._storage_options.gbl']
+        if(gblControl) {
+            this.properties._storage_options.gbl = gblControl.input.value = distance
+        }
+
+        var gbs = +this.getOption('gbs')
+        if(gbs > 0){
+            var gbn = Math.ceil(distance / gbs)
+            var gbnControl = e.target.helpers['properties._storage_options.gbn']
+            if(gbnControl){
+                this.properties._storage_options.gbn = gbnControl.input.value = gbn
+            }
+        }
+
+    } else if(e.helper.name in {'gbs': 0}){
+
+      var gbs = +this.getOption('gbs')
+      var distance = +this.getOption('gbl')
+      if(gbs > 0 && distance > 0){
+          var gbn = Math.ceil(distance / gbs)
+          var gbnControl = e.target.helpers['properties._storage_options.gbn']
+          if(gbnControl){
+              this.properties._storage_options.gbn = gbnControl.input.value = gbn
+          }
+      }
+    } else{
+      //nothing to do
+    }
+
   },
 
   //added by xiongjiabin
@@ -92,8 +136,8 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
 
   getDisplayName: function(){
-    var gbss = this.getOption('gbss')
-    var gbse = this.getOption('gbse')
+    var gbss = this.getOption('gbss') || ''
+    var gbse = this.getOption('gbse') || ''
     return '**' + '突起路标(' + gbss + '-' + gbse + ')' + '**'
   },
 
@@ -115,56 +159,6 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
      return 'tqlb'
   },
 
-  resetTooltip: function(e) {
-
-    L.Storage.FeatureMixin.resetTooltip.call(this,e)
-    if (!e) return;
-    var needDrawAgain = false
-
-    if(e.helper.name in {'gbss':0,'gbse':0}){
-        //计算长度
-        var gbss = this.getOption('gbss') * 1000
-        var gbse = this.getOption('gbse') * 1000
-        var distance = 0
-        if(gbss > gbse){
-            distance = gbss - gbse
-        }else{
-            distance = gbse - gbss
-        }
-        distance = Math.ceil(distance)
-
-        var gblControl = e.target.helpers['properties._storage_options.gbl']
-        if(gblControl) {
-            this.properties._storage_options.gbl = gblControl.input.value = distance
-        }
-
-        var gbs = +this.getOption('gbs')
-        if(gbs > 0){
-            var gbn = Math.ceil(distance / gbs)
-            var gbnControl = e.target.helpers['properties._storage_options.gbn']
-            if(gbnControl){
-                this.properties._storage_options.gbn = gbnControl.input.value = gbn
-            }
-        }
-
-        needDrawAgain = true
-    } else if(e.helper.name in {'gbs': 0}){
-
-      var gbs = +this.getOption('gbs')
-      var distance = +this.getOption('gbl')
-      if(gbs > 0 && distance > 0){
-          var gbn = Math.ceil(distance / gbs)
-          var gbnControl = e.target.helpers['properties._storage_options.gbn']
-          if(gbnControl){
-              this.properties._storage_options.gbn = gbnControl.input.value = gbn
-          }
-      }
-    } else{
-      //nothing to do
-    }
-
-  },
-
   getStringMap: function(){
       var stringMap = L.Storage.Hide.prototype.getStringMap.call(this)
 
@@ -174,6 +168,43 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
       stringMap['hShape'] = lmd.getOptionsToMap(L.FormBuilder.ShaperSwitcher.prototype.selectOptions)[hShape] || ''
       stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || ''
 
+      return stringMap
+  },
+
+});
+
+
+L.Storage.DangTuQiang = L.Storage.Hide.extend({
+
+  getDisplayName: function(){
+    var gbss = this.getOption('gbss') || ''
+    var gbse = this.getOption('gbse') || ''
+    return '**' + '挡土墙(' + gbss + '-' + gbse + ')' + '**'
+  },
+
+  getBasicOptions: function(){
+    return [
+    'properties._storage_options.lr',
+    'properties._storage_options.gbss',//起始桩号
+    'properties._storage_options.gbse',
+    'properties._storage_options.gbl',//总长
+    'properties._storage_options.hHeight',//高度
+    'properties._storage_options.gba',//面积
+    'properties._storage_options.bulk',//体积
+    'properties._storage_options.ds', //设备状态
+    ]
+  },
+
+  getClassName: function(){
+     return 'dtq'
+  },
+
+  getStringMap: function(){
+      var stringMap = L.Storage.Hide.prototype.getStringMap.call(this)
+
+      stringMap['hHeight'] = this.getOption('hHeight');//高度
+      stringMap['gba'] = this.getOption('gba');//面积
+      stringMap['bulk'] = this.getOption('bulk');//体积
       return stringMap
   },
 

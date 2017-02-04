@@ -1590,7 +1590,11 @@ L.Storage.Map.include({
     startTuQiLuBiao: function(){
         return this.editTools.startTuQiLuBiao();
     },
-    
+
+    startDangTuQiang: function(){
+        return this.editTools.startDangTuQiang();
+    },
+
     startMarker: function () {
         return this.editTools.startMarker();
     },

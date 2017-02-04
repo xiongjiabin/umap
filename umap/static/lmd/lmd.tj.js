@@ -354,6 +354,37 @@ lmd.tjTuQiLuBiao = function(){
   new CsvGenerator(data,  '突起路标.csv').download(true);
 }
 
+
+//挡土墙
+lmd.tjDangTuQiang = function(){
+  var data = []
+  var titles = {no:'序号',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                gbl: '长度(m)',
+                hHeight: '高度(m)',
+                pos: '侧别',
+                gba: '面积(m2)',
+                bulk: '体积(m3)',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1
+  this.eachLayerFeature(function (feature) {
+      if(feature.getClassName() === 'dtq'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+  })
+
+  lmd.processData(data)
+  new CsvGenerator(data,  '挡土墙.csv').download(true);
+}
+
 lmd.tjs = [{
     label: '标志',
     process: lmd.tjIndicators
@@ -378,5 +409,8 @@ lmd.tjs = [{
   },{
     label: '突起路标',
     process: lmd.tjTuQiLuBiao
+  },{
+    label: '挡土墙',
+    process: lmd.tjDangTuQiang
   }
 ]

@@ -266,13 +266,29 @@ L.Storage.SubDrawTuQiLuBiaoAction = L.Storage.SubAction.extend({
 
     options: {
         toolbarIcon: {
-          html: '突起路标',
-          tooltip: '突起路标'
+          html: '突起路标(隐)',
+          tooltip: '突起路标，是一个隐藏元素，不会在打印时候出现'
         }
     },
 
     addHooks: function () {
         this.map.startTuQiLuBiao();
+        L.Storage.SubAction.prototype.addHooks.call(this)
+    }
+
+});
+
+L.Storage.SubDrawDangTuQiangAction = L.Storage.SubAction.extend({
+
+    options: {
+        toolbarIcon: {
+          html: '挡土墙(隐)',
+          tooltip: '挡土墙，是一个隐藏元素，不会在打印时候出现'
+        }
+    },
+
+    addHooks: function () {
+        this.map.startDangTuQiang();
         L.Storage.SubAction.prototype.addHooks.call(this)
     }
 
@@ -291,6 +307,7 @@ L.Storage.DrawOtherAction = L.Storage.BaseAction.extend({
         L.Storage.SubDrawBiangouAction,
         L.Storage.SubDrawLmdAreaAction,
         L.Storage.SubDrawTuQiLuBiaoAction,
+        L.Storage.SubDrawDangTuQiangAction,
       ]
   }
 });
@@ -1351,6 +1368,10 @@ L.S.Editable = L.Editable.extend({
 
     createTuQiLuBiao: function( latlng ){
        return new L.Storage.TuQiLuBiao(this.map, latlng)
+    },
+
+    createDangTuQiang: function( latlng ){
+       return new L.Storage.DangTuQiang(this.map, latlng)
     },
 
     createMarker: function (latlng) {
