@@ -192,13 +192,13 @@ L.PolylineOffset = {
   L.Polyline.include({
     getOffSetLatlngs: function(offset, latlngs, tolerance){
       if(!offset) return latlngs
-      tolerance = tolerance || 1
+      tolerance = tolerance || 6 //熊佳斌 相隔太近的points，小于10个像素的排除掉
       latlngs  = latlngs || this._latlngs
       var results = []
       var newLatlngs = []
       var i,len
 
-      this._offsetProjectLatlngs(offset, latlngs, results)
+      this._offsetProjectLatlngs(offset, latlngs, results, tolerance)
       //let points to latlngs
       if(results.length === 1){
         newLatlngs = L.PolylineOffset.pointsToLatLngs(results[0],this._map)
@@ -211,15 +211,26 @@ L.PolylineOffset = {
       return newLatlngs
     },
 
-    _offsetProjectLatlngs: function (offset, latlngs, result) {
+    _offsetProjectLatlngs: function (offset, latlngs, result, tolerance) {
       var flat = latlngs[0] instanceof L.LatLng,
           len = latlngs.length,
-          i, ring;
+          i, ring, tmpPoint;
 
       if (flat) {
         ring = [];
-        for (i = 0; i < len; i++) {
-          ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
+        ring[0] = this._map.latLngToLayerPoint(latlngs[0])
+        for (i = 1; i < len; i++) {
+           tmpPoint = this._map.latLngToLayerPoint(latlngs[i]);
+           //丢掉相隔太近的点
+           console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
+           console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))
+           if ((i < (len-1)) &&
+               Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']) <= tolerance &&
+               Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y'] <= tolerance)){
+
+           }else{
+               ring.push(tmpPoint)
+           }
         }
         // Offset management hack ---
         if(offset) {
