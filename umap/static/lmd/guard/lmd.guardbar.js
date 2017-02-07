@@ -44,8 +44,8 @@ L.Storage.guardbarData = [
     {name:'波形梁护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
     {name:'外展示警墩', type:L.Storage.GB_NORMAL_LINE},
     {name:'中央分隔带混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
-    {name:'示警墩', type: L.Storage.GB_CIRCLE},
-    {name:'示警桩', type: L.Storage.GB_RECT},
+    {name:'示警墩', type: L.Storage.GB_RECT},
+    {name:'示警桩', type: L.Storage.GB_CIRCLE},
     {name:'中间隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
@@ -174,7 +174,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           'properties._storage_options.gbs',//间距
           'properties._storage_options.gbn',//数量
           'properties._storage_options.gblev',//级别
-          'properties._storage_options.gbm', //材料
+          //'properties._storage_options.gbm', //材料
           'properties._storage_options.ds',
         ];
     },
@@ -480,6 +480,23 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
 L.Storage.Biaoxian = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
+
+  //added by xiongjiabin
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        //'properties._storage_options.gba',//面积
+        'properties._storage_options.gbs',//间距
+        'properties._storage_options.gbn',//数量
+        'properties._storage_options.gblev',//级别
+        'properties._storage_options.gbm', //材料
+        'properties._storage_options.ds',
+      ];
+  },
 
   getClassName: function () {
       return 'biaoxian';

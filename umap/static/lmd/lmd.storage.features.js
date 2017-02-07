@@ -111,8 +111,6 @@ L.Storage.LmdFeatureMixin = {
   }
 }
 
-
-
 L.Storage.SVGObject = L.SVGObject.extend({
   parentClass: L.SVGObject,
   includes: [L.Storage.FeatureMixin, L.Mixin.Events],

@@ -222,8 +222,8 @@ L.PolylineOffset = {
         for (i = 1; i < len; i++) {
            tmpPoint = this._map.latLngToLayerPoint(latlngs[i]);
            //丢掉相隔太近的点
-           console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
-           console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))
+           //console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
+           //console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))
            if ((i < (len-1)) &&
                Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']) <= tolerance &&
                Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y'] <= tolerance)){
