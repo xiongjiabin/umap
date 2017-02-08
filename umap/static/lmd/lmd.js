@@ -385,8 +385,14 @@ L.Storage.Map.include({
     var latlng = null
     var result = []
     var duplicate = []
+    var subHelpData = []
     for (; i < len; i++) {
-      var subHelpData = this.datalayers_index[i].options &&
+      //如果这个图层影藏的话，不需要继续处理
+      //fixed bug http://lamudatech.com:3000/xiongjiabin/umap/issues/8
+      if(!this.datalayers_index[i].isVisible()){
+        continue
+      }
+      subHelpData = this.datalayers_index[i].options &&
                         this.datalayers_index[i].options.subHelpData
       if(!subHelpData) continue
       for(j = 0,len1 = subHelpData.length; j < len1; j++){

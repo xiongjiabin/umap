@@ -213,6 +213,7 @@ L.Storage.Map.include({
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
         this.on('moveend',this.handleShowMarker);
+        this.on('update.marker', this.handleShowMarker);
     },
 
     initControls: function () {

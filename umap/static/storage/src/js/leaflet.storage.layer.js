@@ -991,6 +991,10 @@ L.Storage.DataLayer = L.Class.extend({
     toggle: function () {
         if (!this.isVisible()) this.show();
         else this.hide();
+
+        //http://lamudatech.com:3000/xiongjiabin/umap/issues/8
+        //triiger a event to fire handleShowMarker
+        this.map.fire('update.marker');
     },
 
     zoomTo: function () {
