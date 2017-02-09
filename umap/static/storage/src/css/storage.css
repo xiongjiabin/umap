@@ -1475,3 +1475,10 @@ a.add-datalayer:hover,
         display: none;
     }
 }
+
+
+
+/*
+added xiongjiabin
+*/
+.leaflet-marker-pane  { z-index: 399; }

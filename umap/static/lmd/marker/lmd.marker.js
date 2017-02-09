@@ -53,8 +53,9 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
           this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
           var latlngPoint = this.map.latLngToLayerPoint(latlng);
           var centerPoint = this.map.latLngToLayerPoint(center);
-          this.properties._storage_options['helpX'] = Math.round(latlngPoint['x'] - centerPoint['x'])
-          this.properties._storage_options['helpY'] = Math.round(latlngPoint['y'] - centerPoint['y'])
+          var scaleZoom = lmd.getLmdZoom(this.map)
+          this.properties._storage_options['helpX'] = Math.round((latlngPoint['x'] - centerPoint['x'])/scaleZoom)
+          this.properties._storage_options['helpY'] = Math.round((latlngPoint['y'] - centerPoint['y'])/scaleZoom)
       }
     }
   },
@@ -101,8 +102,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   },
 
   update: function(){
-    var helpX = this.properties._storage_options['helpX'] || 0
-    var helpY = this.properties._storage_options['helpY'] || 0
+    var helpX = this.getOption('helpX') || 0
+    var helpY = this.getOption('helpY') || 0
     if (helpX || helpY) {
       var subNo = +this.getOption('sn')
       if(subNo > 0){

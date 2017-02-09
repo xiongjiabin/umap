@@ -296,7 +296,8 @@ L.Toolbar.Popup = L.Toolbar.extend({
       icon : new L.DivIcon({
         className: this.options.className,
         iconAnchor: [0, 0]
-      })
+      }),
+      pane: "tooltipPane"
     });
   },
 

@@ -10,9 +10,7 @@ L.Storage.FeatureMixin = {
         // DataLayer the marker belongs to
         this.datalayer = options.datalayer || null;
         this.properties = {_storage_options: {}};
-        if (options.geojson) {
-            this.populate(options.geojson);
-        }
+
         var isDirty = false,
             self = this;
         try {
@@ -37,6 +35,12 @@ L.Storage.FeatureMixin = {
         this.preInit();
         this.addInteractions();
         this.parentClass.prototype.initialize.call(this, latlng, options);
+        //这个必须放在上一句call的背后，因为里面有一个L.Util.Create的操作，会把里面的title做为一个基础类
+        //然后所有的元素的title都是最后一个title，非常奇怪的特性
+        //xiongjiabin
+        if (options.geojson) {
+            this.populate(options.geojson);
+        }
     },
 
     preInit: function () {},

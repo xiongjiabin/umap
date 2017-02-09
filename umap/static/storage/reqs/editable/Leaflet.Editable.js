@@ -373,6 +373,7 @@
             this.editor = editor;
             L.Marker.prototype.initialize.call(this, latlng, options);
             this.options.icon = this.editor.tools.createVertexIcon({className: this.options.className});
+            this.options.pane = "tooltipPane";
             this.latlng.__vertex = this;
             this.editor.editLayer.addLayer(this);
             this.setZIndexOffset(editor.tools._lastZIndex + 1);
