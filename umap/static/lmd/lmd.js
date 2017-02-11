@@ -150,8 +150,8 @@ L.Storage.Map.include({
                var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
                var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
                var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)
-               console.log('m1-a1:right:' + right )
-               console.log('a1-m1:left :' + left )
+               //console.log('m1-a1:right:' + right )
+               //console.log('a1-m1:left :' + left )
 
                result['left'] = left
                result['right'] = right
@@ -162,7 +162,7 @@ L.Storage.Map.include({
         }
     }
 
-    console.log('no found this sub ' + subNo)
+    //console.log('no found this sub ' + subNo)
     return null
   },
 
