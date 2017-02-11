@@ -492,7 +492,7 @@ L.Storage.Biaoxian = L.Storage.Guardbar.extend({
         //'properties._storage_options.gba',//面积
         'properties._storage_options.gbs',//间距
         'properties._storage_options.gbn',//数量
-        'properties._storage_options.gblev',//级别
+        'properties._storage_options.hColor',//改成color
         'properties._storage_options.gbm', //材料
         'properties._storage_options.ds',
       ];

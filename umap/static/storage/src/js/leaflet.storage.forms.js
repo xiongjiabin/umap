@@ -769,6 +769,8 @@ L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     ["1","白色"],
     ["2","黄色"],
+    ["3","红色"],
+    ["99","其他"]
   ]
 });
 
