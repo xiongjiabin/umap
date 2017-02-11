@@ -538,8 +538,11 @@ L.Storage.FeatureMixin = {
     //默认情况下不是不显示元素
     isHide: function(){
       return false
-    }
+    },
 
+    setSingleOption(key,value){
+      this.properties._storage_options[key] = value
+    }
 };
 
 L.Storage.Marker = L.Marker.extend({

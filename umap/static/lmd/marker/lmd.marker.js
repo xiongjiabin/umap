@@ -21,52 +21,6 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     }
   },
 
-  addInteractions: function() {
-    L.Storage.FeatureMixin.addInteractions.call(this);
-    this.on('dragend', function(e) {
-      this.caculateHelpXY()
-      this.isDirty = true;
-      this.edit(e);
-    }, this);
-    if (!this.isReadOnly()) this.on('mouseover', this._enableDragging);
-    this.on('mouseout', this._onMouseOut);
-    this._popupHandlersAdded = true; // prevent Leaflet from binding event on bindPopup
-
-    this.on('editable:drawing:clicked', function(e) {
-      this.caculateHelpXY()
-    }, this)
-  },
-
-  caculateHelpXY: function() {
-
-    if (this.helpPath) {
-      this.helpPath.remove();
-      this.helpPath = null;
-    }
-    var latlng = this.getLatLng()
-    var sn = +this.getOption('sn')
-    if(sn){
-      var data = this.map.getAnchorLatLngBySubNo(sn)
-      if(data['point']){
-          var center = [data['point'][0],data['point'][1]]
-          var latlngs = [center, latlng]
-          this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
-          var latlngPoint = this.map.latLngToLayerPoint(latlng);
-          var centerPoint = this.map.latLngToLayerPoint(center);
-          var scaleZoom = lmd.getLmdZoom(this.map)
-          this.properties._storage_options['helpX'] = Math.round((latlngPoint['x'] - centerPoint['x'])/scaleZoom)
-          this.properties._storage_options['helpY'] = Math.round((latlngPoint['y'] - centerPoint['y'])/scaleZoom)
-      }
-    }
-  },
-
-  del: function () {
-    L.Storage.FeatureMixin.del.call(this)
-    if (this.helpPath) {
-      this.helpPath.remove();
-      this.helpPath = null;
-    }
-  },
   //added by xiongjiabin
   getBasicOptions: function() {
     return [
@@ -101,36 +55,20 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     };
   },
 
+  addInteractions: function() {
+      L.Storage.LmdUpdateXYMixin.addInteractions.call(this);
+  },
+
+  caculateHelpXY: function() {
+      L.Storage.LmdUpdateXYMixin.caculateHelpXY.call(this);
+  },
+
   update: function(){
-    var helpX = this.getOption('helpX') || 0
-    var helpY = this.getOption('helpY') || 0
-    if (helpX || helpY) {
-      var subNo = +this.getOption('sn')
-      if(subNo > 0){
-        var data = this.map.getAnchorLatLngBySubNo(subNo)
-        if(data && data['point']){
-          var center = [data['point'][0],data['point'][1]]
-          var scaleZoom = lmd.getLmdZoom(this.map)
+     L.Storage.LmdUpdateXYMixin.update.call(this);
+  },
 
-          var centerPoint = this.map.latLngToLayerPoint(center)
-          var destX = centerPoint['x'] + helpX * scaleZoom
-          var destY = centerPoint['y'] + helpY * scaleZoom
-          var dest = this.map.layerPointToLatLng([destX, destY])
-          this._latlng = dest
-
-          if (this.helpPath) {
-            this.helpPath.remove();
-            this.helpPath = null;
-            var latlngs = [center, dest]
-            this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
-          }
-
-        }
-      }
-    }
-
-    this.parentClass.prototype.update.call(this)
-
+  del: function () {
+     L.Storage.LmdUpdateXYMixin.del.call(this);
   },
 
   _getIconUrl: function(name) {

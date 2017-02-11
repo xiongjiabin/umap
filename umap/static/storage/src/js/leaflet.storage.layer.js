@@ -250,6 +250,24 @@ L.Storage.DataLayer = L.Class.extend({
         return this;
     },
 
+
+    findNearInScreenFeature: function(latlng, filter){
+       var distance = Number.MAX_VALUE;
+       var tempFeature = null;
+       var tempDistance = 0;
+       this.eachFeature(function( feature ){
+           if( (!filter || (filter && filter.call(this,feature))) && feature.isOnScreen()){
+              tempDistance = latlng.distanceTo(feature.getLatLng());
+              if(distance > tempDistance){
+                 distance = tempDistance;
+                 tempFeature = feature
+              }
+           }
+       },this);
+
+       return tempFeature;
+    },
+
     fetchData: function () {
         if (!this.storage_id) return;
         this.map.get(this._dataUrl(), {

@@ -859,7 +859,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         height: {handler: 'Range', min:0,max:300,step:1,label: '高度'},
         helpX:  {handler: 'IntInput', label: '辅助X'},
         helpY:  {handler: 'IntInput', label: '辅助Y'},
-
+        isBindSN: {handler: 'Switch', label: '是否绑定桩号',helpEntries:'isBindSNHelp'},
 
         //护栏部分
         gbc: {handler: 'GuardbarCatSwitcher', label: '类别'},
