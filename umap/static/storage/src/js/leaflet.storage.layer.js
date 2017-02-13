@@ -600,22 +600,24 @@ L.Storage.DataLayer = L.Class.extend({
         }
     },
 
-
+    _pointToClass : {},
     _pointToLayer: function(geojson, latlng) {
         var pointClass = { marker: L.Storage.Marker,
-                           lmdMarker: L.Storage.LmdMarker,
-                           lmdPillar: L.Storage.LmdPillar,
-                           lmdLabel: L.Storage.LmdLabel,
-                           tqlb: L.Storage.TuQiLuBiao,
-                           dtq: L.Storage.DangTuQiang,
-                         };
+                         lmdMarker: L.Storage.LmdMarker,
+                         lmdPillar: L.Storage.LmdPillar,
+                         lmdLabel: L.Storage.LmdLabel,
+                         tqlb: L.Storage.TuQiLuBiao,
+                         dtq: L.Storage.DangTuQiang
+                       };
+        for(var i in this._pointToClass){
+            pointClass[i] = this._pointToClass[i]
+        }
         var Class = (geojson.properties && pointClass[geojson.properties.className]) || L.Storage.Marker;
         return new Class(
             this.map,
             latlng,
             {'geojson':geojson, 'datalayer': this}
         );
-
     },
 
     _lineToLayer: function(geojson, latlngs) {

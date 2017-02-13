@@ -10,7 +10,9 @@ L.Storage.FeatureMixin = {
         // DataLayer the marker belongs to
         this.datalayer = options.datalayer || null;
         this.properties = {_storage_options: {}};
-
+        if (options.geojson) {
+            this.populate(options.geojson);
+        }
         var isDirty = false,
             self = this;
         try {
@@ -39,8 +41,9 @@ L.Storage.FeatureMixin = {
         //然后所有的元素的title都是最后一个title，非常奇怪的特性
         //xiongjiabin
         if (options.geojson) {
-            this.populate(options.geojson);
+            this.options.title = options.geojson.properties && options.geojson.properties.name;
         }
+
     },
 
     preInit: function () {},
@@ -229,7 +232,7 @@ L.Storage.FeatureMixin = {
 
     populate: function (feature) {
         this.properties = L.extend({}, feature.properties);
-        this.options.title = feature.properties && feature.properties.name;
+        //this.options.title = feature.properties && feature.properties.name;
         this.properties._storage_options = L.extend({}, this.properties._storage_options);
         // Retrocompat
         if (this.properties._storage_options.clickable === false) {
