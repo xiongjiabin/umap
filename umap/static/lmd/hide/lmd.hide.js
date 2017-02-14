@@ -11,11 +11,9 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     }
 
     if (!this.properties._storage_options.color) {
-      this.properties._storage_options = {
-        scale: 5,
-        rotate: 0,
-        color: 'Black'
-      }
+      this.properties._storage_options['scale'] = 5;
+      this.properties._storage_options['rotate'] = 0;
+      this.properties._storage_options['color'] = 'Black';
     }
 
     var options = {}
@@ -100,6 +98,9 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
   },
 
   edit: function(e) {
+    if(!this.map.editEnabled) {
+        return false
+    }
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 

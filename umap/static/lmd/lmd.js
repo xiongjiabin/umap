@@ -45,7 +45,9 @@ var lmd = {
       if(!options) return results
       var i = 0, len = options.length
       for(; i < len; i++){
+        if(options[i]) {
           results[options[i][0]] = options[i][1]
+        }
       }
       return results
   },

@@ -53,7 +53,7 @@ L.Toolbar = (L.Layer || L.Class).extend({
     }
   },
 
-  appendToContainer: function(container) {
+  appendToContainer: function(container, isSub) {
     var baseClass = (this.constructor.baseClass || 'leaflet-toolbar') + '-' + this._calculateDepth(),
       className = baseClass + ' ' + this.options.className,
       Action, action,
@@ -75,6 +75,9 @@ L.Toolbar = (L.Layer || L.Class).extend({
 
       action = new Action();
       action._createIcon(this, this._ul, this._arguments);
+      if(isSub && i && ((i%5) === 0)) {
+        L.DomUtil.create('br','',this._ul)
+      }
     }
   },
 
@@ -210,7 +213,7 @@ L.ToolbarAction = L.Handler.extend({
       args.push(this);
 
       subToolbar.addTo.apply(subToolbar, args);
-      subToolbar.appendToContainer(container);
+      subToolbar.appendToContainer(container,true);
 
       this.clickCount = 0
       this.addHooks = function(map) {

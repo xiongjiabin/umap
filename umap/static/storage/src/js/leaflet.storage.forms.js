@@ -774,6 +774,25 @@ L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+L.FormBuilder.LineSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1","虚线"],
+    ["2","实线"],
+    ["3","虚实线"],
+    ["4","双实线"]
+  ]
+});
+
+L.FormBuilder.LineWidthSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["8", "8cm"]
+    ["10","10cm"],
+    ["15","15cm"],
+    ["20","20cm"],
+    ["30","30cm"]
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -892,6 +911,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         hColor: {handler: 'ColorSwitcher', label: '颜色'},
         hHeight: {handler: 'IntInput', label: '高度(m)'},
         bulk: {handler: 'IntInput', label: '体积(m3)'},
+        lineType: {handler:'LineSwitcher', label: '形式'},
+        lineWidth: {handler: 'LineWidthSwitcher', label: '线宽'}
 
     },
 

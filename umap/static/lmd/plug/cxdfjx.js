@@ -1,22 +1,22 @@
 /*
-车行道边缘线，不可见
+车行道分界线，不可见
 2017-2-13
 */
 
-L.Storage.CheXingDao = L.Storage.Hide.extend({
+L.Storage.CxdFjx = L.Storage.Hide.extend({
 
   preInit: function(){
 
     if (!this.properties._storage_options.lineType) {
        this.properties._storage_options['lineType'] = 1;
-       this.properties._storage_options['lineWidth'] = 10;
+       this.properties._storage_options['lineWidth'] = 8;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
   },
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '**' + '车行道边缘线(' + gbss + '-' + gbse + ')' + '**'
+    return '**' + '车行道分界线(' + gbss + '-' + gbse + ')' + '**'
   },
 
   getBasicOptions: function(){
@@ -31,12 +31,9 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
     ]
   },
 
+  CLASS_NAME: 'cxdfjx',
   getClassName: function(){
-     return 'cxd'
-  },
-
-  isHide: function(){
-     return true
+     return this.CLASS_NAME
   },
 
   edit: function(e){
@@ -46,13 +43,12 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
 
     L.FormBuilder.LineSwitcher.prototype.selectOptions = [
         ["1","虚线"],
-        ["2","实线"],
-        ["3","虚实线"]
+        ["2","实线"]
     ];
     L.FormBuilder.LineWidthSwitcher.prototype.selectOptions = [
+      ["8","8cm"],
       ["10","10cm"],
-      ["15","15cm"],
-      ["20","20cm"]
+      ["15","15cm"]
     ];
     L.Storage.Hide.prototype.edit.call(this,e);
   },
@@ -60,19 +56,24 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
   getStringMap: function(){
     var stringMap = L.Storage.Hide.prototype.getStringMap.call(this);
     var lineType = + (this.getOption('lineType') || 1);
-    var lineWidth = + (this.getOption('lineWidth') || 10);
+    var lineWidth = + (this.getOption('lineWidth') || 8);
     stringMap['lineType'] = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.selectOptions)[lineType] || '';
     stringMap['lineWidth'] = lmd.getOptionsToMap(L.FormBuilder.LineWidthSwitcher.prototype.selectOptions)[lineWidth] || '';
 
     var area = 0;
     var len = +this.getOption('gbl');
+    var speed = +(this.getOption('speed'));
     if(lineType === 1){ //虚线
-      area = lineWidth / 100 * len * 2 / 6
+      if(speed < 60) {
+        area = lineWidth / 100 * len * 2 / 6;
+      }else{
+        area = lineWidth / 100 * len * 6 / 15;
+      }
+      stringMap['description'] += '设计速度:' + speed;
     }else if(lineType === 2){ //实线
       area = lineWidth / 100 * len;
-    }else if(lineType === 3){
-      area = lineWidth / 100 * len * (1 + 2/6);
     }
+
     area = area.toFixed(1);
     stringMap['area'] = area;
     return stringMap;
@@ -81,7 +82,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
 });
 
 //车行道统计
-lmd.tjCheXingDao = function(){
+lmd.tjCxdFjx = function(){
   var data = []
   var titles = {no:'序号',
                 gbss: '起始桩号',
@@ -100,28 +101,28 @@ lmd.tjCheXingDao = function(){
   //this means map
   var i = 1
   this.eachLayerFeature(function (feature) {
-      if(feature.getClassName() === 'cxd'){
+      if(feature.getClassName() === L.Storage.CxdFjx.prototype.CLASS_NAME){
         data.push(lmd.getTjData(feature,i,titles))
         i++
       }
   })
 
   lmd.processData(data)
-  new CsvGenerator(data,  '车行道边缘线.csv').download(true);
+  new CsvGenerator(data,  '车行道分界线.csv').download(true);
 }
 
 
-lmd.tjs.push({ label: '车行道边缘线', process: lmd.tjCheXingDao});
+lmd.tjs.push({ label: '车行道分界线', process: lmd.tjCxdFjx});
 
-L.Storage.DataLayer.prototype._pointToClass['cxd'] = L.Storage.CheXingDao;
+L.Storage.DataLayer.prototype._pointToClass[L.Storage.CxdFjx.prototype.CLASS_NAME] = L.Storage.CxdFjx;
 
-L.S.Editable.prototype.createCheXingDao = function( latlng ){
-   return new L.Storage.CheXingDao(this.map, latlng)
+L.S.Editable.prototype.createCxdFjx = function( latlng ){
+   return new L.Storage.CxdFjx(this.map, latlng)
 };
 
-L.Editable.prototype.startCheXingDao = function(latlng,options){
+L.Editable.prototype.startCxdFjx = function(latlng,options){
   latlng = latlng || this.map.getCenter();
-  var label = this.createCheXingDao(latlng, options);
+  var label = this.createCxdFjx(latlng, options);
   this.connectCreatedToMap(label);
   var editor = label.enableEdit();
   editor.startDrawing();
@@ -129,24 +130,24 @@ L.Editable.prototype.startCheXingDao = function(latlng,options){
 };
 
 L.Storage.Map.include({
-  startCheXingDao: function(){
-      return this.editTools.startCheXingDao();
+  startCxdFjx: function(){
+      return this.editTools.startCxdFjx();
   }
 });
 
-L.Storage.SubDrawCheXingDaoAction = L.Storage.SubAction.extend({
+L.Storage.SubDrawCxdFjxAction = L.Storage.SubAction.extend({
 
     options: {
         toolbarIcon: {
-          html: '车行道边缘线',
-          tooltip: '车行道边缘线，不用渲染'
+          html: '车行道分界线',
+          tooltip: '车行道分界线，不用渲染'
         }
     },
 
     addHooks: function () {
-        this.map.startCheXingDao();
+        this.map.startCxdFjx();
         L.Storage.SubAction.prototype.addHooks.call(this)
     }
 });
 
-L.Storage.DrawOtherAction.prototype.options.subActions.push(L.Storage.SubDrawCheXingDaoAction);
+L.Storage.DrawOtherAction.prototype.options.subActions.push(L.Storage.SubDrawCxdFjxAction);
