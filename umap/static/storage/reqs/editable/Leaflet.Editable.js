@@ -545,6 +545,7 @@
             L.Marker.prototype.initialize.call(this, this.computeLatLng(), options);
             this._opacity = this.options.opacity;
             this.options.icon = this.editor.tools.createVertexIcon({className: this.options.className});
+            this.options.pane = "tooltipPane"; //xiognjaibin make it cover the line
             this.editor.editLayer.addLayer(this);
             this.setVisibility();
         },
