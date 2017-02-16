@@ -16,7 +16,8 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '**' + '车行道边缘线(' + gbss + '-' + gbse + ')' + '**'
+    return '<tspan x=0 dy=0>**车行道边缘线**</tspan>'+
+           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
   getBasicOptions: function(){

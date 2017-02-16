@@ -793,6 +793,17 @@ L.FormBuilder.LineWidthSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+//交叉口类型
+L.FormBuilder.CrossTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1", "接入口"],
+    ["2","T型"],
+    ["3","十字形"],
+    ["4","5支交叉"],
+    ["99","其他"]
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -912,8 +923,33 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         hHeight: {handler: 'IntInput', label: '高度(m)'},
         bulk: {handler: 'IntInput', label: '体积(m3)'},
         lineType: {handler:'LineSwitcher', label: '形式'},
-        lineWidth: {handler: 'LineWidthSwitcher', label: '线宽'}
+        lineWidth: {handler: 'LineWidthSwitcher', label: '线宽'},
 
+        //交叉口特性
+        crossType: {handler:'CrossTypeSwitcher', label: '交叉类型'},
+        jsrxBx: {handler: 'FloatInput', label: '标线(m2)'},
+        jsrxNum: {handler: 'IntInput', label: '数量(快)'},
+        jsrxSize:{label: '版面尺寸'},
+
+        tcrxBx: {handler:'FloatInput', label: '标线(m2)'},
+        tcrxNum: {handler:'IntInput', label: '数量(快)'},
+        tcrxSize: {label: '版面尺寸'},
+
+        jsqBx: {handler:'FloatInput', label: '减速丘标线(m2)'},
+        jsqBz: {handler:'IntInput', label: '标志(快)'},
+        jsqSize: {label: '版面尺寸'},
+        jsqXjjsl:{handler:'FloatInput',label: '橡胶减速垄(m)'},
+
+        jgContent: {label: '标志内容'},
+        jgSize: {label: '版面尺寸'},
+        jgNum: {handler:'IntInput', label:"数量(快)"},
+
+        oQhbx: {handler:'FloatInput',label:'渠化标线(m2)'},
+        oRxhd: {handler:'FloatInput',label: '被交道人行横道线(m2)'},
+        oJsbx: {handler:'FloatInput',label: '被交道减速标线(m2)'},
+        oDkbz: {handler:'IntInput', label: '道口标注'},
+        oQcgm: {handler:'FloatInput',label: '清除内侧灌木(m2)'},
+        oJdgz: {handler:'FloatInput',label: '被交道路改造(m2)'},
     },
 
     initialize: function (obj, fields, options) {

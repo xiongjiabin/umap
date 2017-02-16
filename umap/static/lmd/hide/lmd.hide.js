@@ -139,7 +139,8 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '**' + '突起路标(' + gbss + '-' + gbse + ')' + '**'
+    return '<tspan x=0 dy=0>**突起路标**</tspan>'+
+           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
   getBasicOptions: function(){
@@ -180,7 +181,8 @@ L.Storage.DangTuQiang = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '**' + '挡土墙(' + gbss + '-' + gbse + ')' + '**'
+    return '<tspan x=0 dy=0>**挡土墙**</tspan>'+
+           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
   getBasicOptions: function(){
