@@ -531,10 +531,7 @@ L.Storage.FeatureMixin = {
       var ds = this.getOption('ds') || L.FormBuilder.DevStatusSwitcher.prototype.default
       stringMap['ds'] = lmd.getOptionsToMap(L.FormBuilder.DevStatusSwitcher.prototype.choices)[ds] || ''
 
-
       stringMap['description'] = this.properties.description || ''
-
-
       return stringMap
     },
 

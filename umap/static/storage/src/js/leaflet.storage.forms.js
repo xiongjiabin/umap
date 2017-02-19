@@ -609,10 +609,8 @@ L.FormBuilder.DevStatusSwitcher = L.FormBuilder.MultiChoice.extend({
     default: 1,
     choices: [
         [1, L._('Add device')],
-        //[2, L._('Change device')],
-        [2, '保留'],
-        [3, L._('Remove device')],
-        [4, L._('Remove to other palace')],
+        [2, '现状保留'],
+        [3, '现状拆除']
     ]
 });
 
