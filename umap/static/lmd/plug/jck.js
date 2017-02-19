@@ -40,7 +40,28 @@ L.Storage.Jck = L.Storage.Hide.extend({
     var stringMap = L.Storage.Hide.prototype.getStringMap.call(this);
     var crossType = + (this.getOption('crossType') || 1);
     stringMap['crossType'] = lmd.getOptionsToMap(L.FormBuilder.CrossTypeSwitcher.prototype.selectOptions)[crossType] || '';
-
+    stringMap['jsrxBx'] = this.getOption('jsrxBx');
+    stringMap['jsrxNum'] = this.getOption('jsrxNum');
+    stringMap['jsrxSize'] = this.getOption('jsrxSize');
+    stringMap['tcrxBx'] = this.getOption('tcrxBx');
+    stringMap['tcrxNum'] = this.getOption('tcrxNum');
+    stringMap['tcrxSize'] = this.getOption('tcrxSize');
+    stringMap['jsqBx'] = this.getOption('jsqBx');
+    stringMap['jsqBz'] = this.getOption('jsqBz');
+    stringMap['jsqSize'] = this.getOption('jsqSize');
+    stringMap['jsqXjjsl'] = this.getOption('jsqXjjsl');
+    stringMap['jgNum'] = +this.getOption('jgNum');
+    if(stringMap['jgNum'] > 0) {
+      stringMap['jgContent'] = this.getOption('jgContent');
+      stringMap['jgSize'] = this.getOption('jgSize');
+      stringMap['jgType'] = lmd.getOptionsToMap(L.FormBuilder.PillSuppSwitcher.prototype.selectOptions)[this.getOption('jgType') || 1];
+    }
+    stringMap['oQhbx'] = this.getOption('oQhbx');
+    stringMap['oRxhd'] = this.getOption('oRxhd');
+    stringMap['oJsbx'] = this.getOption('oJsbx');
+    stringMap['oDkbz'] = this.getOption('oDkbz');
+    stringMap['oQcgm'] = this.getOption('oQcgm');
+    stringMap['oJdgz'] = this.getOption('oJdgz');
     return stringMap;
   },
 
@@ -128,6 +149,26 @@ lmd.tjJck = function(){
                 sn: '桩号',
                 crossType: '类型',
                 pos: '侧别',
+                jsrxBx: '减速让行标线(m2)',
+                jsrxNum: '禁令标志(块)',
+                jsrxSize: '版面尺寸',
+                tcrxBx: '停车让行标线(m2)',
+                tcrxNum: '禁令标志(块)',
+                tcrxSize: '版面尺寸',
+                jsqBx: '减速丘标线',
+                jsqBz: '减速丘标志(块)',
+                jsqSize: '版面尺寸',
+                jsqXjjsl: '橡胶减速垄(m)',
+                jgContent: '警告标志内容',
+                jgSize:'版面尺寸',
+                jgType:'支撑形式',
+                jgNum: '数量(块)',
+                oQhbx: '渠化标线(m2)',
+                oRxhd: '被交道人行横道线(m2)',
+                oJsbx: '被交道减速标线(m2)',
+                oDkbz: '道口标注(个)',
+                oQcgm: '清除内侧灌木(m2)',
+                oJdgz: '被交道改造(m2)',
                 description:'备注'
               }
   data.push(lmd.objectToArray(titles))

@@ -276,7 +276,7 @@ var locale = {
     "Icon symbol": "Icon符号",
     "Interaction options": "交互选项",
     "Sub Number": "桩号",
-    "Device Status": "设备状态",
+    "Device Status": "设施状态",
     "Add device": "新增",
     "Change device": "更换",
     "Remove device":"拆除",

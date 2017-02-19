@@ -28,7 +28,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
     'properties._storage_options.gbse',
     'properties._storage_options.lineWidth',//线宽
     'properties._storage_options.gbl',//总长
-    'properties._storage_options.ds', //设备状态
+    'properties._storage_options.ds', //设施状态
     ]
   },
 

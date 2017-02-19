@@ -153,7 +153,7 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
     'properties._storage_options.gbn',//数量
     'properties._storage_options.hShape',
     'properties._storage_options.hColor',
-    'properties._storage_options.ds', //设备状态
+    'properties._storage_options.ds', //设施状态
     ]
   },
 
@@ -194,7 +194,7 @@ L.Storage.DangTuQiang = L.Storage.Hide.extend({
     'properties._storage_options.hHeight',//高度
     'properties._storage_options.gba',//面积
     'properties._storage_options.bulk',//体积
-    'properties._storage_options.ds', //设备状态
+    'properties._storage_options.ds', //设施状态
     ]
   },
 
