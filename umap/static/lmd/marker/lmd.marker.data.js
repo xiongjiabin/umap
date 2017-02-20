@@ -68,7 +68,7 @@ var temp = [
 	"警22 渡口",
 	"警23 驼峰桥",
 	"警24 路面不平",
-	"警25 减速丘",
+	"警25 路面高突",
 	"警26 路面低洼",
 	"警27 过水路面",
 	"警28 有人看守铁道路口",
@@ -85,8 +85,8 @@ var temp = [
 	"警40 隧道开车灯",
 	"警41 注意潮汐车道",
 	"警42 注意保持车距",
-	"警43 十字平面交叉",
-	"警43 丁字平面交叉",
+	"警43 注意分离式道路 (十字平面交叉)",
+	"警43 注意分离式道路 (丁字平面交叉)",
 	"警44 注意合流（左下）",
 	"警44 注意合流（右下）",
 	"警46 注意雾天",
@@ -105,7 +105,7 @@ lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({speed:'<40',size:'90
 //警告标志之矩形
 temp = [
 	"警39 建议减速-模版",
-	"警39 建议减速",
+	"警39 建议速度",
 	"警45 避险车道（横）",
 	"警45 避险车道（纵）",
 	"警45 避险车道（进入 横）",
@@ -417,7 +417,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][3]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'告诉公路&城市快速路','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'高速公路&城市快速路','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][4]['childs'].push({size:'自定义',customize: true})
 temp = [
 	"指路41 两条高速公路共线时入口预告1",
