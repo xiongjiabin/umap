@@ -402,6 +402,14 @@ L.Storage.Map.include({
                 L.DomEvent.stop(e);
                 this.help.show('edit');
             }
+
+            //增加copy and paste xiongjiabin
+            if (key === L.S.Keys.V && modifierKey && this.editEnabled) {
+               L.DomEvent.stop(e);
+               this.pasteElement(e);
+            }
+
+
             if (e.keyCode === L.S.Keys.ESC) {
                 if (this.editEnabled) this.editTools.stopDrawing();
                 if (this.measureTools.enabled()) this.measureTools.stopDrawing();
@@ -1659,8 +1667,34 @@ L.Storage.Map.include({
         this.contextmenu.enable();
     },
 
+    pasteElement: function(e){
+
+        var latlng = e.latlng;
+        var layer = this.datalayers[this._copyLayerLeafletId];
+        if(this._copyObj && layer) {
+            if(!latlng) {
+               latlng = this.getCenter();
+            }
+            layer.cloneElement(this._copyObj,latlng);
+        }else{
+          if(!layer){
+              this.ui.alert({content: '对应的数据层数据被删，无法复制此元素'});
+          }
+          this._copyObj = null;
+          this._copyLayerLeafletId = 0;
+        }
+    },
+
     setContextMenuItems: function (e) {
         var items = [];
+        if(this._copyObj ) {
+          items.push({
+              text: '粘贴 (Ctrl-V)',
+              callback: function (e) {
+                this.pasteElement(e);
+              }
+          });
+        }
         if (this._zoom !== this.getMaxZoom()) {
             items.push({
                 text: L._('Zoom in'),

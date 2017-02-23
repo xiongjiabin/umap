@@ -21,6 +21,10 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     }
   },
 
+  isCopy: function(){
+      return true;
+  },
+
   //added by xiongjiabin
   getBasicOptions: function() {
     return [
@@ -154,7 +158,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     if(result){
         this.properties.name = name.input.value = result[1]
     }else{
-        this.properties.name = name.input.value = option[1].trim()
+        this.properties.name = name.input.value = text.trim()
     }
 
     return

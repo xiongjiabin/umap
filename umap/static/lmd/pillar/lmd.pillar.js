@@ -51,6 +51,10 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     return options
   },
 
+  isCopy: function(){
+      return true;
+  },
+
   getSvgData(type,sn, tail) {
     var typeSvg = {
       1: '<circle cx="92" cy="17" r="15" /> <rect width="178" height="20" x="2" y="31" /><path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单柱式

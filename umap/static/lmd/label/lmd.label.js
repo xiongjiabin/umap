@@ -30,6 +30,10 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
     }
     return options
   },
+  
+  isCopy: function(){
+      return true;
+  },
 
   getSvgData: function() {
     var name = this.getDisplayName()|| '请输入文字'

@@ -210,6 +210,14 @@ L.Storage.FeatureMixin = {
         return false;
     },
 
+    copyElement: function (){
+       var obj = this.toGeoJSON();
+       //var element = this.datalayer.addData(obj);
+       this.map._copyObj = obj;
+       this.map._copyLayerLeafletId = this.datalayer._leaflet_id;
+    },
+
+
     del: function () {
         this.isDirty = true;
         this.map.closePopup();
@@ -428,6 +436,16 @@ L.Storage.FeatureMixin = {
 
     getContextMenuEditItems: function () {
         var items = ['-'];
+
+        if(this.isCopy()){
+          items.push({
+              text: '复制元素',
+              callback: this.copyElement,
+              context: this,
+              iconCls: 'storage-edit'
+          });
+        }
+
         if (this.map.editedFeature !== this) {
             items.push(
                 {
@@ -452,6 +470,7 @@ L.Storage.FeatureMixin = {
                 iconCls: 'storage-delete'
             }
         );
+
         return items;
     },
 
@@ -539,6 +558,10 @@ L.Storage.FeatureMixin = {
     isHide: function(){
       return false
     },
+    //是否支持copy，默认不支持
+    isCopy: function(){
+      return false
+    },
 
     setSingleOption(key,value){
       this.properties._storage_options[key] = value
@@ -551,6 +574,9 @@ L.Storage.Marker = L.Marker.extend({
 
     preInit: function () {
         this.setIcon(this.getIcon());
+    },
+    isCopy: function(){
+        return true;
     },
 
     addInteractions: function () {
@@ -869,11 +895,11 @@ L.Storage.PathMixin = {
 
     getContextMenuEditItems: function (e) {
         var items = L.S.FeatureMixin.getContextMenuEditItems.call(this, e);
-        items.push({
+        /*items.push({
             text: L._('Clone this feature'),
             callback: this.clone,
             context: this
-        });
+        });*/
         if (this.map.editedFeature && this.isSameClass(this.map.editedFeature) && this.map.editedFeature !== this) {
             items.push({
                 text: L._('Transfer shape to edited feature'),

@@ -736,6 +736,16 @@ L.Storage.DataLayer = L.Class.extend({
         return datalayer;
     },
 
+    //xiongjiabin  copy其他一个元素并且移动到这个地方去
+    cloneElement(geojson,latlng){
+      var element = this.addData(geojson);
+      if(element) {
+        element.setLatLng(latlng);
+        this.isDirty = true;
+        element.edit();
+      }
+    },
+
     erase: function () {
         this.hide();
         delete this.map.datalayers[L.stamp(this)];
