@@ -1484,6 +1484,15 @@ L.Storage.Map.include({
         settingControl.href = '#';
         settingControl.innerHTML = '隐藏地图设置';
 
+        var defaultLayerControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        defaultLayerControl.href = '#';
+        defaultLayerControl.innerHTML = '创建默认图层(*)';
+        L.DomEvent.addListener(defaultLayerControl,'click',function(){
+            var names = ['标志','标线','防护设施','警示诱导','交叉口','清除危险物'];
+            var ret = this.createDefaultLayer(names);
+            this.ui.alert({content: '成功创建' + ret + '个图层', level:'info'});
+        },this)
+
         L.DomEvent
             .addListener(settingControl,'click',L.DomEvent.stop)
             .addListener(settingControl,'click',function (e) {

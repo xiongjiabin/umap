@@ -451,6 +451,25 @@ L.Storage.Map.include({
     //console.timeEnd('showmarker')
   },
 
+  createDefaultLayer: function(names){
+
+    if(!Array.isArray(names)) return 0;
+
+    var oldNames = {};
+    this.eachDataLayer(function (datalayer) {
+      oldNames[datalayer.getName()] = 1;
+    });
+
+    var count = 0;
+    for(var i = 0, len = names.length; i < len; i++){
+      if(oldNames[names[i]]){
+        continue;
+      }
+      this.createDataLayer({name: names[i]});
+      count++;
+    }
+    return count;
+  },
 })
 
 L.DomUtil.setTransformRotate = function(el, offset, scale, rotate) {
