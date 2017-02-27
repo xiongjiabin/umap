@@ -289,7 +289,7 @@ L.Storage.LmdUpdateXYMixin = {
     var sn = +this.getOption('sn')
     if(sn){
       var data = this.map.getAnchorLatLngBySubNo(sn)
-      if(data['point']){
+      if(data && data['point']){
           var center = [data['point'][0],data['point'][1]]
           var latlngs = [center, latlng]
           this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
@@ -298,6 +298,8 @@ L.Storage.LmdUpdateXYMixin = {
           var scaleZoom = lmd.getLmdZoom(this.map)
           this.properties._storage_options['helpX'] = Math.round((latlngPoint['x'] - centerPoint['x'])/scaleZoom)
           this.properties._storage_options['helpY'] = Math.round((latlngPoint['y'] - centerPoint['y'])/scaleZoom)
+      }else if(!data){
+          this.map.ui.alert({content: '找不到主路,请在底图中把导入的路设置为主路', level:'info'});
       }
     }
   },

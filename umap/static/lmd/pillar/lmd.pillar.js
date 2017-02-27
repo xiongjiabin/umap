@@ -40,6 +40,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       options.svgText = this.getSvgData(
                             _storage_options['ps'],
                             _storage_options['sn'],
+                            _storage_options['color'],
                             _storage_options['tail'])
     }
     var validObj = {rotate:1,scale:1,color:1}
@@ -55,21 +56,23 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       return true;
   },
 
-  getSvgData(type,sn, tail) {
+  getSvgData(type,sn, color, tail) {
     var typeSvg = {
-      1: '<circle cx="92" cy="17" r="15" /> <rect width="178" height="20" x="2" y="31" /><path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单柱式
-      2: '<circle cx="42" cy="16" r="14"/><circle cx="129" cy="16" r="14" /> <rect width="178" height="25" x="2" y="30" /> <path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双柱式
-      3: '<rect width="149" height="25" x="2" y="30" /><circle cx="166" cy="45" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单悬臂式
-      4: '<rect width="73" height="25" x="106" y="25" /><circle cx="90" cy="25" r="15" /> <rect width="72" height="25" x="2" y="25"/><path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双悬臂式
-      5: '<rect width="121" height="25" x="31" y="25" /><circle cx="16" cy="35" r="15" /> <circle cx="167" cy="35" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="Yellow" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //门架式
+      1: '<circle cx="92" cy="17" r="15" /> <rect width="178" height="20" x="2" y="31" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单柱式
+      2: '<circle cx="42" cy="16" r="14"/><circle cx="129" cy="16" r="14" /> <rect width="178" height="25" x="2" y="30" /> <path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双柱式
+      3: '<rect width="149" height="25" x="2" y="30" /><circle cx="166" cy="45" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单悬臂式
+      4: '<rect width="73" height="25" x="106" y="25" /><circle cx="90" cy="25" r="15" /> <rect width="72" height="25" x="2" y="25"/><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双悬臂式
+      5: '<rect width="121" height="25" x="31" y="25" /><circle cx="16" cy="35" r="15" /> <circle cx="167" cy="35" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //门架式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
     tail = tail || 320
+    color = color || 'Yellow'
     if(sn){
       snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
       svgStr = svgStr.replace('{{桩号}}', snStr)
     }
     svgStr = svgStr.replace('{{tail}}',tail)
+    svgStr = svgStr.replace('{{color}}',color)
 
     return svgStr
   },
@@ -78,7 +81,8 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     var ps = this.getOption('ps')
     var sn = this.getOption('sn')
     var tail = this.getOption('tail')
-    this.setSvgText(this.getSvgData(ps,sn,tail))
+    var color = this.getOption('color')
+    this.setSvgText(this.getSvgData(ps,sn,color, tail))
     L.Storage.SVGObject.prototype._redraw.call(this)
   },
 
@@ -86,12 +90,13 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     var ps = this.getOption('ps')
     var sn = this.getOption('sn')
     var tail = this.getOption('tail')
-    this.setSvgText(this.getSvgData(ps,sn,tail))
+    var color = this.getOption('color')
+    this.setSvgText(this.getSvgData(ps,sn,color,tail))
 
     if(!e) return
+    var selfValue = e.helper.value()
 
-    if (e.helper.field === 'properties._storage_options.sn' ||
-        e.helper.field === 'properties._storage_options.lr') {
+    if (e.helper.name === 'sn' || e.helper.name === 'lr') {
       var lr = +this.getOption('lr')
       var data = this.map.getAnchorLatLngBySubNo(sn)
       var pos = lr == 2 ? 'right' : 'left'
@@ -102,6 +107,13 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
               this.setLatLng(data.point)
           }
       }
+    }else if(e.helper.name === 'ds') {
+        //设备状态更新导致颜色更新 http://lamudatech.com:3000/xiongjiabin/umap/issues/9
+        var dsColors = [null,'Yellow','Lime','Fuchsia']
+        color = dsColors[selfValue] || 'Yellow'
+        this.properties._storage_options['color'] = color
+        this.setSvgText(this.getSvgData(ps,sn,color,tail))
+        this.updateStyle()
     }
   },
 
