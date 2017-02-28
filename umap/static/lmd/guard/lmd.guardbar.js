@@ -50,7 +50,7 @@ L.Storage.guardbarData = [
     {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
     {name:'连续示警墩', type: L.Storage.GB_RECT},
-    {name:'防护墙', type: L.Storage.GB_RECT},    
+    {name:'防护墙', type: L.Storage.GB_RECT},
   ]},
   {name:'轮廓标', childs: [
     null,
@@ -417,7 +417,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
           var gbs = +this.getOption('gbs')
           if(gbs > 0){
-              var gbn = Math.ceil(distance / gbs)
+              var gbn = Math.ceil(distance / gbs) + 1
               var gbnControl = e.target.helpers['properties._storage_options.gbn']
               if(gbnControl){
                   this.properties._storage_options.gbn = gbnControl.input.value = gbn
@@ -430,7 +430,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         var gbs = +this.getOption('gbs')
         var distance = +this.getOption('gbl')
         if(gbs > 0 && distance > 0){
-            var gbn = Math.ceil(distance / gbs)
+            var gbn = Math.ceil(distance / gbs) + 1
             var gbnControl = e.target.helpers['properties._storage_options.gbn']
             if(gbnControl){
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn

@@ -63,7 +63,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
         var gbs = +this.getOption('gbs')
         if(gbs > 0){
-            var gbn = Math.ceil(distance / gbs)
+            var gbn = Math.ceil(distance / gbs) + 1
             var gbnControl = e.target.helpers['properties._storage_options.gbn']
             if(gbnControl){
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn
@@ -75,7 +75,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
       var gbs = +this.getOption('gbs')
       var distance = +this.getOption('gbl')
       if(gbs > 0 && distance > 0){
-          var gbn = Math.ceil(distance / gbs)
+          var gbn = Math.ceil(distance / gbs) + 1
           var gbnControl = e.target.helpers['properties._storage_options.gbn']
           if(gbnControl){
               this.properties._storage_options.gbn = gbnControl.input.value = gbn
