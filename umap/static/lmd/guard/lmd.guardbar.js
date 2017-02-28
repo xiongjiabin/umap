@@ -17,7 +17,7 @@ L.Storage.guardbarData = [
   null,
   {name: '标线',
    defaultData: {
-     color: 'LightCyan',
+     color: 'White',
      weight: 20,
      opacity: 1
    },
@@ -32,6 +32,7 @@ L.Storage.guardbarData = [
     defaultData:{
       gbc: "10", //默认示警墩
       weight:"10",
+      color: "red",
     },
     childs: [
     null,
@@ -52,19 +53,25 @@ L.Storage.guardbarData = [
     {name:'连续示警墩', type: L.Storage.GB_RECT},
     {name:'防护墙', type: L.Storage.GB_RECT},
   ]},
-  {name:'轮廓标', childs: [
+  {name:'轮廓标',
+   defaultData:{ color: "Yellow"},
+   childs: [
     null,
     {name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
     {name:'柱状轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
-  {name: '防眩设施', childs: [
+  {name: '防眩设施',
+   defaultData:{ color: "White"},
+   childs: [
     null,
     {name:'防眩板', type: L.Storage.GB_NORMAL_LINE},
     {name:'防眩网',type: L.Storage.GB_NORMAL_LINE},
     {name:'植树', type: L.Storage.GB_NORMAL_LINE},
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]},
-  {name:'减速路面', childs: [
+  {name:'减速路面',
+   defaultData:{ color: "Red"},
+   childs: [
     null,
     {name:'急弯',type: L.Storage.GB_VERTICAL_LINE},
     {name:'过村',type: L.Storage.GB_VERTICAL_LINE},
@@ -72,7 +79,9 @@ L.Storage.guardbarData = [
     {name:'隧道洞口',type: L.Storage.GB_VERTICAL_LINE},
     {name:'学校',type: L.Storage.GB_VERTICAL_LINE},
   ]},
-  {name:'减速丘',childs: [
+  {name:'减速丘',
+   defaultData:{ color: "White"},
+   childs: [
     null,
     {name:'大型减速丘',type: L.Storage.GB_VERTICAL_LINE},
     {name:'预制减速垄',type: L.Storage.GB_VERTICAL_LINE},
@@ -119,6 +128,7 @@ L.Storage.getGBDefaultData = function(gbt){
 
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
+    dsColors: [null, 'Red', 'Lime','Fuchsia'],
 
     preInit: function() {
       if (!this.properties['className']) {
@@ -448,7 +458,14 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           }
       }else if(e.helper.name in {'lr': 0}){
           needDrawAgain = true
-      }else{
+      }else if(e.helper.name === 'ds') {
+          var selfValue = e.helper.value()
+          //设备状态更新导致颜色更新 http://lamudatech.com:3000/xiongjiabin/umap/issues/9
+          var dsColors = this.dsColors || []
+          var color = dsColors[selfValue] || 'Blue'
+          this.properties._storage_options['color'] = color
+          this.setStyle()
+      }else {
         //nothing to do
       }
 
@@ -482,6 +499,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
 L.Storage.Biaoxian = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
+  dsColors: [null, 'White', 'White','White'], //所有都一样
 
   //added by xiongjiabin
   getBasicOptions: function () {
@@ -507,6 +525,7 @@ L.Storage.Biaoxian = L.Storage.Guardbar.extend({
 
 L.Storage.Lunkuo = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LUNKUO,
+  dsColors: [null, 'Yellow', 'Lime','Fuchsia'],
 
   getClassName: function () {
       return 'lunkuo';
@@ -530,6 +549,7 @@ L.Storage.Lunkuo = L.Storage.Guardbar.extend({
 
 L.Storage.Fangxuan = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_FANGXUAN,
+  dsColors: [null, 'White', 'Lime','Fuchsia'],
 
   getClassName: function () {
       return 'fangxuan';
@@ -538,6 +558,7 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
 
 L.Storage.Jiansu = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_JIANSU,
+  dsColors: [null, 'White', 'Lime','Fuchsia'],
 
   getClassName: function () {
       return 'jiansu';
@@ -561,6 +582,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
 
 L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_JIANSUQIU,
+  dsColors: [null, 'White', 'Lime','Fuchsia'],
 
   getClassName: function () {
       return 'jiansuqiu';
@@ -584,6 +606,7 @@ L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
 
 L.Storage.Biangou = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIANGOU,
+  dsColors: [null, 'Blue', 'Lime','Fuchsia'],
 
   preInit: function() {
     if (!this.properties['className']) {
@@ -593,7 +616,7 @@ L.Storage.Biangou = L.Storage.Guardbar.extend({
     if (!this.properties._storage_options.gbc) {
       this.properties._storage_options = {
         gbc: "1",
-        color: "blue",
+        color: "Blue",
         weight:"10"
       }
 
