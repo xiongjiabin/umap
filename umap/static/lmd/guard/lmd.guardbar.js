@@ -90,7 +90,10 @@ L.Storage.guardbarData = [
   {name:'边沟',childs: [
     null,
     {name:'浅碟形边沟',type: L.Storage.GB_NORMAL_LINE},
-    {name:'加铺盖板',type: L.Storage.GB_NORMAL_LINE}
+    {name:'加铺盖板',type: L.Storage.GB_NORMAL_LINE},
+    {name:'矩形边沟',type: L.Storage.GB_NORMAL_LINE},
+    {name:'梯形边沟',type: L.Storage.GB_NORMAL_LINE},
+    {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]}
 ];
 
