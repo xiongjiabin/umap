@@ -102,6 +102,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 lmd.marker[lmd.MARKER_WARMING]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({speed:'40-70',size:'120*170'})
 lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({speed:'<40',size:'90*130'})
+lmd.marker[lmd.MARKER_WARMING]['childs'][2]['childs'].push({size:'自定义',customize: true})
 //警告标志之矩形
 temp = [
 	"警39 建议减速-模版",
