@@ -189,8 +189,8 @@ L.Storage.SubDrawLunkuoAction = L.Storage.SubAction.extend({
 L.Storage.SubDrawFangxuanAction = L.Storage.SubAction.extend({
   options: {
       toolbarIcon: {
-          html: '防炫设施',
-          tooltip: '防炫设施'
+          html: '防眩设施',
+          tooltip: '防眩设施'
       }
   },
 

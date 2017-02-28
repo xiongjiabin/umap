@@ -554,6 +554,21 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
   getClassName: function () {
       return 'fangxuan';
   },
+
+  //added by xiongjiabin
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        'properties._storage_options.gbs',//间距
+        'properties._storage_options.gbn',//数量
+        'properties._storage_options.ds',
+      ];
+  },
+
 });
 
 L.Storage.Jiansu = L.Storage.Guardbar.extend({

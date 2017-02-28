@@ -296,12 +296,12 @@ lmd.tjXiujian = function(){
 lmd.tjFanghu = function(){
   var data = []
   var titles = {no:'序号',
-                name: '类型',
                 gbss: '起始桩号',
                 gbse: '结束桩号',
                 gbl: '长度',
                 pos: '侧别',
                 gblev: '级别',
+                name: '类型',
                 gbs: '间距',
                 gbn: '数量',
                 ds: '状态',
