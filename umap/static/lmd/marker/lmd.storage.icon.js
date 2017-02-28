@@ -16,7 +16,7 @@ L.Storage.Icon.Rect = L.Storage.Icon.extend({
     },
 
     getDefaultHeightWidth(){
-      return [60,60]
+      return [0,60]
     },
 
     createIcon: function() {
