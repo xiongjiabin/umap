@@ -1484,24 +1484,42 @@ L.Storage.Map.include({
         disable.href = '#';
         disable.title = disable.innerHTML = L._('Disable editing');
 
-        var drawControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        /*var drawControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         drawControl.href = '#';
         drawControl.innerHTML = '隐藏设计按钮';
 
         var settingControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         settingControl.href = '#';
-        settingControl.innerHTML = '隐藏地图设置';
+        settingControl.innerHTML = '隐藏地图设置';*/
 
         var defaultLayerControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         defaultLayerControl.href = '#';
-        defaultLayerControl.innerHTML = '创建默认图层(*)';
+        defaultLayerControl.innerHTML = '创建默认图层';
         L.DomEvent.addListener(defaultLayerControl,'click',function(){
             var names = ['标志','标线','防护设施','警示诱导','交叉口','清除危险物'];
             var ret = this.createDefaultLayer(names);
             this.ui.alert({content: '成功创建' + ret + '个图层', level:'info'});
         },this)
 
-        L.DomEvent
+        var hideLayerControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        hideLayerControl.href = '#';
+        hideLayerControl.innerHTML = '影藏所有图层';
+        L.DomEvent.addListener(hideLayerControl,'click',function(){
+          var show = true;
+          if(hideLayerControl.innerHTML === '影藏所有图层'){
+            hideLayerControl.innerHTML = '显示所有图层';
+            show  = false;
+          }else{
+            hideLayerControl.innerHTML = '影藏所有图层';
+          }
+
+          this.eachDataLayer(function(layer){
+            show ? layer.show() : layer.hide();
+          });
+
+        },this)
+
+        /*L.DomEvent
             .addListener(settingControl,'click',L.DomEvent.stop)
             .addListener(settingControl,'click',function (e) {
                 var displayCss = 'display:block'
@@ -1539,7 +1557,7 @@ L.Storage.Map.include({
                 for(var i = 3, len = lis.length; i < len; i++){
                   lis[i].style = displayCss
                 }
-            },this);
+            },this);*/
 
         L.DomEvent
             .addListener(disable, 'click', L.DomEvent.stop)

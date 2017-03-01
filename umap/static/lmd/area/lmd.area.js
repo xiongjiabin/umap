@@ -47,6 +47,9 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
     if(!this.map.editEnabled) {
         return false
     }
+    //解决侧别的问题,area 只有左右，中间
+    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLR;
+
     var builder = L.Storage.LmdFeatureMixin.edit.call(this, e)
     var gbn = builder && builder.helpers['properties._storage_options.gbn']
     //at.fire('change')

@@ -61,7 +61,8 @@ L.Storage.guardbarData = [
     {name:'柱状轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
   {name: '防眩设施',
-   defaultData:{ color: "White"},
+   defaultData:{ color: "White",lr: 3},//default middle
+   posData: L.FormBuilder.LeftRightChoice.prototype.choicesM,
    childs: [
     null,
     {name:'防眩板', type: L.Storage.GB_NORMAL_LINE},
@@ -128,6 +129,14 @@ L.Storage.getGBDefaultData = function(gbt){
   return temp['defaultData']
 }
 
+L.Storage.getGBPosData = function(gbt){
+  if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
+    return {}
+  }
+  var temp = L.Storage.guardbarData[gbt]
+  return temp['posData']
+}
+
 
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
@@ -148,7 +157,11 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         for(var i in defaultData){
           this.properties._storage_options[i] = defaultData[i]
         }
+        var gbtype = this.gbType
+        var gbcat  = this.properties._storage_options['gbc']
+        var classObject = L.Storage.getGBClass(gbtype, gbcat)
 
+        this.properties.name = classObject['name'] || ''
       }
     },
 
@@ -159,6 +172,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           var gbt = this.gbType
           var gbcOptions = L.Storage.getGBOptions(gbt)
           L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
+
+          //解决侧别的问题
+          L.FormBuilder.LeftRightChoice.prototype.choices = L.Storage.getGBPosData(gbt) ||
+                                                            L.FormBuilder.LeftRightChoice.prototype.choicesNoM;
 
           var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
 

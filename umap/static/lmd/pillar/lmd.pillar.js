@@ -171,6 +171,9 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
         return false
     }
 
+    //解决侧别的问题,pillar 只有左右，中间
+    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
+
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 

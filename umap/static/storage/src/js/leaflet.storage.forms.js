@@ -618,10 +618,28 @@ L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
 
     default: 1,
     choices: [
+       [1, L._('left')],
+       [2, L._('right')],
+       [3, L._('middle')],
+    ],
+    choicesLR: [
+        [1, L._('left')],
+        [2, L._('right')]
+    ],
+    choicesLRM: [
         [1, L._('left')],
         [2, L._('right')],
-        [3, L._('middle')],
-        [4, '俩侧']
+        [3, L._('middle')]
+    ],
+    choicesNoM: [
+        [1, L._('left')],
+        [2, L._('right')],
+        [5, '中分左'],
+        [6, '中分右'],
+        [4, '两侧'],
+    ],
+    choicesM: [
+        [3, L._('middle')]
     ],
 });
 

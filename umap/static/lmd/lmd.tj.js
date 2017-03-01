@@ -323,6 +323,36 @@ lmd.tjFanghu = function(){
   new CsvGenerator(data,  '防护栏.csv').download(true);
 }
 
+lmd.tjFangxuan = function(){
+  var data = []
+  var titles = {no:'序号',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                gbl: '长度',
+                pos: '侧别',
+                gblev: '级别',
+                name: '类型',
+                gbs: '间距',
+                gbn: '数量',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1
+  this.eachLayerFeature(function (feature) {
+      if(feature.getClassName() === 'fangxuan'){
+        data.push(lmd.getTjData(feature,i,titles))
+        i++
+      }
+  })
+
+  lmd.processData(data)
+  new CsvGenerator(data,  '防眩设施.csv').download(true);
+}
+
 //突起路标
 lmd.tjTuQiLuBiao = function(){
   var data = []
@@ -395,6 +425,9 @@ lmd.tjs = [{
   },{
     label: '轮廓设施',
     process: lmd.tjLunkuo
+  },{
+    label: '防眩设施',
+    process: lmd.tjFangxuan
   },{
     label: '减速路面',
     process: lmd.tjJiansu
