@@ -813,6 +813,35 @@ L.FormBuilder.CrossTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+//减速让行版面尺寸
+L.FormBuilder.jsrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["L90", "40-70_____L90"],
+    ["L70", "<40  _____L70"]
+  ]
+});
+
+//停车让行版面尺寸
+L.FormBuilder.tcrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["L80", "40-70_____L80"],
+    ["L60", "<40  _____L60"]
+  ]
+});
+
+//警告减速丘版面尺寸
+L.FormBuilder.jgSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["L130", "100-120_____L130"],
+    ["L110", "70-99  _____L110"],
+    ["L90", "40-70   _____L90"],
+    ["L70", "<40     _____L70"],
+  ]
+});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -937,21 +966,21 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //交叉口特性
         crossType: {handler:'CrossTypeSwitcher', label: '交叉类型'},
         jsrxBx: {handler: 'FloatInput', label: '标线(m2)'},
-        jsrxNum: {handler: 'IntInput', label: '数量(快)'},
-        jsrxSize:{label: '版面尺寸'},
+        jsrxNum: {handler: 'IntInput', label: '数量(块)'},
+        jsrxSize:{handler:'jsrxSizeSwitcher', label: '版面尺寸'},
 
         tcrxBx: {handler:'FloatInput', label: '标线(m2)'},
-        tcrxNum: {handler:'IntInput', label: '数量(快)'},
-        tcrxSize: {label: '版面尺寸'},
+        tcrxNum: {handler:'IntInput', label: '数量(块)'},
+        tcrxSize: {handler: 'tcrxSizeSwitcher', label: '版面尺寸'},
 
         jsqBx: {handler:'FloatInput', label: '减速丘标线(m2)'},
-        jsqBz: {handler:'IntInput', label: '标志(快)'},
-        jsqSize: {label: '版面尺寸'},
+        jsqBz: {handler:'IntInput', label: '标志(块)'},
+        jsqSize: {handler: 'jgSizeSwitcher', label: '版面尺寸'},
         jsqXjjsl:{handler:'FloatInput',label: '橡胶减速垄(m)'},
 
         jgContent: {label: '标志内容'},
-        jgSize: {label: '版面尺寸'},
-        jgNum: {handler:'IntInput', label:"数量(快)"},
+        jgSize: {handler:'jgSizeSwitcher', label: '版面尺寸'},
+        jgNum: {handler:'IntInput', label:"数量(块)"},
 
         oQhbx: {handler:'FloatInput',label:'渠化标线(m2)'},
         oRxhd: {handler:'FloatInput',label: '被交道人行横道线(m2)'},
