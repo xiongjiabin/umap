@@ -330,7 +330,6 @@ lmd.tjFangxuan = function(){
                 gbse: '结束桩号',
                 gbl: '长度',
                 pos: '侧别',
-                gblev: '级别',
                 name: '类型',
                 gbs: '间距',
                 gbn: '数量',
