@@ -741,6 +741,16 @@ L.FormBuilder.XiujianSwitch = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+
+L.FormBuilder.DangTuQiangSwitch = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["1","挡土墙"],
+    ["2","挡土墙表面处理"],
+    ["3","挡土墙+表面处理"],
+    ["99","其他"]
+  ]
+});
+
 L.FormBuilder.LevelSwitch = L.FormBuilder.Select.extend({
 
   selectOptions: [
@@ -949,6 +959,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         oDkbz: {handler:'IntInput', label: '道口标注'},
         oQcgm: {handler:'FloatInput',label: '清除内侧灌木(m2)'},
         oJdgz: {handler:'FloatInput',label: '被交道路改造(m2)'},
+
+        //挡土墙
+        dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'}
     },
 
     initialize: function (obj, fields, options) {

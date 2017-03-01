@@ -1,5 +1,6 @@
 
 L.Storage.Hide = L.Storage.SVGObject.extend({
+  defaultName: '',
 
   initialize: function(map, latlng, options) {
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
@@ -14,6 +15,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
       this.properties._storage_options['scale'] = 5;
       this.properties._storage_options['rotate'] = 0;
       this.properties._storage_options['color'] = 'Black';
+      this.properties.name = this.defaultName;
     }
 
     var options = {}
@@ -41,8 +43,8 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
   resetTooltip: function(e){
 
-    this.setSvgText(this.getSvgData())
     if (!e) return;
+    this.setSvgText(this.getSvgData())
 
     if(e.helper.name in {'gbss':0,'gbse':0}){
         //计算长度
@@ -110,6 +112,9 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
   getStringMap: function(){
     var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
+    if(!stringMap['name']){
+        stringMap['name'] = this.defaultName || ''
+    }
 
     var sns = this.getOption('gbss')
     var sne = this.getOption('gbse')
@@ -135,11 +140,12 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 });
 
 L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
+  defaultName: '突起路标',
 
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '<tspan x=0 dy=0>**突起路标**</tspan>'+
+    return '<tspan x=0 dy=0>**' + this.defaultName + '**</tspan>'+
            '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
@@ -177,16 +183,48 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
 
 
 L.Storage.DangTuQiang = L.Storage.Hide.extend({
+  defaultName: '挡土墙',
+
+  resetTooltip: function(e) {
+
+    if(!e) return
+    if(e.helper.name === 'dtqType') {
+        this.updateName(e)
+    }
+
+    L.Storage.Hide.prototype.resetTooltip.call(this,e)
+
+  },
+
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+
+    var name = e.target.helpers['properties.name']
+    var nameValue = name.value()
+    if(nameValue && nameValue.startsWith('@')) {
+      return
+    }
+
+    var dtqType = e.target.helpers['properties._storage_options.dtqType']
+    var text = dtqType.getSelectText()
+    var result = text.trim()
+    this.properties.name = name.input.value = result
+
+    return
+  },
 
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '<tspan x=0 dy=0>**挡土墙**</tspan>'+
+    var name = this.properties.name || this.defaultName
+    return '<tspan x=0 dy=0>**' + name + '**</tspan>'+
            '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
   getBasicOptions: function(){
     return [
+    'properties._storage_options.dtqType',
     'properties._storage_options.lr',
     'properties._storage_options.gbss',//起始桩号
     'properties._storage_options.gbse',

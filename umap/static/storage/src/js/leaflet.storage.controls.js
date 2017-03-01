@@ -282,8 +282,8 @@ L.Storage.SubDrawDangTuQiangAction = L.Storage.SubAction.extend({
 
     options: {
         toolbarIcon: {
-          html: '挡土墙(隐)',
-          tooltip: '挡土墙，是一个隐藏元素，不会在打印时候出现'
+          html: '挡墙(隐)',
+          tooltip: '挡墙，是一个隐藏元素，不会在打印时候出现'
         }
     },
 

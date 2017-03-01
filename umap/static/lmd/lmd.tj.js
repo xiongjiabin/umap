@@ -355,12 +355,13 @@ lmd.tjTuQiLuBiao = function(){
 }
 
 
-//挡土墙
+//挡墙
 lmd.tjDangTuQiang = function(){
   var data = []
   var titles = {no:'序号',
                 gbss: '起始桩号',
                 gbse: '结束桩号',
+                name: '设施名称',
                 gbl: '长度(m)',
                 hHeight: '高度(m)',
                 pos: '侧别',
@@ -382,7 +383,7 @@ lmd.tjDangTuQiang = function(){
   })
 
   lmd.processData(data)
-  new CsvGenerator(data,  '挡土墙.csv').download(true);
+  new CsvGenerator(data,  '挡墙.csv').download(true);
 }
 
 lmd.tjs = [{
@@ -410,7 +411,7 @@ lmd.tjs = [{
     label: '突起路标',
     process: lmd.tjTuQiLuBiao
   },{
-    label: '挡土墙',
+    label: '挡墙',
     process: lmd.tjDangTuQiang
   }
 ]
