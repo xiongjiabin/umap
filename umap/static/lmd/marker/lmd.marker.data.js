@@ -414,7 +414,8 @@ temp = [
 	"指路33 车道数增加",
 	"指路34 交通监控设备",
 	"指路35 隧道出口距离预告2",
-	"指路35 隧道出口距离预告1"
+	"指路35 隧道出口距离预告1",
+	"指路80 文字性表述"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][3]['wife'].push(temp[i])
