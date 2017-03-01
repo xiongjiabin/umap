@@ -62,6 +62,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
     stringMap['oDkbz'] = this.getOption('oDkbz');
     stringMap['oQcgm'] = this.getOption('oQcgm');
     stringMap['oJdgz'] = this.getOption('oJdgz');
+    stringMap['oXjsm'] = this.getOption('oXjsm');
     return stringMap;
   },
 
@@ -106,6 +107,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
       'properties._storage_options.oJsbx',
       'properties._storage_options.oDkbz',
       'properties._storage_options.oQcgm',
+      'properties._storage_options.oXjsm',
       'properties._storage_options.oJdgz'
     ]
   },
@@ -166,8 +168,9 @@ lmd.tjJck = function(){
                 oQhbx: '渠化标线(m2)',
                 oRxhd: '被交道人行横道线(m2)',
                 oJsbx: '被交道减速标线(m2)',
-                oDkbz: '道口标注(个)',
+                oDkbz: '道口标柱(个)',
                 oQcgm: '清除内侧灌木(m2)',
+                oXjsm: '修剪树木(棵)',
                 oJdgz: '被交道改造(m2)',
                 description:'备注'
               }

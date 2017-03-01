@@ -965,15 +965,15 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //交叉口特性
         crossType: {handler:'CrossTypeSwitcher', label: '交叉类型'},
-        jsrxBx: {handler: 'FloatInput', label: '标线(m2)'},
+        jsrxBx: {handler: 'FloatInput', label: '标线(平方)'},
         jsrxNum: {handler: 'IntInput', label: '数量(块)'},
         jsrxSize:{handler:'jsrxSizeSwitcher', label: '版面尺寸'},
 
-        tcrxBx: {handler:'FloatInput', label: '标线(m2)'},
+        tcrxBx: {handler:'FloatInput', label: '标线(平方)'},
         tcrxNum: {handler:'IntInput', label: '数量(块)'},
         tcrxSize: {handler: 'tcrxSizeSwitcher', label: '版面尺寸'},
 
-        jsqBx: {handler:'FloatInput', label: '减速丘标线(m2)'},
+        jsqBx: {handler:'FloatInput', label: '减速丘标线(平方)'},
         jsqBz: {handler:'IntInput', label: '标志(块)'},
         jsqSize: {handler: 'jgSizeSwitcher', label: '版面尺寸'},
         jsqXjjsl:{handler:'FloatInput',label: '橡胶减速垄(m)'},
@@ -982,12 +982,13 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         jgSize: {handler:'jgSizeSwitcher', label: '版面尺寸'},
         jgNum: {handler:'IntInput', label:"数量(块)"},
 
-        oQhbx: {handler:'FloatInput',label:'渠化标线(m2)'},
-        oRxhd: {handler:'FloatInput',label: '被交道人行横道线(m2)'},
-        oJsbx: {handler:'FloatInput',label: '被交道减速标线(m2)'},
-        oDkbz: {handler:'IntInput', label: '道口标注'},
-        oQcgm: {handler:'FloatInput',label: '清除内侧灌木(m2)'},
-        oJdgz: {handler:'FloatInput',label: '被交道路改造(m2)'},
+        oQhbx: {handler:'FloatInput',label:'渠化标线(平方)'},
+        oRxhd: {handler:'FloatInput',label: '被交道人行横道线(平方)'},
+        oJsbx: {handler:'FloatInput',label: '被交道减速标线(平方)'},
+        oDkbz: {handler:'IntInput', label: '道口标柱(个)'},
+        oQcgm: {handler:'FloatInput',label: '清除内侧灌木(平方)'},
+        oJdgz: {handler:'FloatInput',label: '被交道路改造(平方)'},
+        oXjsm: {handler:'IntInput',label: '修剪树木(棵)'},
 
         //挡土墙
         dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'}
