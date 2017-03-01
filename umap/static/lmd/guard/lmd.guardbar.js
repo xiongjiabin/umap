@@ -387,6 +387,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       if(e.helper.name === 'gbc') {
           this._redraw();
+          this.updateName(e)
 
           if(this.gbType === L.Storage.GB_TYPE_HULAN){
               var gbc = +this.getOption('gbc')
@@ -472,7 +473,6 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         //nothing to do
       }
 
-      this.updateName(e)
 
       if(needDrawAgain){
         var gbss = this.getOption('gbss')

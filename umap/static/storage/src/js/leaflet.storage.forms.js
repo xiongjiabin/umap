@@ -736,6 +736,7 @@ L.FormBuilder.XiujianSwitch = L.FormBuilder.EmptySwitcher.extend({
     ["2","削挖土坡"],
     ["3","拆除广告牌"],
     ["4","移除大石"],
+    ["5","清除灌木"],
     ["99","其他"]
   ]
 });
@@ -909,7 +910,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'},
 
         //修建
-        at: {handler: 'XiujianSwitch', label: '修剪类型'},
+        at: {handler: 'XiujianSwitch', label: '清除类型'},
 
         //road
         road: {handler: 'Switch', label: '是否定义为主路',helpEntries:'roadHelp'},

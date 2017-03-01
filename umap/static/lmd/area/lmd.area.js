@@ -1,6 +1,15 @@
 
 L.Storage.LmdArea = L.Storage.Polygon.extend({
 
+  //    ["1","修剪树木"],
+  //    ["2","削挖土坡"],
+  //    ["3","拆除广告牌"],
+  //    ["4","移除大石"],
+  //    ["5","清除灌木"],
+  //    ["99","其他"]
+  units:  ['','棵','立方','个','立方','平方'],
+  defaultName: '修剪树木',
+
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
@@ -12,6 +21,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
         color:'Cyan',
         fillOpacity: '0.6'
       }
+      this.properties.name = this.defaultName
     }
   },
 
@@ -37,14 +47,30 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
     if(!this.map.editEnabled) {
         return false
     }
-    L.Storage.LmdFeatureMixin.edit.call(this, e)
+    var builder = L.Storage.LmdFeatureMixin.edit.call(this, e)
+    var gbn = builder && builder.helpers['properties._storage_options.gbn']
+    //at.fire('change')
+    this.gbnDisplay(gbn,this.getOption('at'))
   },
-
 
   resetTooltip: function(e) {
     L.Storage.FeatureMixin.resetTooltip.call(this,e)
     if(!e) return
-    this.updateName(e)
+    var gbn = e.target.helpers['properties._storage_options.gbn']
+    if(e.helper.name === 'at') {
+        this.updateName(e)
+        this.gbnDisplay(gbn,e.helper.value())
+    }
+  },
+
+  gbnDisplay: function(gbn, value){
+      if(!gbn) return
+      var unitStr = this.units[value] | ''
+      if(this.units[value]){
+          gbn.label.innerHTML = '数量 （' + this.units[value] + ')'
+      }else{
+          gbn.label.innerHTML = '数量'
+      }
   },
 
   //name是自动生成的，依据所选择的参数
@@ -68,6 +94,9 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
   getStringMap: function(){
 
     var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
+    if(stringMap['name']){
+        stringMap['name'] = this.defaultName
+    }
 
     var sns = this.getOption('gbss')
     var sne = this.getOption('gbse')
