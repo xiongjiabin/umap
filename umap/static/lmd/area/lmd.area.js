@@ -18,7 +18,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
       this.properties._storage_options = {
         at: "1",
         lr: "1",
-        color:'Cyan',
+        color:'Red',
         fillOpacity: '0.6'
       }
       this.properties.name = this.defaultName
@@ -33,7 +33,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
       'properties._storage_options.gbss',//起始桩号
       'properties._storage_options.gbse',
       'properties._storage_options.gbn',//面积或者数量
-      'properties._storage_options.ds'
+      //'properties._storage_options.ds'
     ];
   },
 
@@ -110,7 +110,8 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
       stringMap['gbse'] = snsString
     }
 
-    stringMap['gbn'] = this.getOption('gbn');//数量
+    var unit = this.units[this.getOption('at')] || ''
+    stringMap['gbn'] = this.getOption('gbn') + unit;//数量
 
     return stringMap
 
