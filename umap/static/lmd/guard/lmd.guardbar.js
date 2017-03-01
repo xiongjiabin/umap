@@ -82,6 +82,7 @@ L.Storage.guardbarData = [
   ]},
   {name:'减速丘',
    defaultData:{ color: "White"},
+   posData: L.FormBuilder.LeftRightChoice.prototype.choicesLRBoth,
    childs: [
     null,
     {name:'大型减速丘',type: L.Storage.GB_VERTICAL_LINE},

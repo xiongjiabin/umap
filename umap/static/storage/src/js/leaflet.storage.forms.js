@@ -641,6 +641,17 @@ L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
     choicesM: [
         [3, L._('middle')]
     ],
+    choicesLRBoth: [
+        [1, L._('left')],
+        [2, L._('right')],
+        [4, '两侧']
+    ],
+    choicesLRMBoth: [
+       [1, L._('left')],
+       [2, L._('right')],
+       [3, L._('middle')],
+       [4, '两侧']
+    ],
 });
 
 L.FormBuilder.DirectionChoice = L.FormBuilder.MultiChoice.extend({
@@ -794,6 +805,7 @@ L.FormBuilder.ShaperSwitcher = L.FormBuilder.EmptySwitcher.extend({
 
 L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
+    [undefined,"无"],
     ["1","白色"],
     ["2","黄色"],
     ["3","红色"],
@@ -980,6 +992,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         bulk: {handler: 'IntInput', label: '体积(m3)'},
         lineType: {handler:'LineSwitcher', label: '形式'},
         lineWidth: {handler: 'LineWidthSwitcher', label: '线宽'},
+        lane: {handler: 'IntInput', label: '道数'},
 
         //交叉口特性
         crossType: {handler:'CrossTypeSwitcher', label: '交叉类型'},

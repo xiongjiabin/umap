@@ -4,6 +4,7 @@
 */
 
 L.Storage.Jck = L.Storage.Hide.extend({
+  defaultName: '交叉口',
 
   preInit: function(){
 
@@ -12,13 +13,14 @@ L.Storage.Jck = L.Storage.Hide.extend({
        this.properties._storage_options['scale'] = 5;
        this.properties._storage_options['rotate'] = 0;
        this.properties._storage_options['color'] = 'Red';
+       this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
   },
 
   getDisplayName: function(){
     var sn = this.getOption('sn') || ''
-    return '<tspan x=0 dy=0>**交叉口**</tspan>'+
+    return '<tspan x=0 dy=0>**' + this.properties.name + '**</tspan>'+
            '<tspan x=0 dy=1.2em>(' + L.Storage.LmdFeatureMixin.showSubNice.call(this,sn) + ')</tspan>'
   },
 

@@ -4,19 +4,20 @@
 */
 
 L.Storage.CxdFjx = L.Storage.Hide.extend({
-
+  defaultName: '车行道分界线',
   preInit: function(){
 
     if (!this.properties._storage_options.lineType) {
        this.properties._storage_options['lineType'] = 1;
        this.properties._storage_options['lineWidth'] = 8;
+       this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
   },
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '<tspan x=0 dy=0>**车行道分界线**</tspan>'+
+    return '<tspan x=0 dy=0>**' + this.properties.name + '**</tspan>'+
            '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
@@ -28,6 +29,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
     'properties._storage_options.gbse',
     'properties._storage_options.lineWidth',//线宽
     'properties._storage_options.gbl',//总长
+    'properties._storage_options.gba',//面积
     'properties._storage_options.ds', //设施状态
     ]
   },
