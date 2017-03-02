@@ -974,6 +974,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gbd: {handler: 'DirectionChoice',label: '方向'},
         gblev: {handler: 'LevelSwitch', label:'级别'},
         offset: {handler: 'Range', min: 0, max: 200, step: 1, label: '中线偏移'},
+        jslmTs: {handler: 'IntInput', label: '每道设置条数'},
 
         speed: {handler: 'IntInput', label: '默认速度', helpEntries: 'defaultSpeed'},
         zIndex: {handler:'IntInput', label: '重叠级别(默认400,越大越突出)'},

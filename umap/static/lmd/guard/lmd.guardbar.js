@@ -340,6 +340,26 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         return items;
     },
 
+    caculateLanesAndSpace: function( len ){
+        var spaces = [17,20,23,26,28,30,32];
+        var maxSpace = 32
+        var tempLen = len;
+        var i, j;
+        if(tempLen <= 0){
+          return null;
+        }
+        i = 0;
+        while(tempLen > 0){
+          tempLen = tempLen - (spaces[i] || maxSpace);
+          i++;
+        }
+        var result = {lanes: i + 1, space:[]};
+        for(j = 0; j < i; j++){
+          result.space.push( spaces[j] || maxSpace )
+        }
+        return result;
+    },
+
     getStringMap: function(){
       var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
 
@@ -608,10 +628,33 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
         'properties._storage_options.gbss',//起始桩号
         'properties._storage_options.gbse',
         'properties._storage_options.gbl',//总长
+        'properties._storage_options.jslmTs',//每道设置条数
         'properties._storage_options.gbw',//宽度
         'properties._storage_options.gba',//面积
         'properties._storage_options.ds',
       ];
+  },
+
+  resetTooltip: function(e){
+      L.Storage.Guardbar.prototype.resetTooltip.call(this,e);
+      if(!e) return;
+
+      if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0,'jslmTs':0,'gbw':0}){
+          var gbl = +this.getOption('gbl');
+          var ret = this.caculateLanesAndSpace(gbl);
+          var gbaControl = e.target.helpers['properties._storage_options.gba'];
+          var descControl = e.target.helpers['properties.description'];
+
+          if(!ret){
+              this.properties._storage_options.gba = gbaControl.input.value = 0;
+          }else {
+              var gbw = +this.getOption('gbw');
+              var jslmTs = +this.getOption('jslmTs');
+              var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
+              this.properties._storage_options.gba = gbaControl.input.value = area
+              descControl.input.value = this.properties.description = '道数:' + ret['lanes'] + ',间距(米):' + ret['space'].join(',');
+          }
+      }
   },
 
 });
