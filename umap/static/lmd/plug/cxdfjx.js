@@ -60,7 +60,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
     ];
 
     var builder = L.Storage.Hide.prototype.edit.call(this,e);
-    
+
     return builder;
   },
 
@@ -120,6 +120,7 @@ lmd.tjCxdFjx = function(){
                 gbse: '结束桩号',
                 lineType: '形式',
                 lineWidth: '线宽(cm)',
+                lane: '道数',
                 gbl: '长度(m)',
                 area: '面积(m2)',
                 pos: '侧别',

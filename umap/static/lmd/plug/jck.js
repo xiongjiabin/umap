@@ -9,7 +9,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
   preInit: function(){
 
     if (!this.properties._storage_options.crossType) {
-       this.properties._storage_options['crossType'] = 1;
+       this.properties._storage_options['crossType'] = "1";
        this.properties._storage_options['scale'] = 5;
        this.properties._storage_options['rotate'] = 0;
        this.properties._storage_options['color'] = 'Red';
