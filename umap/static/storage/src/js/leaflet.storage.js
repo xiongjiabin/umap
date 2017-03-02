@@ -1484,13 +1484,13 @@ L.Storage.Map.include({
         disable.href = '#';
         disable.title = disable.innerHTML = L._('Disable editing');
 
-        /*var drawControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
+        var drawControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         drawControl.href = '#';
         drawControl.innerHTML = '隐藏设计按钮';
 
         var settingControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         settingControl.href = '#';
-        settingControl.innerHTML = '隐藏地图设置';*/
+        settingControl.innerHTML = '隐藏地图设置';
 
         var defaultLayerControl = L.DomUtil.create('a','leaflet-control-edit-disable',container);
         defaultLayerControl.href = '#';
@@ -1519,7 +1519,7 @@ L.Storage.Map.include({
 
         },this)
 
-        /*L.DomEvent
+        L.DomEvent
             .addListener(settingControl,'click',L.DomEvent.stop)
             .addListener(settingControl,'click',function (e) {
                 var displayCss = 'display:block'
@@ -1534,7 +1534,7 @@ L.Storage.Map.include({
                 var ul = topright.getElementsByClassName('leaflet-control-toolbar')
                 var toolbar1 = ul[1]
                 var lis = toolbar1.getElementsByTagName('li')
-                for(var i = 3, len = lis.length; i < len; i++){
+                for(var i = 1, len = lis.length; i < len; i++){
                   lis[i].style = displayCss
                 }
             },this);
@@ -1554,10 +1554,10 @@ L.Storage.Map.include({
                 var ul = topright.getElementsByClassName('leaflet-control-toolbar')
                 var toolbar1 = ul[0]
                 var lis = toolbar1.getElementsByTagName('li')
-                for(var i = 3, len = lis.length; i < len; i++){
+                for(var i = 1, len = lis.length; i < len; i++){
                   lis[i].style = displayCss
                 }
-            },this);*/
+            },this);
 
         L.DomEvent
             .addListener(disable, 'click', L.DomEvent.stop)
