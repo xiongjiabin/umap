@@ -228,7 +228,7 @@ L.Storage.Map.include({
             var editActions = [
                 L.S.ImportAction,
                 L.S.EditPropertiesAction,
-                L.S.ChangeTileLayerAction,
+                //L.S.ChangeTileLayerAction,
                 L.S.ManageDatalayersAction,
                 L.S.UpdateExtentAction
             ];
