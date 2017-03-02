@@ -419,7 +419,9 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
     resetTooltip: function(e) {
 
-      L.Storage.FeatureMixin.resetTooltip.call(this,e)
+      if(this._rings.length > 0) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
+          L.Storage.FeatureMixin.resetTooltip.call(this,e)
+      }
       if (!e) return;
       var needDrawAgain = false
 
