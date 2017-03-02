@@ -107,7 +107,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     //解决侧别的问题, 只有左右，中间
     L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth;
 
-    L.Storage.LmdFeatureMixin.edit.call(this, e)
+    return L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 
   isHide: function(){

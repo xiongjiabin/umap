@@ -9,9 +9,10 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
   preInit: function(){
 
     if (!this.properties._storage_options.lineType) {
-       this.properties._storage_options['lineType'] = 1;
-       this.properties._storage_options['lineWidth'] = 10;
+       this.properties._storage_options['lineType'] = "1";
+       this.properties._storage_options['lineWidth'] = "10";
        this.properties._storage_options['lane'] = 1;
+       this.properties._storage_options['hColor'] = "2";
        this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
@@ -62,7 +63,10 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
       ["15","15cm"],
       ["20","20cm"]
     ];
-    L.Storage.Hide.prototype.edit.call(this,e);
+    var builder = L.Storage.Hide.prototype.edit.call(this,e);
+    //var laneControl = builder && builder.helpers['properties._storage_options.lane'];
+    //(laneControl && laneControl.label) && (laneControl.label.innerHTML = '条数');
+    return builder;
   },
 
   resetTooltip: function(e){
@@ -95,9 +99,13 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
     var lineType = + (this.getOption('lineType') || 1);
     var lineWidth = + (this.getOption('lineWidth') || 10);
     var lane = +(this.getOption('lane') || 1);
+    var hColor =  +(this.getOption('hColor'));
+    var gbm = +(this.getOption('gbm'));
     stringMap['lineType'] = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.selectOptions)[lineType] || '';
     stringMap['lineWidth'] = lmd.getOptionsToMap(L.FormBuilder.LineWidthSwitcher.prototype.selectOptions)[lineWidth] || '';
     stringMap['lane'] = lane;
+    stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
+    stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
 
     return stringMap;
   },
@@ -116,6 +124,8 @@ lmd.tjCheXingDao = function(){
                 gbl: '长度(m)',
                 area: '面积(m2)',
                 pos: '侧别',
+                hColor: '颜色',
+                gbm: '材料',
                 ds: '状态',
                 description:'备注'
               }

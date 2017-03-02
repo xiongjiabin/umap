@@ -805,7 +805,7 @@ L.FormBuilder.ShaperSwitcher = L.FormBuilder.EmptySwitcher.extend({
 
 L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
-    [undefined,"无"],
+    ["0","无"],
     ["1","白色"],
     ["2","黄色"],
     ["3","红色"],
