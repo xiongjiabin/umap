@@ -29,6 +29,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
     'properties._storage_options.lr',
     'properties._storage_options.sn',//桩号
     'properties._storage_options.crossType',//交叉类型
+    'properties._storage_options.bjdKd',//被交道宽度
     ]
   },
 
@@ -41,6 +42,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
   getStringMap: function(){
     var stringMap = L.Storage.Hide.prototype.getStringMap.call(this);
     var crossType = + (this.getOption('crossType') || 1);
+    stringMap['bjdKd'] = this.getOption('bjdKd');
     stringMap['crossType'] = lmd.getOptionsToMap(L.FormBuilder.CrossTypeSwitcher.prototype.selectOptions)[crossType] || '';
     stringMap['jsrxBx'] = this.getOption('jsrxBx');
     stringMap['jsrxNum'] = this.getOption('jsrxNum');
@@ -102,6 +104,12 @@ L.Storage.Jck = L.Storage.Hide.extend({
     ]
   },
 
+  /*getBjdkdOptions: function(){
+    return [
+      'properties._storage_options.bjdKd',
+    ]
+  },*/
+
   getOtherOptions: function(){
     return [
       'properties._storage_options.oQhbx',
@@ -116,6 +124,11 @@ L.Storage.Jck = L.Storage.Hide.extend({
 
 
   appendEditFieldsets: function (container) {
+
+    /*var bjdFields = this.getBjdkdOptions();
+    var builder = new L.S.FormBuilder(this, bjdFields, {});
+    var bjdProperties = L.DomUtil.createFieldset(container, '被交道宽度');
+    bjdProperties.appendChild(builder.build());*/
 
     var jsrxFields = this.getJsrxOptions();
     var builder = new L.S.FormBuilder(this, jsrxFields, {});
@@ -137,6 +150,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
     var warningProperties = L.DomUtil.createFieldset(container, '警告标志');
     warningProperties.appendChild(builder.build());
 
+
     var otherFields = this.getOtherOptions();
     var builder = new L.S.FormBuilder(this, otherFields, {});
     var otherProperties = L.DomUtil.createFieldset(container, '其他特性');
@@ -153,6 +167,7 @@ lmd.tjJck = function(){
                 sn: '桩号',
                 crossType: '类型',
                 pos: '侧别',
+                bjdKd: '被交道宽度',
                 jsrxBx: '减速让行标线(m2)',
                 jsrxNum: '禁令标志(块)',
                 jsrxSize: '版面尺寸',

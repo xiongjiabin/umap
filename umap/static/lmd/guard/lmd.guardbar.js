@@ -71,7 +71,7 @@ L.Storage.guardbarData = [
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]},
   {name:'减速路面',
-   defaultData:{ color: "Red"},
+   defaultData:{ color: "white"},
    childs: [
     null,
     {name:'急弯',type: L.Storage.GB_VERTICAL_LINE},

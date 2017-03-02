@@ -1022,6 +1022,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         oJdgz: {handler:'FloatInput',label: '被交道路改造(平方)'},
         oXjsm: {handler:'IntInput',label: '修剪树木(棵)'},
 
+        bjdKd: { label: '被交道宽度(以逗号隔开)'},
+
         //挡土墙
         dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'}
     },
