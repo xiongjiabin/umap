@@ -350,7 +350,8 @@ L.Storage.Map.include({
     initShortcuts: function () {
         var globalShortcuts = function (e) {
             var key = e.keyCode,
-                modifierKey = e.ctrlKey || e.metaKey;
+                modifierKey = e.ctrlKey || e.metaKey,
+                shiftKey = e.shiftKey;
 
             /* Generic shortcuts */
             if (key === L.S.Keys.F && modifierKey) {
@@ -404,7 +405,7 @@ L.Storage.Map.include({
             }
 
             //增加copy and paste xiongjiabin
-            if (key === L.S.Keys.V && modifierKey && this.editEnabled) {
+            if (key === L.S.Keys.V && shiftKey && this.editEnabled) {
                L.DomEvent.stop(e);
                this.pasteElement(e);
             }
@@ -1693,6 +1694,13 @@ L.Storage.Map.include({
             if(!latlng) {
                latlng = this.getCenter();
             }
+
+            //要不能复制的时候会一直保持在原地
+            if(this._copyObj.properties && this._copyObj.properties._storage_options){
+                (this._copyObj.properties._storage_options.helpX) && (this._copyObj.properties._storage_options.helpX = 0);
+                (this._copyObj.properties._storage_options.helpY) && (this._copyObj.properties._storage_options.helpY = 0);
+            }
+
             layer.cloneElement(this._copyObj,latlng);
         }else{
           if(!layer){
@@ -1707,7 +1715,7 @@ L.Storage.Map.include({
         var items = [];
         if(this._copyObj ) {
           items.push({
-              text: '粘贴 (Ctrl-V)',
+              text: '粘贴 (Shift-V)',
               callback: function (e) {
                 this.pasteElement(e);
               }
