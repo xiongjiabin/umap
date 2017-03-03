@@ -606,6 +606,7 @@ L.Storage.DataLayer = L.Class.extend({
                          lmdMarker: L.Storage.LmdMarker,
                          lmdPillar: L.Storage.LmdPillar,
                          lmdLabel: L.Storage.LmdLabel,
+                         jiansuqiu : L.Storage.JianSuQiu,
                          tqlb: L.Storage.TuQiLuBiao,
                          dtq: L.Storage.DangTuQiang
                        };
@@ -628,7 +629,6 @@ L.Storage.DataLayer = L.Class.extend({
           'lunkuo'  : L.Storage.Lunkuo,
           'fangxuan': L.Storage.Fangxuan,
           'jiansu'  : L.Storage.Jiansu,
-          'jiansuqiu' : L.Storage.JianSuQiu,
           'biangou' : L.Storage.Biangou
         }
         var Class = (geojson.properties && lineClass[geojson.properties.className]) || L.Storage.Polyline;

@@ -202,12 +202,6 @@
             line.enableEdit().newShape(latlng);
             return line;
         },
-        startJianSuQiu: function (latlng, options) {
-            var line = this.createJianSuQiu([], options);
-            this.connectCreatedToMap(line);
-            line.enableEdit().newShape(latlng);
-            return line;
-        },
 
         startBiangou: function (latlng, options) {
             var line = this.createBiangou([], options);
@@ -253,6 +247,14 @@
           var editor = label.enableEdit();
           editor.startDrawing();
           return label;
+        },
+
+        startJianSuQiu: function (latlng, options) {
+            latlng = latlng || this.map.getCenter();
+            var line = this.createJianSuQiu(latlng, options);
+            this.connectCreatedToMap(line);
+            line.enableEdit().startDrawing();
+            return line;
         },
 
         startLmdMarker: function (latlng, options) {

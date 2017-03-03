@@ -100,7 +100,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       var lr = +this.getOption('lr')
       var data = this.map.getAnchorLatLngBySubNo(sn)
       var pos = lr == 2 ? 'right' : 'left'
-      if(data && data[pos]){
+      if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
           this.updateStyle()
           if(data.point){

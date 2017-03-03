@@ -10,7 +10,7 @@ L.Storage.GB_TYPE_HULAN = 2
 L.Storage.GB_TYPE_LUNKUO = 3
 L.Storage.GB_TYPE_FANGXUAN = 4
 L.Storage.GB_TYPE_JIANSU = 5
-L.Storage.GB_TYPE_JIANSUQIU = 6
+L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobject中实现 xiongjiabin 17_3_03
 L.Storage.GB_TYPE_BIANGOU = 7
 
 L.Storage.guardbarData = [
@@ -661,7 +661,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
 
 });
 
-L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
+/*L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_JIANSUQIU,
   dsColors: [null, 'White', 'Lime','Fuchsia'],
 
@@ -683,7 +683,7 @@ L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
       ];
   },
 
-});
+});*/
 
 L.Storage.Biangou = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIANGOU,

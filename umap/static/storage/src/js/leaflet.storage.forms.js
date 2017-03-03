@@ -1025,7 +1025,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         bjdKd: { label: '被交道宽度(以逗号隔开)'},
 
         //挡土墙
-        dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'}
+        dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'},
+
+        showText: {handler: 'Switch', label: '显示文字桩号'},
+        roadWidth: {handler:'FloatInput',label:'设置道路宽度(米)'},
     },
 
     initialize: function (obj, fields, options) {

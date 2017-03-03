@@ -1,4 +1,9 @@
 var lmd = {
+  POS_LEFT: 1,
+  POS_RIGHT: 2,
+  POS_MIDDLE: 3,
+  POS_BOTH: 4,
+  
   init: function(map) {
 
     //init the latlng show events
