@@ -621,6 +621,7 @@ L.Storage.DataLayer = L.Class.extend({
         );
     },
 
+    _lineToClass: {},
     _lineToLayer: function(geojson, latlngs) {
         var lineClass = {
           'polyline': L.Storage.Polyline,
@@ -630,6 +631,9 @@ L.Storage.DataLayer = L.Class.extend({
           'fangxuan': L.Storage.Fangxuan,
           'jiansu'  : L.Storage.Jiansu,
           'biangou' : L.Storage.Biangou
+        }
+        for(var i in this._lineToClass){
+            lineClass[i] = this._lineToClass[i]
         }
         var Class = (geojson.properties && lineClass[geojson.properties.className]) || L.Storage.Polyline;
         return new Class(

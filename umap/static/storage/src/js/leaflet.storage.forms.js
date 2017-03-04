@@ -814,7 +814,7 @@ L.FormBuilder.ColorSwitcher = L.FormBuilder.EmptySwitcher.extend({
 });
 
 L.FormBuilder.LineSwitcher = L.FormBuilder.EmptySwitcher.extend({
-  selectOptions: [
+  allSelectOptions: [
     ["1","虚线"],
     ["2","实线"],
     ["3","虚实线"],
@@ -823,7 +823,7 @@ L.FormBuilder.LineSwitcher = L.FormBuilder.EmptySwitcher.extend({
 });
 
 L.FormBuilder.LineWidthSwitcher = L.FormBuilder.EmptySwitcher.extend({
-  selectOptions: [
+  allSelectOptions: [
     ["8", "8cm"]
     ["10","10cm"],
     ["15","15cm"],
@@ -1029,6 +1029,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         showText: {handler: 'Switch', label: '显示文字桩号'},
         roadWidth: {handler:'FloatInput',label:'设置道路宽度(米)'},
+        roadWidth2: {handler:'FloatInput',label:'道路宽度(米)'},
+        roadWidth3: {handler:'FloatInput',label: '线宽'},
     },
 
     initialize: function (obj, fields, options) {

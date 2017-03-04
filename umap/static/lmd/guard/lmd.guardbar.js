@@ -5,7 +5,7 @@ L.Storage.GB_CIRCLE = 4
 L.Storage.GB_CROSS = 5
 L.Storage.GB_OTHER = 99
 
-L.Storage.GB_TYPE_BIAOXIAN = 1
+L.Storage.GB_TYPE_BIAOXIAN = 1 //标线也是逃兵，不符合这些原有的规则
 L.Storage.GB_TYPE_HULAN = 2
 L.Storage.GB_TYPE_LUNKUO = 3
 L.Storage.GB_TYPE_FANGXUAN = 4
@@ -22,7 +22,7 @@ L.Storage.guardbarData = [
      opacity: 1
    },
    childs: [
-    null,
+    {name:'标线',type: L.Storage.GB_RECT, defaultOptions: {}}, //一言难尽的修改
     {name:'横向减速标线',type: L.Storage.GB_RECT, defaultOptions: {}},
     {name:'纵向减速标线',type: L.Storage.GB_RECT},
     {name:'收费站广场减速标线',type: L.Storage.GB_RECT},
@@ -119,6 +119,7 @@ L.Storage.getGBClass = function(gbt, gbc){
     return []
   }
   var temp = L.Storage.guardbarData[gbt]
+  gbc = (+gbc) || 0
   return temp['childs'][gbc]
 }
 
@@ -162,7 +163,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         var gbcat  = this.properties._storage_options['gbc']
         var classObject = L.Storage.getGBClass(gbtype, gbcat)
 
-        this.properties.name = classObject['name'] || ''
+        this.properties.name = this.defaultName || classObject['name'] || ''
       }
     },
 
@@ -540,7 +541,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     }
 });
 
-L.Storage.Biaoxian = L.Storage.Guardbar.extend({
+/*L.Storage.Biaoxian = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
   dsColors: [null, 'White', 'White','White'], //所有都一样
 
@@ -565,7 +566,7 @@ L.Storage.Biaoxian = L.Storage.Guardbar.extend({
       return 'biaoxian';
   },
 });
-
+*/
 L.Storage.Lunkuo = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LUNKUO,
   dsColors: [null, 'Yellow', 'Lime','Fuchsia'],

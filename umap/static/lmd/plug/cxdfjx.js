@@ -101,8 +101,8 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
     var lane = +(this.getOption('lane') || 1);
     var hColor =  +(this.getOption('hColor'));
     var gbm = +(this.getOption('gbm'));
-    stringMap['lineType'] = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.selectOptions)[lineType] || '';
-    stringMap['lineWidth'] = lmd.getOptionsToMap(L.FormBuilder.LineWidthSwitcher.prototype.selectOptions)[lineWidth] || '';
+    stringMap['lineType'] = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.allSelectOptions)[lineType] || '';
+    stringMap['lineWidth'] = lmd.getOptionsToMap(L.FormBuilder.LineWidthSwitcher.prototype.allSelectOptions)[lineWidth] || '';
     stringMap['lane'] = lane;
     stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
     stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
@@ -184,4 +184,4 @@ L.Storage.SubDrawCxdFjxAction = L.Storage.SubAction.extend({
     }
 });
 
-L.Storage.DrawOtherAction.prototype.options.subActions.push(L.Storage.SubDrawCxdFjxAction);
+L.Storage.DrawAllBiaoxianAction.prototype.options.subActions.push(L.Storage.SubDrawCxdFjxAction);

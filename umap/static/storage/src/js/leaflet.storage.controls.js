@@ -160,18 +160,6 @@ L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
   }
 });
 
-L.Storage.DrawBiaoxianAction = L.Storage.BaseAction.extend({
-  options: {
-      helpMenu: true,
-      className: 'storage-draw-biaoxian dark',
-      tooltip: '标线'
-  },
-
-  addHooks: function () {
-      this.map.startBiaoxian();
-  }
-});
-
 L.Storage.SubDrawLunkuoAction = L.Storage.SubAction.extend({
   options: {
       toolbarIcon: {
@@ -308,6 +296,33 @@ L.Storage.DrawOtherAction = L.Storage.BaseAction.extend({
         L.Storage.SubDrawLmdAreaAction,
         L.Storage.SubDrawTuQiLuBiaoAction,
         L.Storage.SubDrawDangTuQiangAction,
+      ]
+  }
+});
+
+
+L.Storage.DrawBiaoxianAction = L.Storage.SubAction.extend({
+      options: {
+          toolbarIcon: {
+            html: '横向减速标线',
+            tooltip: '横向减速标线'
+          }
+      },
+
+      addHooks: function () {
+          this.map.startBiaoxian();
+          L.Storage.SubAction.prototype.addHooks.call(this)
+      }
+});
+
+
+L.Storage.DrawAllBiaoxianAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-biaoxian dark',
+      tooltip: '全部的标线',
+      subActions: [
+        L.Storage.DrawBiaoxianAction,
       ]
   }
 });
@@ -549,7 +564,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdMarkerAction);
         this.options.actions.push(L.S.DrawLmdPillarAction);
         this.options.actions.push(L.S.DrawLmdGuardAction);
-        this.options.actions.push(L.S.DrawBiaoxianAction);
+        this.options.actions.push(L.S.DrawAllBiaoxianAction);
         this.options.actions.push(L.S.DrawLmdLabelAction);
         this.options.actions.push(L.S.DrawOtherAction);
 
