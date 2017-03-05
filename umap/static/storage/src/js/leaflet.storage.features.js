@@ -551,7 +551,7 @@ L.Storage.FeatureMixin = {
       stringMap['key'] = +sn
 
       var pos = this.getOption('lr') || L.FormBuilder.LeftRightChoice.prototype.default
-      stringMap['pos'] = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.choices)[pos] || ''
+      stringMap['pos'] = lmd.getOptionsToMap(L.FormBuilder.LeftRightChoice.prototype.allChoices)[pos] || ''
 
       var ds = this.getOption('ds') || L.FormBuilder.DevStatusSwitcher.prototype.default
       stringMap['ds'] = lmd.getOptionsToMap(L.FormBuilder.DevStatusSwitcher.prototype.choices)[ds] || ''

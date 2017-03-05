@@ -9,9 +9,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-    }
-
-    if (!this.properties._storage_options.color) {
+      
       this.properties._storage_options['scale'] = 5;
       this.properties._storage_options['rotate'] = 0;
       this.properties._storage_options['color'] = 'Black';

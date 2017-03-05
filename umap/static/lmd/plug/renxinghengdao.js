@@ -138,6 +138,8 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.roadWidth3',//线宽
       'properties._storage_options.gbs',//间距
       'properties._storage_options.gbn',//数量
+      'properties._storage_options.hColor',
+      'properties._storage_options.gbm',//材料
       'properties._storage_options.ds'
     ];
   },

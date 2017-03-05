@@ -13,8 +13,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-    }
-    if (!this.properties._storage_options.at) {
+
       this.properties._storage_options = {
         at: "1",
         lr: "1",
