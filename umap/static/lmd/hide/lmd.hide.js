@@ -6,10 +6,15 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
   },
 
+  //对影藏元素支持copy
+  isCopy: function(){
+    return true;
+  },
+
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-      
+
       this.properties._storage_options['scale'] = 5;
       this.properties._storage_options['rotate'] = 0;
       this.properties._storage_options['color'] = 'Black';
