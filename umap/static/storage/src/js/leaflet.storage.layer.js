@@ -770,7 +770,7 @@ L.Storage.DataLayer = L.Class.extend({
         }
 
         if(ret === false){
-            this.ui.alert({content: '没找到新的可移动位置，已经复制在原地，和被复制设备重合'});
+            this.map.ui.alert({content: '没找到新的可移动位置，已经复制在原地，和被复制设施重合'});
         }
         this.isDirty = true;
         element.edit();
