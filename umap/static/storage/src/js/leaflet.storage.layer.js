@@ -743,8 +743,35 @@ L.Storage.DataLayer = L.Class.extend({
     //xiongjiabin  copy其他一个元素并且移动到这个地方去
     cloneElement(geojson,latlng){
       var element = this.addData(geojson);
+      var ret  = true;
       if(element) {
-        element.setLatLng(latlng);
+        if(element.setLatLng) {
+            element.setLatLng(latlng);
+        }else if(element.moveTo){
+            var results = this.map.getLatLngsInBounds();
+            if(results && results.length > 0){
+                var sum = results[0][2];
+                if(results.length > 1){
+                    sum += results[results.length - 1][2]
+                }
+                var gss = sum / 20 - 0.05;
+                if(gss < 0){
+                  gss = 0;
+                }else{
+                  gss = gss.toFixed(1);
+                }
+                var gse = (sum / 20 + 0.05).toFixed(1)
+                ret = element.moveTo(+gss, +gse);
+            }else{
+                ret = false
+            }
+        }else{
+            ret = false;
+        }
+
+        if(ret === false){
+            this.ui.alert({content: '没找到新的可移动位置，已经复制在原地，和被复制设备重合'});
+        }
         this.isDirty = true;
         element.edit();
       }

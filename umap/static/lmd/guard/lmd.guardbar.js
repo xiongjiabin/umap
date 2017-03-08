@@ -167,6 +167,14 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
     },
 
+    isCopy: function(){
+        //只有护栏支持copy
+        if(this.getClassName() in { guardbar: 1}){
+            return true;
+        }
+        return false;
+    },
+
     edit: function(e) {
       if(this.map.editEnabled) {
           if (!this.editEnabled()) this.enableEdit();
@@ -277,12 +285,38 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
     },
 
+    moveTo: function( gbss, gbse, offset ) {
+      gbss = +gbss;
+      gbse = +gbse;
+      var temp = gbss;
+      if(gbse < gbss ){
+          gbss = gbse;
+          gbse = temp;
+      }
+
+      var gl   = +this.getOption('lr') || 1
+      var offset = this.getOption('offset') * 2
+      if(gl !== 2) offset = 0 - offset
+
+      //console.time('get line between sub :', gbss + '->' + gbse)
+      //var oldLatlngs = this.getLatLngs()
+      var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
+      if(newCoordinates) {
+          var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
+          this.setLatLngs(offsetLatLngs);
+          this.properties._storage_options.gbss = null;
+          this.properties._storage_options.gbse = null;
+          return true;
+      }
+      return false;
+    },
+
     _redraw: function (e) {
 
       if(e && e.helper.name in {'offset': 0}){
           var gbss = this.getOption('gbss')
           var gbse = this.getOption('gbse')
-          if(gbss && gbse && gbse > gbss){
+          if( gbse && gbse > gbss){
               var gl   = +this.getOption('lr') || 1
               var offset = this.getOption('offset')
               if(gl !== 2) offset = 0 - offset
