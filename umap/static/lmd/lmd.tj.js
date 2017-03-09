@@ -108,6 +108,7 @@ lmd.tjIndicators = function(){
                 pillarType: '支撑型式',
                 num:'数量(块)',
                 ds:'状态',
+                pic: '图形',
                 description:'备注'
               }
   data.push(lmd.objectToArray(titles))

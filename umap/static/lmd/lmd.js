@@ -3,7 +3,7 @@ var lmd = {
   POS_RIGHT: 2,
   POS_MIDDLE: 3,
   POS_BOTH: 4,
-  
+
   init: function(map) {
 
     //init the latlng show events
@@ -153,7 +153,12 @@ L.Storage.Map.include({
                    }
                }
 
-               var m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
+               var m1 = 0
+               if(((scaleSubNo - floorSubNo )/10 - 0.002) > 0){
+                   m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
+               }else{
+                   m1 = turf.along(sliced, 0)
+               }
                var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
                var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
                var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)

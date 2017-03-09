@@ -33,6 +33,40 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
   },
 });
 
+//横向减速标线
+lmd.tjHxbx = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '类型',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                pos: '侧别',
+                gbl: '长度(米)',
+                jslmTs: '每道设置条数',
+                gbw: '宽度(米)',
+                gba: '面积(平方米)',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  //this means map
+  var i = 1
+  this.eachLayerFeature(function (feature) {
+      if(feature.getClassName() === 'biaoxian'){
+          data.push(lmd.getTjData(feature,i,titles))
+          i++
+      }
+  })
+
+  lmd.processData(data)
+
+  new CsvGenerator(data,  '横向减速标线.csv').download(true);
+}
+
+lmd.tjs.push({ label: '横向减速标线', process: lmd.tjHxbx});
+
 L.Storage.Zxbx = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
   dsColors: [null, 'White', 'White','White'], //所有都一样
@@ -103,7 +137,7 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
   },
 });
 
-//车行道统计
+//纵向减速标线
 lmd.tjZxbx = function(){
   var data = []
   var titles = {no:'序号',

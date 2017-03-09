@@ -76,6 +76,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   },
 
   _getIconUrl: function(name) {
+    var name = name
     var baseUrl = '/static/storage/src/img/'
     var mt = this.getOption('mt')
     var mic = this.getOption('mic')
@@ -273,6 +274,15 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         stringMap['mss'] = this.getOption('size') || ''
     }
     stringMap['num'] = 1
+    var iconUrl = this._getIconUrl();
+    if(iconUrl){
+        stringMap['pic'] = window.location.protocol +
+                           "//" +
+                           window.location.host
+                           + iconUrl
+    }else{
+        stringMap['pic'] = ""
+    }
 
     return stringMap
   },

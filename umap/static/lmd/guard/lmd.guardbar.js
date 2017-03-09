@@ -689,11 +689,17 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
               var jslmTs = +this.getOption('jslmTs');
               var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
               this.properties._storage_options.gba = gbaControl.input.value = area
-              descControl.input.value = this.properties.description = '道数:' + ret['lanes'] + ',间距(米):' + ret['space'].join(',');
+              descControl.input.value = this.properties.description = '道数:' + ret['lanes'] + ';间距(米):' + ret['space'].join('_');
           }
       }
   },
 
+  getStringMap: function(){
+      var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
+      var jslmTs = this.getOption('jslmTs');
+      stringMap['jslmTs'] = jslmTs;
+      return stringMap;
+  },
 });
 
 /*L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
