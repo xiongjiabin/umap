@@ -2,7 +2,7 @@
 function CsvGenerator(dataArray, fileName, separator, addQuotes) {
     this.dataArray = dataArray;
     this.fileName = fileName;
-    this.separator = separator || ',';
+    this.separator = separator || '\t';
     this.addQuotes = !!addQuotes;
 
     if (this.addQuotes) {
