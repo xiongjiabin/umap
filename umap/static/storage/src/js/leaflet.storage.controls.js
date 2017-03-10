@@ -897,7 +897,7 @@ L.Storage.Map.include({
             filter = L.DomUtil.create('input', '', browserContainer),
             filterValue = '',
             featuresContainer = L.DomUtil.create('div', 'storage-browse-features', browserContainer),
-            filterKeys = (this.options.filterKey || this.options.sortKey || 'name').split(',');
+            filterKeys = (this.options.filterKey || this.options.sortKey || 'name,className').split(','); //增加对class类型的搜索
         var map = this
         filter.type = 'text';
         filter.placeholder = L._('Filter…');
