@@ -557,6 +557,7 @@ L.Storage.FeatureMixin = {
       stringMap['ds'] = lmd.getOptionsToMap(L.FormBuilder.DevStatusSwitcher.prototype.choices)[ds] || ''
 
       stringMap['description'] = this.properties.description || ''
+      stringMap['sortField'] = { k1: sn};
       return stringMap
     },
 

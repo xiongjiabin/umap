@@ -143,13 +143,12 @@ L.Storage.getGBPosData = function(gbt){
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
     dsColors: [null, 'Red', 'Lime','Fuchsia'],
+    brother: null,//用来搞那种俩侧都出来，用来复制的
 
     preInit: function() {
       if (!this.properties['className']) {
         this.properties['className'] = this.getClassName()
-      }
 
-      if (!this.properties._storage_options.gbc) {
         var defaultData = L.Storage.getGBDefaultData(this.gbType) || {}
         this.properties._storage_options = {
           gbc: "1",
@@ -165,6 +164,16 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
         this.properties.name = this.defaultName || classObject['name'] || ''
       }
+
+      var lr = +this.getOption('lr')
+      if(lr === lmd.POS_BOTH) { //如果是俩侧都有的
+          //this.brother = this.copySelfObject();
+      }
+    },
+
+    copySelfObject: function(){
+      //var obj = new L.Storage.Guardbar(this.map);
+      //return obj;
     },
 
     isCopy: function(){
@@ -405,9 +414,11 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       if(sne > sns ){
         stringMap['gbss'] = snsString
         stringMap['gbse'] = sneString
+        stringMap['sortField'] = {k1:sns}
       }else{
         stringMap['gbss'] = sneString
         stringMap['gbse'] = snsString
+        stringMap['sortField'] = {k1:sne}
       }
 
       stringMap['key'] = +sns

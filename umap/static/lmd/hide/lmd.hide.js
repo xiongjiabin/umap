@@ -130,9 +130,11 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     if(sne > sns ){
       stringMap['gbss'] = snsString
       stringMap['gbse'] = sneString
+      stringMap['sortField'] = {k1:sns};
     }else{
       stringMap['gbss'] = sneString
       stringMap['gbse'] = snsString
+      stringMap['sortField'] = {k1:sne};
     }
 
     stringMap['key'] = +sns

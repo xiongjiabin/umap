@@ -107,9 +107,11 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
     if(sne > sns ){
       stringMap['gbss'] = snsString
       stringMap['gbse'] = sneString
+      stringMap['sortField'] = {k1: sns}
     }else{
       stringMap['gbss'] = sneString
       stringMap['gbse'] = snsString
+      stringMap['sortField'] = {k1: sne}
     }
 
     var unit = this.units[this.getOption('at')] || ''

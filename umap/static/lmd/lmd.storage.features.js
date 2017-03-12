@@ -103,7 +103,7 @@ L.Storage.LmdFeatureMixin = {
 
   showSubNice: function(sn){
     var a = parseInt(sn)
-    var temp = (+sn * 1000 - a * 1000)
+    var temp = Math.round(+sn * 1000 - a * 1000)
 
     if(temp < 10){
       temp = '00' + temp

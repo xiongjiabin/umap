@@ -75,20 +75,26 @@ lmd.getTjData = function(feature, no, titles){
   for(var temp in titles) {
     tempData.push(stringMap[temp] || '')
   }
-  tempData['key'] = stringMap['key'] || 0
+  tempData['sortField'] = stringMap['sortField'] || null
   return tempData
 }
 
 lmd.processData = function(data){
+
   data.sort(function(a,b){
-    if(a.key && b.key){
-      return a.key - b.key
-    }else{
-      return a.no - b.no
-    }
-  })
+      if(!a['sortField']){
+        return -1;
+      }
+      if(!b['sortField']){
+        return 1;
+      }
+      var ak1 = +a['sortField']['k1'];
+      var bk1 = +b['sortField']['k1'];
+      return ak1 - bk1;
+  });
 
   for(var i = 1; i < data.length; i++){
+    delete data[i]['sortField']
     data[i][0] = i
   }
 
@@ -137,6 +143,7 @@ lmd.tjIndicators = function(){
   }
   pillars = null
 
+  lmd.processData(data)
   new CsvGenerator(data,  '标志一览表.csv').download(true);
 }
 
@@ -289,7 +296,7 @@ lmd.tjXiujian = function(){
 
   lmd.processData(data)
 
-  new CsvGenerator(data,  '修剪内侧.csv').download(true);
+  new CsvGenerator(data,  '清除障碍物.csv').download(true);
 }
 
 
@@ -435,7 +442,7 @@ lmd.tjs = [{
     label: '边沟',
     process: lmd.tjBiangou
   },{
-    label: '修剪内侧',
+    label: '清除障碍物',
     process: lmd.tjXiujian
   },{
     label: '防护栏',
