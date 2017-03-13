@@ -67,6 +67,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
     stringMap['oQcgm'] = this.getOption('oQcgm');
     stringMap['oJdgz'] = this.getOption('oJdgz');
     stringMap['oXjsm'] = this.getOption('oXjsm');
+    stringMap['sortField'] = { k1: this.getOption('sn')};
     return stringMap;
   },
 

@@ -54,6 +54,7 @@ L.Storage.Rxhdyjx = L.Storage.Hide.extend({
     stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
     var hColor =  +(this.getOption('hColor'));
     stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
+    stringMap['sortField'] = { k1: this.getOption('sn')};
 
     return stringMap;
   },
