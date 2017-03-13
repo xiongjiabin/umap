@@ -3,6 +3,7 @@ var lmd = {
   POS_RIGHT: 2,
   POS_MIDDLE: 3,
   POS_BOTH: 4,
+  MIN_VALID_TWO_SUBS: 30,
 
   init: function(map) {
 
@@ -124,20 +125,40 @@ L.Storage.Map.include({
        var feature = null
        var layer = this.datalayers_index[i]
        var factor = 0, along = null,lineGeojson,sliced
+       var temp = 0
        for (var k = 0; k < layer._index.length; k++) {
-           feature = layer._layers[layer._index[k]];
+           feature = layer._layers[layer._index[k]]
+           if(feature.properties && feature.properties._storage_options) {
+               if(!feature.properties._storage_options['road']){
+                   if(!feature.properties['className']){ //寻找没有设置是路，但是公里数比较比较高的
+                       lineGeojson = feature.toGeoJSON()
+                       temp = turf.lineDistance(lineGeojson)
+                       if(temp >= 3){ //if 3公里以上的，默认为路
+                           console.log('公里数为' + temp + '公里,默认为路')
+                       }else{
+                           continue
+                       }
+                   }else{
+                       continue
+                   }
+               }else{
+                   //如果是条路的话
+                   lineGeojson = feature.toGeoJSON()
+               }
 
-           if(feature.properties &&
-              feature.properties._storage_options &&
-              feature.properties._storage_options['road']){
-               //如果是条路的话
-               lineGeojson = feature.toGeoJSON()
                sliced = turf.lineSlice(floorPoint,ceilPoint,lineGeojson)
                if(sliced){
-                 var temp = turf.point(sliced.geometry.coordinates[0])
+                 temp = 1000 * turf.lineDistance(sliced)
+                 if(temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
+                     console.log("距离不满足，继续找下一个:" + temp)
+                     continue; //继续寻找下一个
+                 }
+                 temp = turf.point(sliced.geometry.coordinates[0])
                  if((turf.distance(temp,floorPoint) * 1000) > 5){
                      sliced.geometry.coordinates.reverse()
                  }
+               }else {
+                   continue;
                }
 
 
@@ -223,16 +244,36 @@ L.Storage.Map.include({
        var feature = null
        var layer = this.datalayers_index[i]
        var lineGeojson,sliced,  k = 0
+       var temp = 0;
        for ( len1 = layer._index.length; k < len1; k++) {
-           feature = layer._layers[layer._index[k]];
-           if(feature.properties &&
-              feature.properties._storage_options &&
-              feature.properties._storage_options['road']){
+           feature = layer._layers[layer._index[k]]
+           if(feature.properties && feature.properties._storage_options) {
+             if(!feature.properties._storage_options['road']){
+                 if(!feature.properties['className']){ //寻找没有设置是路，但是公里数比较比较高的
+                     lineGeojson = feature.toGeoJSON()
+                     temp = turf.lineDistance(lineGeojson)
+                     if(temp >= 3){ //if 3公里以上的，默认为路
+                         console.log('公里数为' + temp + '公里,默认为路')
+                     }else{
+                         continue
+                     }
+                 }else{
+                     continue
+                 }
+             }else{
+                 //如果是条路的话
+                 lineGeojson = feature.toGeoJSON()
+             }
                //如果是条路的话
                lineGeojson = feature.toGeoJSON()
                sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,lineGeojson)
                if( sliced ){
-                 var temp = turf.point(sliced.geometry.coordinates[0])
+                 temp = 1000 * turf.lineDistance(sliced)
+                 if( temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
+                     console.log("距离不满足，继续找下一个:" + temp)
+                     continue; //继续寻找下一个
+                 }
+                 temp = turf.point(sliced.geometry.coordinates[0])
                  if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
                    sliced.geometry.coordinates.reverse()
                  }
