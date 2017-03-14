@@ -409,7 +409,14 @@ L.Storage.Map.include({
                L.DomEvent.stop(e);
                this.pasteElement(e);
             }
-
+            if (key === L.S.Keys.A && shiftKey) {
+               L.DomEvent.stop(e);
+               this.setZoom(17);
+            }
+            if (key === L.S.Keys.S && shiftKey) {
+               L.DomEvent.stop(e);
+               this.setZoom(12);
+            }
 
             if (e.keyCode === L.S.Keys.ESC) {
                 if (this.editEnabled) this.editTools.stopDrawing();
