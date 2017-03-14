@@ -5,12 +5,13 @@ L.PhotonBase = L.Class.extend({
     },
 
     ajax: function (callback, thisobj) {
-        if (typeof this.xhr === 'object') {
+        /*if (typeof this.xhr === 'object') {
             this.xhr.abort();
         }
         this.xhr = new XMLHttpRequest();
         var self = this;
         this.xhr.open('GET', this.options.url + this.buildQueryString(this.getParams()), true);
+
 
         this.xhr.onload = function(e) {
             self.fire('ajax:return');
@@ -26,6 +27,26 @@ L.PhotonBase = L.Class.extend({
 
         this.fire('ajax:send');
         this.xhr.send();
+        */
+        var params = this.getParams();
+        var subno = 0;
+        if(params['q'] !== undefined){
+          subno = +params['q'];
+        }
+        var data = this.map.getAnchorLatLngBySubNo(subno);
+        var point = null;
+        var features = null;
+        if(data && data['point']){
+            point = turf.point([data['point'][1],data['point'][0]]);
+            point.properties.name = '桩号:' + subno;
+            point.properties.city = point.properties.country = '';
+            features = turf.featureCollection([point]);
+        }else{
+            features = turf.featureCollection([]);
+        }
+
+        this.fire('ajax:return');
+        callback.call(thisobj || this, features);
     },
 
     buildQueryString: function (params) {
@@ -54,14 +75,14 @@ L.PhotonBaseSearch = L.PhotonBase.extend({
 
     options: {
         url: 'http://photon.komoot.de/api/?',
-        placeholder: 'Start typing...',
-        minChar: 3,
-        limit: 5,
+        placeholder: '请输入桩号...',
+        minChar: 1,
+        limit: 10,
         submitDelay: 300,
         includePosition: true,
-        noResultLabel: 'No result',
-        feedbackEmail: 'photon@komoot.de',  // Set to null to remove feedback box
-        feedbackLabel: 'Feedback'
+        noResultLabel: '没有找到对应数据',
+        feedbackEmail: null,  // Set to null to remove feedback box
+        feedbackLabel: ''
     },
 
     CACHE: '',
