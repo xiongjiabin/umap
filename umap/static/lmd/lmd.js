@@ -3,6 +3,8 @@ var lmd = {
   POS_RIGHT: 2,
   POS_MIDDLE: 3,
   POS_BOTH: 4,
+  POS_MIDDLE_LEFT: 5, //中分左
+  POS_MIDDLE_RIGHT: 6, //中分右
   MIN_VALID_TWO_SUBS: 30,
 
   init: function(map) {

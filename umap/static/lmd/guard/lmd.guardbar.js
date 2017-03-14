@@ -328,7 +328,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           if( gbse && gbse > gbss){
               var gl   = +this.getOption('lr') || 1
               var offset = this.getOption('offset')
-              if(gl !== 2) offset = 0 - offset
+              if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
 
               //console.time('get line between sub :', gbss + '->' + gbse)
               //var oldLatlngs = this.getLatLngs()
@@ -566,7 +566,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         if(gbss && gbse && gbse > gbss){
             var gl   = +this.getOption('lr') || 1
             var offset = this.getOption('offset') || 40
-            if(gl !== 2) offset = 0 - offset
+            if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
 
             //console.time('get line between sub :', gbss + '->' + gbse)
             //var oldLatlngs = this.getLatLngs()
