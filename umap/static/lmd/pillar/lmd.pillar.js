@@ -63,6 +63,10 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       3: '<rect width="149" height="25" x="2" y="30" /><circle cx="166" cy="45" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单悬臂式
       4: '<rect width="73" height="25" x="106" y="25" /><circle cx="90" cy="25" r="15" /> <rect width="72" height="25" x="2" y="25"/><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双悬臂式
       5: '<rect width="121" height="25" x="31" y="25" /><circle cx="16" cy="35" r="15" /> <circle cx="167" cy="35" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //门架式
+      6: '<rect width="149" height="4" x="0" y="-2"/>' +
+         '<circle cx="150" cy="0" r="15" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 165,2 {{tail}},0"/>' +
+         '<text style="font-size:70px;" x="175" y="-2">{{桩号}}</text>', //附着式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
     tail = tail || 320

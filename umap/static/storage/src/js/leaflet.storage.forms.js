@@ -679,7 +679,8 @@ L.FormBuilder.PillSuppSwitcher = L.FormBuilder.Select.extend({
         ["2", L._('Double Support')],
         ["3", L._('Single Arm Support')],
         ["4", L._('Doulle Arms Support')],
-        ["5", L._('Door Support')]
+        ["5", L._('Door Support')],
+        ["6", "附着式"]
     ]
 
 });
