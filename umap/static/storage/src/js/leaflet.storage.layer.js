@@ -758,9 +758,9 @@ L.Storage.DataLayer = L.Class.extend({
                 if(gss < 0){
                   gss = 0;
                 }else{
-                  gss = gss.toFixed(1);
+                  gss = gss.toFixed(3);
                 }
-                var gse = (sum / 20 + 0.05).toFixed(1)
+                var gse = (sum / 20 + 0.05).toFixed(3)
                 ret = element.moveTo(+gss, +gse);
             }else{
                 ret = false

@@ -441,7 +441,7 @@ L.Storage.FeatureMixin = {
 
         if(this.isCopy()){
           items.push({
-              text: '复制元素',
+              text: '复制元素(shift+C)',
               callback: this.copyElement,
               context: this,
               iconCls: 'storage-edit'
@@ -466,7 +466,7 @@ L.Storage.FeatureMixin = {
                 iconCls: 'storage-edit'
             },
             {
-                text: L._('Delete this feature'),
+                text: L._('Delete this feature') + '(shift+E)',
                 callback: this.confirmDelete,
                 context: this,
                 iconCls: 'storage-delete'

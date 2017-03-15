@@ -1115,6 +1115,12 @@ L.Storage.Map.include({
 
     save: function () {
         if (!this.isDirty) return;
+
+        //clear这些临时变量
+        this._copyObj = null;
+        this._copyLayerLeafletId = 0;
+        this._currentFocusObj = null;
+
         var geojson = {
             type: 'Feature',
             geometry: this.geometry(),
