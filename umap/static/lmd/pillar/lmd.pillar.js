@@ -58,15 +58,37 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
 
   getSvgData(type,sn, color, tail) {
     var typeSvg = {
-      1: '<circle cx="92" cy="17" r="15" /> <rect width="178" height="20" x="2" y="31" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单柱式
-      2: '<circle cx="42" cy="16" r="14"/><circle cx="129" cy="16" r="14" /> <rect width="178" height="25" x="2" y="30" /> <path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双柱式
-      3: '<rect width="149" height="25" x="2" y="30" /><circle cx="166" cy="45" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //单悬臂式
-      4: '<rect width="73" height="25" x="106" y="25" /><circle cx="90" cy="25" r="15" /> <rect width="72" height="25" x="2" y="25"/><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //双悬臂式
-      5: '<rect width="121" height="25" x="31" y="25" /><circle cx="16" cy="35" r="15" /> <circle cx="167" cy="35" r="15" /><path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,65 {{tail}},0"/> <text style="font-size:70px;" x="200" y="60">{{桩号}}</text>', //门架式
-      6: '<rect width="149" height="4" x="0" y="-2"/>' +
-         '<circle cx="150" cy="0" r="15" />' +
-         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 165,2 {{tail}},0"/>' +
-         '<text style="font-size:70px;" x="175" y="-2">{{桩号}}</text>', //附着式
+      1: '<circle cx="92" cy="-17" r="15" />' +
+         '<rect width="178" height="20" x="0" y="-10" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
+         '<text style="font-size:70px;" x="200" y="20">{{桩号}}</text>', //单柱式
+
+      2: '<circle cx="42" cy="-30" r="15"/><circle cx="129" cy="-30" r="15"/>' +
+         '<rect width="178" height="25" x="0" y="-15" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
+         '<text style="font-size:70px;" x="200" y="20">{{桩号}}</text>', //双柱式
+
+      3: '<rect width="150" height="25" x="0" y="-12.5" />' +
+         '<circle cx="168" cy="0" r="15" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
+         '<text style="font-size:70px;" x="200" y="20">{{桩号}}</text>', //单悬臂式
+
+      4: '<rect width="73" height="25" x="106" y="-12.5" />' +
+         '<circle cx="90" cy="-12.5" r="15" /> ' +
+         '<rect width="72" height="25" x="2" y="-12.5"/>' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/> '+
+         '<text style="font-size:70px;" x="200" y="20">{{桩号}}</text>', //双悬臂式
+
+      5: '<circle cx="16" cy="-7.5" r="15" />'+
+         '<rect width="121" height="25" x="32" y="-20" />' +
+         '<circle cx="168" cy="-7.5" r="15" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/> ' +
+         '<text style="font-size:70px;" x="200" y="20">{{桩号}}</text>', //门架式
+
+      6: '<circle cx="52" cy="-20" r="10"/><circle cx="119" cy="-20" r="10"/>' +
+         '<rect width="200" height="20" x="0" y="-10" />' +
+         '<path stroke-width="2px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 202,25 {{tail}},0"/>' +
+         '<text style="font-size:70px;" x="220" y="20">{{桩号}}</text>', //附着式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
     tail = tail || 320
