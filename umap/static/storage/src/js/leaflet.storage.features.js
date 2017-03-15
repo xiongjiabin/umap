@@ -215,6 +215,7 @@ L.Storage.FeatureMixin = {
        //var element = this.datalayer.addData(obj);
        this.map._copyObj = obj;
        this.map._copyLayerLeafletId = this.datalayer._leaflet_id;
+       this.map.ui.alert({content: '复制元素成功'});
     },
 
 
@@ -399,6 +400,7 @@ L.Storage.FeatureMixin = {
                     actions: this.getInplaceToolbarActions(e)
                 }).addTo(this.map, this, e.latlng);
             }
+            this.map._currentFocusObj = this;
         }
         L.DomEvent.stop(e);
     },

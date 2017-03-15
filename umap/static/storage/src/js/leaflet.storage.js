@@ -405,10 +405,25 @@ L.Storage.Map.include({
             }
 
             //增加copy and paste xiongjiabin
-            if (key === L.S.Keys.V && shiftKey && this.editEnabled) {
-               L.DomEvent.stop(e);
-               this.pasteElement(e);
+
+            if (shiftKey && this.editEnabled) {
+                if (key === L.S.Keys.V ) {
+                    L.DomEvent.stop(e);
+                    this.pasteElement(e);
+                }else if (key === L.S.Keys.C){
+                    if (this._currentFocusObj){
+                        L.DomEvent.stop(e);
+                        this._currentFocusObj.copyElement && this._currentFocusObj.copyElement();
+                    }
+                }else if(key === L.S.Keys.E) {
+                    if (this._currentFocusObj){
+                        L.DomEvent.stop(e);
+                        this._currentFocusObj.confirmDelete && this._currentFocusObj.confirmDelete();
+                    }
+                }
             }
+
+
             if (key === L.S.Keys.A && shiftKey) {
                L.DomEvent.stop(e);
                this.setZoom(17);
