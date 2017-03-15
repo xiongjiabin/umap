@@ -17,12 +17,11 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     this.edit(e);
   },
 
+  defaultName: '单柱式',
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-    }
-
-    if (!this.properties._storage_options.ps) {
+      this.properties.name = this.defaultName
       var preOptions = this.getSamePreviousOptions()
       //console.log(preOptions)
       this.properties._storage_options = {
@@ -140,7 +139,23 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
         this.properties._storage_options['color'] = color
         this.setSvgText(this.getSvgData(ps,sn,color,tail))
         this.updateStyle()
+    }else if(e.helper.name === 'ps') {
+        //update the name
+        this.updateName(e);
     }
+  },
+
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+    var reg = /^\W*\d*\s+(.+)$/
+    var name = e.target.helpers['properties.name']
+    var nameValue = name.value()
+    if(nameValue && nameValue.startsWith('@')) {
+      return
+    }
+    this.properties.name = name.input.value = this.getTypeName();
+    return
   },
 
   //added by xiongjiabin

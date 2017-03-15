@@ -1,9 +1,10 @@
 L.Storage.LmdMarker = L.Storage.Marker.extend({
 
+  defaultName: '交叉路口(T右)',
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-
+      this.properties.name = this.defaultName
       var preOptions = this.getPreviousOptions()
       this.properties._storage_options = {
         mt: "" + lmd.MARKER_WARMING,
@@ -67,11 +68,11 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   },
 
   update: function(){
-     L.Storage.LmdUpdateXYMixin.update.call(this);
+      L.Storage.LmdUpdateXYMixin.update.call(this);
   },
 
   del: function () {
-     L.Storage.LmdUpdateXYMixin.del.call(this);
+      L.Storage.LmdUpdateXYMixin.del.call(this);
   },
 
   _getIconUrl: function(name) {
@@ -284,6 +285,6 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     }
 
     return stringMap
-  }
+  },
 
 });
