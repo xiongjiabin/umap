@@ -3,8 +3,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-    }
-    if (!this.properties._storage_options.mt) {
+
       var preOptions = this.getPreviousOptions()
       this.properties._storage_options = {
         mt: "" + lmd.MARKER_WARMING,
@@ -285,6 +284,6 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     }
 
     return stringMap
-  },
+  }
 
 });

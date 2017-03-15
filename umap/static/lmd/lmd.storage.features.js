@@ -277,6 +277,15 @@ L.Storage.LmdUpdateXYMixin = {
     this.on('editable:drawing:clicked', function(e) {
       this.caculateHelpXY()
     }, this)
+
+    //增加处理remove事件，remove的时候去掉helpPath，事件比del更可靠
+    //解决保存以后helppath不消失的问题
+    this.on('remove', function(e){
+       if(this.helpPath) {
+           this.helpPath.remove();
+           this.helpPath = null;
+       }
+    })
   },
 
   caculateHelpXY: function() {
@@ -321,12 +330,12 @@ L.Storage.LmdUpdateXYMixin = {
           var dest = this.map.layerPointToLatLng([destX, destY])
           this._latlng = dest
 
-          if (this.helpPath) {
+          /*if (this.helpPath) {
             this.helpPath.remove();
             this.helpPath = null;
             var latlngs = [center, dest]
             this.helpPath = L.polyline(latlngs, {color: 'grey'}).addTo(this.map);
-          }
+          }*/
 
         }
       }
@@ -336,10 +345,10 @@ L.Storage.LmdUpdateXYMixin = {
   },
 
   del: function () {
-    L.Storage.FeatureMixin.del.call(this)
     if (this.helpPath) {
       this.helpPath.remove();
       this.helpPath = null;
     }
+    L.Storage.FeatureMixin.del.call(this)
   },
 }
