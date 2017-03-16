@@ -271,7 +271,7 @@ L.Storage.Map.include({
                sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,lineGeojson)
                if( sliced ){
                  temp = 1000 * turf.lineDistance(sliced)
-                 if( temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
+                 if( temp < 1) { //这个地方不是一段100米的桩号，是查找的桩号之间的距离，不可能小于1米，小于1米，说明没有找到
                      console.log("距离不满足，继续找下一个:" + temp)
                      continue; //继续寻找下一个
                  }
