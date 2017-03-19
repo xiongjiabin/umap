@@ -285,6 +285,10 @@ L.Storage.LmdUpdateXYMixin = {
            this.helpPath.remove();
            this.helpPath = null;
        }
+       if(this.textHelpObject) {
+           this.textHelpObject.remove();
+           this.textHelpObject = null;
+       }
     })
   },
 

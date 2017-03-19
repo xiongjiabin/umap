@@ -136,9 +136,25 @@ L.Storage.FeatureMixin = {
         }, this);
     },
 
+    //do nothing here,在子类中实现具体的应用
+    _follow: function(e) {},
+    getFocus: function(e) {},
+    lostFocus: function(e) {},
+
     appendEditFieldsets: function (container) {
+        var builder = null;
+        if(this.getTextOptions) { //有文字的控制属性
+            var txtFields = this.getTextOptions();
+            builder = new L.S.FormBuilder(this, txtFields, {
+                id: 'storage-feature-txt-properties',
+                callback: this._follow
+            });
+            var txtProperties = L.DomUtil.createFieldset(container, '文字属性');
+            txtProperties.appendChild(builder.build());
+        }
+
         var optionsFields = this.getShapeOptions();
-        var builder = new L.S.FormBuilder(this, optionsFields, {
+        builder = new L.S.FormBuilder(this, optionsFields, {
             id: 'storage-feature-shape-properties',
             callback: this._redraw
         });
@@ -146,7 +162,7 @@ L.Storage.FeatureMixin = {
         shapeProperties.appendChild(builder.build());
 
         var advancedOptions = this.getAdvancedOptions();
-        var builder = new L.S.FormBuilder(this, advancedOptions, {
+        builder = new L.S.FormBuilder(this, advancedOptions, {
             id: 'storage-feature-advanced-properties',
             callback: this._redraw
         });
@@ -400,7 +416,8 @@ L.Storage.FeatureMixin = {
                     actions: this.getInplaceToolbarActions(e)
                 }).addTo(this.map, this, e.latlng);
             }
-            this.map._currentFocusObj = this;
+            (this.map._currentFocusObj) && (this.map._currentFocusObj.lostFocus());
+            (this.map._currentFocusObj = this) && (this.getFocus());
         }
         L.DomEvent.stop(e);
     },

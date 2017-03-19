@@ -1,6 +1,7 @@
 L.Storage.LmdMarker = L.Storage.Marker.extend({
 
   defaultName: '交叉路口(T右)',
+  textHelpObject: null,
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
@@ -16,7 +17,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         width:  "0",
         height: "60",
         rotate: preOptions['rotate'] || "0",
-        sn: preOptions['sn'] || ''
+        sn: preOptions['sn'] || '',
+        color: 'Red',
       }
     }
   },
@@ -39,9 +41,18 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     ];
   },
 
+  getTextOptions: function(){
+    return [
+      'properties._storage_options.text',
+      'properties._storage_options.color',
+      'properties._storage_options.scale',
+      'properties._storage_options.textX',
+      'properties._storage_options.textY',
+    ]
+  },
+
   getShapeOptions: function() {
     return [
-      'properties._storage_options.color',
       'properties._storage_options.iconUrl',
       'properties._storage_options.width',
       'properties._storage_options.height',
@@ -65,14 +76,86 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
   caculateHelpXY: function() {
       L.Storage.LmdUpdateXYMixin.caculateHelpXY.call(this);
+      this._follow();
   },
 
   update: function(){
       L.Storage.LmdUpdateXYMixin.update.call(this);
+      this._follow();
   },
 
   del: function () {
       L.Storage.LmdUpdateXYMixin.del.call(this);
+      if(this.textHelpObject){
+          this.textHelpObject.remove();
+          this.textHelpObject = null;
+      }
+  },
+
+  _caculateTxtXY: function(txtX, txtY ) {
+    if(txtX === 0 && txtY === 0) {
+        return L.latLng(this._latlng);
+    }
+    var scaleZoom = lmd.getLmdZoom(this.map)
+    var centerPoint = this.map.latLngToLayerPoint(this._latlng)
+    var destX = centerPoint['x'] + txtX * scaleZoom
+    var destY = centerPoint['y'] + txtY * scaleZoom
+    var dest = this.map.layerPointToLatLng([destX, destY])
+    return dest || null;
+
+  },
+  //如果有txt属性需要填充的话，就得增加_follow函数处理
+  _follow: function(e){
+    var text = this.getOption('text');
+    text = text && text.trim();
+    if (!text) {
+        if(this.textHelpObject) {
+            this.textHelpObject.remove();
+            this.textHelpObject = null;
+        }
+        return;
+    }
+    var size = 35;
+    var formatText = '<text font-family="Verdana" font-size="' + size + '">' + text + '</text>';
+
+    var options = {
+      rotate: +this.getOption('rotate'),
+      color: this.getOption('color'),
+      svgText: formatText,
+      interactive: false
+    };
+    var scaleZoom = lmd.getLmdZoom(this.map)
+    var scale = this.getOption('scale');
+    (scale === null) && (scale = 10);
+    options['scale'] = +scale * scaleZoom
+
+    var textX = this.getOption('textX');
+    var textY = this.getOption('textY');
+    var lr = +this.getOption('lr')
+    if(lr === lmd.POS_RIGHT){
+      (textX === null) && (textX = 90);
+      (textY === null) && (textY = 20);
+    }else{
+      (textX === null) && (textX = 40);
+      (textY === null) && (textY = 40);
+    }
+    var latlng = this._caculateTxtXY(+textX, +textY);
+    //console.log(textX + ':' + textY + ':' + scale);
+
+    if (!this.textHelpObject) {
+        this.textHelpObject = new L.SVGObject(latlng, options).addTo(this.map);
+    }else{
+        this.textHelpObject.setSvgText(formatText)
+                           .updateStyle(options)
+                           .setLatLng(latlng);
+    }
+  },
+
+  getFocus: function() {
+      this._icon && L.DomUtil.addClass(this._icon, "get-eyes-focused");
+  },
+  lostFocus: function() {
+      this._icon && L.DomUtil.removeClass(this._icon, "get-eyes-focused");
   },
 
   _getIconUrl: function(name) {
@@ -244,7 +327,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       var lr = +this.getOption('lr')
       var sn = this.getOption('sn')
       var data = this.map.getAnchorLatLngBySubNo(sn)
-      var pos = lr == 2 ? 'right' : 'left'
+      var pos = lr == lmd.POS_RIGHT ? 'right' : 'left'
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
           this.caculateHelpXY()

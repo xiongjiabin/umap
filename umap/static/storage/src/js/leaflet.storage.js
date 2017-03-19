@@ -362,6 +362,16 @@ L.Storage.Map.include({
                 else this.ui.closePanel();
             }
 
+
+            if (key === L.S.Keys.A && shiftKey) {
+                L.DomEvent.stop(e);
+                this.setZoom(17);
+            }
+            if (key === L.S.Keys.S && shiftKey) {
+                L.DomEvent.stop(e);
+                this.setZoom(12);
+            }
+
             if (!this.options.allowEdit) return;
 
             /* Edit mode only shortcuts */
@@ -421,16 +431,6 @@ L.Storage.Map.include({
                         this._currentFocusObj.confirmDelete && this._currentFocusObj.confirmDelete();
                     }
                 }
-            }
-
-
-            if (key === L.S.Keys.A && shiftKey) {
-               L.DomEvent.stop(e);
-               this.setZoom(17);
-            }
-            if (key === L.S.Keys.S && shiftKey) {
-               L.DomEvent.stop(e);
-               this.setZoom(12);
             }
 
             if (e.keyCode === L.S.Keys.ESC) {

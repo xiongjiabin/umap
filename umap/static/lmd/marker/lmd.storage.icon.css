@@ -1,12 +1,12 @@
 .storage-rect-icon {
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     border-radius: 5px 5px 5px 5px;
 
     text-align: center;
 }
 
 .storage-square-icon {
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     border-radius: 5px 5px 5px 5px;
 
     text-align: center;
@@ -25,13 +25,16 @@
 }
 
 .storage-lmdcircle-icon {
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     border-radius: 50px 50px 50px 50px;
 
     text-align: center;
 }
-.leaflet-interactive {
-   border: 1px solid white
+.leaflet-interactive:focus {
+   border: 3px solid #06fc54
+}
+.get-eyes-focused {
+   border: 3px solid #06fc54
 }
 
 svg text1{

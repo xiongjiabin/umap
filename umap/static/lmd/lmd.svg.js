@@ -1,6 +1,6 @@
 L.SVG.include({
 
-  _initContainer: function () {
+  _initContainer: function() {
     this._container = L.SVG.create('svg');
 
     // makes it possible to click through svg root; we'll reset it back in individual paths
@@ -13,42 +13,45 @@ L.SVG.include({
     this._initPredefinedMarkers();
   },
 
-  _initPredefinedMarkers: function(){
+  _initPredefinedMarkers: function() {
     this._defs = L.SVG.create('defs')
-    this._defs.innerHTML = '<g id="lmdcross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>'
-                        +  '<g id="lmdtrian"><path d="M 0,8 L -8,-8 8,-8 0,8"></path></g>'
+    this._defs.innerHTML =
+      '<g id="lmdcross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>' +
+      '<g id="lmdtrian"><path d="M 0,8 L -8,-8 8,-8 0,8"></path></g>'
 
     //add other markers
     this._container.appendChild(this._defs)
   },
 
-  _delPolyMarker: function( layer ){
-    if(layer._polyMarker){
+  _delPolyMarker: function(layer) {
+    if (layer._polyMarker) {
       L.DomUtil.remove(layer._polyMarker)
-      layer._polyMarker  = null
+      layer._polyMarker = null
     }
   },
 
-  _updatePolyMarker: function( layer, options ){
-    var i = 0, len = 0, j = 0, jlen = 0
+  _updatePolyMarker: function(layer, options) {
+    var i = 0,
+      len = 0,
+      j = 0,
+      jlen = 0
     var point = null
     options = options || {}
-    if(layer._parts && layer._parts.length > 0){
-    }else{
+    if (layer._parts && layer._parts.length > 0) {} else {
       return
     }
 
-    if(layer._polyMarker){
+    if (layer._polyMarker) {
       L.DomUtil.remove(layer._polyMarker)
-      layer._polyMarker  = null
+      layer._polyMarker = null
     }
 
     layer._polyMarker = L.SVG.create('g')
 
-    if(options.fill){
+    if (options.fill) {
       layer._polyMarker.setAttribute('stroke-width', 1);
       layer._polyMarker.setAttribute('fill', options.fillColor);
-    }else{
+    } else {
       layer._polyMarker.setAttribute('stroke-width', options.weight || 4);
       layer._polyMarker.setAttribute('fill', 'none');
       layer._polyMarker.setAttribute('stroke', options.color || 'red');
@@ -58,10 +61,11 @@ L.SVG.include({
 
     //<use xlink:href="#m_cross" x="962" y="180"></use>
     for (i = 0, len = layer._rings.length; i < len; i++) {
-      for(j = 0, jlen = layer._rings[i].length; j < jlen; j++){
+      for (j = 0, jlen = layer._rings[i].length; j < jlen; j++) {
         point = layer._rings[i][j]
         layer._polyMarker.innerHTML +=
-            '<use xlink:href="#' + lmdtype + '" x="' + point.x + '" y="' + point.y + '"></use>'
+          '<use xlink:href="#' + lmdtype + '" x="' + point.x + '" y="' +
+          point.y + '"></use>'
       }
     }
     this._rootGroup.appendChild(layer._polyMarker)
@@ -104,8 +108,11 @@ L.SVG.include({
   },
 
   _updateSVGStyle: function(layer) {
-    var path = layer._svgObject,options = layer.options, pathChild = layer._svgObjectChild;
-    var scale = options.scale || 10, rotate = options.rotate || 0
+    var path = layer._svgObject,
+      options = layer.options,
+      pathChild = layer._svgObjectChild;
+    var scale = options.scale || 10,
+      rotate = options.rotate || 0
 
     if (!path) return;
 
@@ -140,13 +147,13 @@ L.SVG.include({
     }
     path.setAttribute('pointer-events', 'auto')
 
-    var transformStr =  (scale ? ' scale(' + scale/10 + ')' : '')
-    //pathChild.setAttribute('transform', transformStr)
+    var transformStr = (scale ? ' scale(' + scale / 10 + ')' : '')
+      //pathChild.setAttribute('transform', transformStr)
     var rotateStr = (rotate ? ' rotate(' + rotate + 'deg)' : '');
-    if(transformStr || rotateStr) {
-      pathChild.style['transform'] = transformStr + ' '+ rotateStr
-      //pathChild.style['transform-origin'] = "left top"
-      //path.style['transform'] += ' ' + rotateStr
+    if (transformStr || rotateStr) {
+      pathChild.style['transform'] = transformStr + ' ' + rotateStr
+        //pathChild.style['transform-origin'] = "left top"
+        //path.style['transform'] += ' ' + rotateStr
     }
   },
 
@@ -154,13 +161,13 @@ L.SVG.include({
 
 L.Polyline.include({
   delPolyMakrer: function() {
-    if(this._renderer){
+    if (this._renderer) {
       this._renderer._delPolyMarker(this)
     }
   },
 
-  updatePolyMarker: function(options){
-    if(this._renderer){
+  updatePolyMarker: function(options) {
+    if (this._renderer) {
       this._renderer._updatePolyMarker(this, options)
     }
   },
@@ -178,7 +185,7 @@ L.SVGObject = L.Layer.extend({
     scale: 10,
     rotate: 0,
     fill: true,
-    fillOpacity:1,
+    fillOpacity: 1,
     fillRule: 'evenodd',
     color: '#ffcc00'
   },
@@ -227,16 +234,19 @@ L.SVGObject = L.Layer.extend({
 
     // @event move: Event
     // Fired when the marker is moved via [`setLatLng`](#marker-setlatlng) or by [dragging](#marker-dragging). Old and new coordinates are included in event arguments as `oldLatLng`, `latlng`.
-    return this.fire('move', {
+    this.fire('move', {
       oldLatLng: oldLatLng,
       latlng: this._latlng
     });
+
+    return this;
   },
 
   //负责更新图形
   setSvgText: function(svgText) {
     this.options.svgText = svgText;
-    this._renderer._updateSVGText(this)
+    this._renderer._updateSVGText(this);
+    return this;
   },
 
   //负责更新位置
@@ -246,15 +256,17 @@ L.SVGObject = L.Layer.extend({
     }
     this._point = this._map.latLngToLayerPoint(this._latlng)
     this._renderer._updateSVGPosition(this);
+    return this;
   },
 
   //负责更新样式，大小，旋转
   updateStyle: function(options) {
     options = options || {}
-    for(var i in options){
+    for (var i in options) {
       this.options[i] = options[i]
     }
     this._renderer._updateSVGStyle(this);
+    return this;
   },
 
   _initInteraction: function() {
@@ -325,7 +337,8 @@ L.Handler.SVGObjectDrag = L.Handler.extend({
     }, this).disable();
 
     if (this._marker._svgObject) {
-      L.DomUtil.removeClass(this._marker._svgObject,  'leaflet-marker-draggable');
+      L.DomUtil.removeClass(this._marker._svgObject,
+        'leaflet-marker-draggable');
     }
   },
 

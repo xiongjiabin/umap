@@ -8,9 +8,7 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
   preInit: function() {
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
-    }
 
-    if (!this.properties._storage_options.color) {
       this.properties._storage_options = {
         scale: 5,
         rotate: 0,
@@ -30,7 +28,7 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
     }
     return options
   },
-  
+
   isCopy: function(){
       return true;
   },
@@ -38,7 +36,7 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
   getSvgData: function() {
     var name = this.getDisplayName()|| '请输入文字'
     var size = this.getOption('size') || 35
-    return ' <text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
+    return '<text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
   },
 
   resetTooltip: function(e){

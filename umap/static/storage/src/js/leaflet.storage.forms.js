@@ -1040,6 +1040,11 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         roadWidth: {handler:'FloatInput',label:'设置道路宽度(米)'},
         roadWidth2: {handler:'FloatInput',label:'道路宽度(米)'},
         roadWidth3: {handler:'FloatInput',label: '线宽'},
+
+        //help text
+        textX:  {handler: 'Range', min:-200,max:200,step:1,label: '相对位置X'},
+        textY: {handler: 'Range', min:-200,max:200,step:1,label: '相对位置Y'},
+        text: {label: '附带文字内容'},
     },
 
     initialize: function (obj, fields, options) {

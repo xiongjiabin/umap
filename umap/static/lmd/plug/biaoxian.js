@@ -28,8 +28,9 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
     }
   },
 
+  CLASS_NAME: 'biaoxian',
   getClassName: function () {
-      return 'biaoxian'; //历史遗留问题，用标线来代替横向减速标线
+      return this.CLASS_NAME; //历史遗留问题，用标线来代替横向减速标线
   },
 });
 
