@@ -415,6 +415,7 @@ L.Storage.FeatureMixin = {
                     anchor: this.getPopupToolbarAnchor(),
                     actions: this.getInplaceToolbarActions(e)
                 }).addTo(this.map, this, e.latlng);
+                this.map.ui.closePanel();
             }
             (this.map._currentFocusObj) && (this.map._currentFocusObj.lostFocus());
             (this.map._currentFocusObj = this) && (this.getFocus());

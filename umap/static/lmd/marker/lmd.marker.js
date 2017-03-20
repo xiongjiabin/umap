@@ -152,10 +152,15 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   },
 
   getFocus: function() {
-      this._icon && L.DomUtil.addClass(this._icon, "get-eyes-focused");
+      if(this._icon){
+          var dsColors = [null,'Yellow','Lime','Fuchsia']
+          var ds = this.getOption('ds') || 1;
+          var color = dsColors[ds] || 'Yellow';
+          this._icon.style.border = "3px solid " + color;
+      }
   },
   lostFocus: function() {
-      this._icon && L.DomUtil.removeClass(this._icon, "get-eyes-focused");
+      this._icon && (this._icon.style.border = "");
   },
 
   _getIconUrl: function(name) {

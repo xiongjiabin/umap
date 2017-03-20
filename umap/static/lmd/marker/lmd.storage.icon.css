@@ -30,9 +30,9 @@
 
     text-align: center;
 }
-.leaflet-interactive:focus {
+/*.leaflet-interactive:focus {
    border: 3px solid #06fc54
-}
+}*/
 .get-eyes-focused {
    border: 3px solid #06fc54
 }
