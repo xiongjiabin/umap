@@ -201,11 +201,11 @@ L.PolylineOffset = {
       this._offsetProjectLatlngs(offset, latlngs, results, tolerance)
       //let points to latlngs
       if(results.length === 1){
-        newLatlngs = L.PolylineOffset.pointsToLatLngs(results[0],this._map)
+        newLatlngs = L.PolylineOffset.pointsToLatLngs(results[0],this.map)
       } else {
         for(i = 0, len = results.length; i < len; i++){
           if(!results[i]) break
-          newLatlngs.push(L.PolylineOffset.pointsToLatLngs(results[i],this._map))
+          newLatlngs.push(L.PolylineOffset.pointsToLatLngs(results[i],this.map))
         }
       }
       return newLatlngs
@@ -218,9 +218,9 @@ L.PolylineOffset = {
 
       if (flat) {
         ring = [];
-        ring[0] = this._map.latLngToLayerPoint(latlngs[0])
+        ring[0] = this.map.latLngToLayerPoint(latlngs[0])
         for (i = 1; i < len; i++) {
-           tmpPoint = this._map.latLngToLayerPoint(latlngs[i]);
+           tmpPoint = this.map.latLngToLayerPoint(latlngs[i]);
            //丢掉相隔太近的点
            //console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
            //console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))

@@ -1,8 +1,9 @@
 L.Storage.FeatureMixin = {
 
     staticOptions: {},
+    brotherOtherSide: null,
 
-    initialize: function (map, latlng, options) {
+    initialize: function (map, latlng, options, clone) {
         this.map = map;
         if(typeof options === 'undefined') {
             options = {};
@@ -13,6 +14,17 @@ L.Storage.FeatureMixin = {
         if (options.geojson) {
             this.populate(options.geojson);
         }
+
+        //我只是clone的东西，不具备完整的生命
+        if (clone) {
+            this.preInit();
+            this.parentClass.prototype.initialize.call(this, latlng, options);
+            if (options.geojson) {
+                this.options.title = options.geojson.properties && options.geojson.properties.name;
+            }
+            return;
+        }
+
         var isDirty = false,
             self = this;
         try {
@@ -44,9 +56,12 @@ L.Storage.FeatureMixin = {
             this.options.title = options.geojson.properties && options.geojson.properties.name;
         }
 
+        //当一个设施会产生一些相关联的渲染设施的话，在这里处理
+        this.doMoreThings();
     },
 
     preInit: function () {},
+    doMoreThings: function() {},
 
     isReadOnly: function () {
         return this.datalayer && this.datalayer.isRemoteLayer();

@@ -143,7 +143,6 @@ L.Storage.getGBPosData = function(gbt){
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
     dsColors: [null, 'Red', 'Lime','Fuchsia'],
-    brother: null,//用来搞那种俩侧都出来，用来复制的
 
     preInit: function() {
       if (!this.properties['className']) {
@@ -165,15 +164,40 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         this.properties.name = this.defaultName || classObject['name'] || ''
       }
 
-      var lr = +this.getOption('lr')
-      if(lr === lmd.POS_BOTH) { //如果是俩侧都有的
-          //this.brother = this.copySelfObject();
-      }
+      this.on('remove', function(e){
+         if(this.brotherOtherSide) {
+             this.brotherOtherSide.remove();
+             this.brotherOtherSide = null;
+         }
+      })
+      
     },
 
-    copySelfObject: function(){
-      //var obj = new L.Storage.Guardbar(this.map);
-      //return obj;
+    doMoreThings: function() {
+      var latlngs = this.getLatLngs();
+      var geojson = this.toGeoJSON();
+      if(this.brotherOtherSide) {
+          this.brotherOtherSide.remove && this.brotherOtherSide.remove();
+          this.brotherOtherSide = null;
+      }
+      var pos = +this.getOption('lr');
+      if (pos != lmd.POS_BOTH) {
+          return null;
+      }
+
+      var offset = geojson.properties._storage_options.offset = 0 - geojson.properties._storage_options.offset;
+      if(latlngs && latlngs.length > 1) {
+          var offsetLatLngs = this.getOffSetLatlngs(2 * offset, latlngs)
+          this.brotherOtherSide = new L.Storage.Guardbar(
+                     this.map,
+                     offsetLatLngs,
+                     {'geojson': geojson, 'datalayer': null},
+                     true
+              ).addTo(this.map);
+
+          return this.brotherOtherSide;
+      }
+      return null;
     },
 
     isCopy: function(){
@@ -303,7 +327,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           gbse = temp;
       }
 
-      var gl   = +this.getOption('lr') || 1
+      var gl   = +this.getOption('lr') || lmd.POS_LEFT
       var offset = this.getOption('offset') * 2
       if(gl !== 2) offset = 0 - offset
 
@@ -326,7 +350,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           var gbss = this.getOption('gbss')
           var gbse = this.getOption('gbse')
           if( gbse && gbse > gbss){
-              var gl   = +this.getOption('lr') || 1
+              var gl   = +this.getOption('lr') || lmd.POS_LEFT
               var offset = this.getOption('offset')
               if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
 
@@ -346,6 +370,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       this.setStyle();
       this.resetTooltip();
+
+      this.doMoreThings();
     },
 
     getClassName: function () {
@@ -488,17 +514,21 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               }
           }
 
-      } else if(e.helper.name in {'gbss':0,'gbse':0}){
+      } else if(e.helper.name in {'gbss':0,'gbse':0, 'lr':0 }){
           //计算长度
           var gbss = this.getOption('gbss') * 1000
           var gbse = this.getOption('gbse') * 1000
+          var multipe = 1
           var distance = 0
           if(gbss > gbse){
               distance = gbss - gbse
           }else{
               distance = gbse - gbss
           }
-          distance = Math.ceil(distance)
+          if ( +this.getOption('lr') === lmd.POS_BOTH){
+              multipe = 2;
+          }
+          distance = Math.ceil(distance * multipe)
 
           var gblControl = e.target.helpers['properties._storage_options.gbl']
           if(gblControl) {
