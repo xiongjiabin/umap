@@ -307,7 +307,9 @@ var temp = [
 	"指示35 停车位(左)",
 	"指示35 停车位",
 	"指示35 停车位（区域）",
-	"指示36 允许掉头"
+	"指示36 允许掉头",
+	"指示101 超车道",
+	"指示102 行车道"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['wife'].push(temp[i])
