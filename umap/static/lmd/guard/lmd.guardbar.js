@@ -170,7 +170,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
              this.brotherOtherSide = null;
          }
       })
-      
+
     },
 
     doMoreThings: function() {
@@ -226,7 +226,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
             var gbc = +this.getOption('gbc')
             var gbsControl = builder.helpers['properties._storage_options.gbs']
             var gbnControl = builder.helpers['properties._storage_options.gbn']
-            if(gbc === 10 || gbc === 11 ){
+            if(gbc === 10 || gbc === 11 ){ //示警墩
               gbsControl.show()
               gbnControl.show()
             }else{
@@ -730,7 +730,9 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
               var jslmTs = +this.getOption('jslmTs');
               var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
               this.properties._storage_options.gba = gbaControl.input.value = area
-              descControl.input.value = this.properties.description = '道数:' + ret['lanes'] + ';间距(米):' + ret['space'].join('_');
+              descControl.input.value = this.properties.description = '一处设置' + ret['lanes'] + '道,' +
+                                                                    '每道' + ret['space'].length + '条,' +
+                                                                    '间距(米):' + ret['space'].join('_');
           }
       }
   },

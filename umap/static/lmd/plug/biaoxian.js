@@ -1,12 +1,13 @@
 L.Storage.Biaoxian = L.Storage.Jiansu.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
   dsColors: [null, 'White', 'White','White'], //所有都一样
-  defaultName: '横向减速标线',
+  defaultName: '横向减速标线-急弯',
+  CLASS_ALIAS: '横向减速标线',
 
   //added by xiongjiabin
   getBasicOptions: function () {
       return [
-        //'properties._storage_options.gbc',//类别
+        'properties._storage_options.gbc',//类别
         'properties._storage_options.lr',
         'properties._storage_options.gbss',//起始桩号
         'properties._storage_options.gbse',
@@ -22,6 +23,10 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
 
   edit: function(e) {
     if(this.map.editEnabled) {
+        var gbt = L.Storage.GB_TYPE_JIANSU; //类别属性和减速路面一样，
+        var gbcOptions = L.Storage.getGBOptions(gbt)
+        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
+
         //解决侧别的问题
         L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
         var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
@@ -31,6 +36,40 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
   CLASS_NAME: 'biaoxian',
   getClassName: function () {
       return this.CLASS_NAME; //历史遗留问题，用标线来代替横向减速标线
+  },
+
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+
+    var name = e.target.helpers['properties.name']
+    var nameValue = name.value()
+    if(nameValue && nameValue.startsWith('@')) {
+      return
+    }
+
+    var gbc = e.target.helpers['properties._storage_options.gbc']
+    var text = gbc.getSelectText()
+    var result = this.CLASS_ALIAS + '-' + text.trim()
+    this.properties.name = name.input.value = result
+
+    return
+  },
+
+  getStringMap: function(){
+    var stringMap = L.Storage.Jiansu.prototype.getStringMap.call(this);
+    var hColor =  +(this.getOption('hColor'));
+    var gbm = +(this.getOption('gbm'));
+
+    stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
+    stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
+
+    var num = 1;
+    var lr = +this.getOption('lr') || 1;
+    if(lmd.POS_MIDDLE === lr) num = 2;
+    stringMap['num'] = num;
+    
+    return stringMap;
   },
 });
 
@@ -42,8 +81,11 @@ lmd.tjHxbx = function(){
                 gbss: '起始桩号',
                 gbse: '结束桩号',
                 pos: '侧别',
+                num: '数量(处)',
                 gbl: '长度(米)',
                 jslmTs: '每道设置条数',
+                hColor:'颜色',
+                gbm: '材料',
                 gbw: '宽度(米)',
                 gba: '面积(平方米)',
                 ds: '状态',
@@ -55,7 +97,7 @@ lmd.tjHxbx = function(){
   //this means map
   var i = 1
   this.eachLayerFeature(function (feature) {
-      if(feature.getClassName() === 'biaoxian'){
+      if(feature.getClassName() in { 'biaoxian':0, 'zxbx': 0 }) {
           data.push(lmd.getTjData(feature,i,titles))
           i++
       }
@@ -63,15 +105,16 @@ lmd.tjHxbx = function(){
 
   lmd.processData(data)
 
-  new CsvGenerator(data,  '横向减速标线.csv').download(true);
+  new CsvGenerator(data,  '减速标线.csv').download(true);
 }
 
-lmd.tjs.push({ label: '横向减速标线', process: lmd.tjHxbx});
+lmd.tjs.push({ label: '减速标线', process: lmd.tjHxbx});
 
 L.Storage.Zxbx = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIAOXIAN,
   dsColors: [null, 'White', 'White','White'], //所有都一样
-  defaultName: '纵向减速标线',
+  defaultName: '纵向减速标线-急弯',
+  CLASS_ALIAS: '纵向减速标线',
 
   CLASS_NAME: 'zxbx',
   getClassName: function () {
@@ -87,10 +130,12 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
   //added by xiongjiabin
   getBasicOptions: function () {
       return [
+        'properties._storage_options.gbc',//类别
         'properties._storage_options.lr',
         'properties._storage_options.gbss',//起始桩号
         'properties._storage_options.gbse',
         'properties._storage_options.gbl',//总长
+        'properties._storage_options.jslmTs',//每道设置条数
         'properties._storage_options.gba',//数量
         'properties._storage_options.hColor',//改成color
         'properties._storage_options.gbm', //材料
@@ -103,23 +148,48 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
     L.Storage.Guardbar.prototype.resetTooltip.call(this,e);
 
     //处理面积部分计算
-    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0}){
-      var gbl = this.getOption('gbl');
+    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0,'jslmTs':0}){
+      var gbl = +this.getOption('gbl');
+      var jslmTs = +this.getOption('jslmTs');
       var area = 0;
       if(gbl > 0  && gbl < 30){
 
       }else{
         area = 3 + (gbl - 30) * 0.3 / 2;
-        area = area.toFixed(2);
+        area = (jslmTs * area).toFixed(2);
       }
 
       var gbaControl = e.target.helpers['properties._storage_options.gba']
       this.properties._storage_options.gba = gbaControl.input.value = area
+    } else if (e.helpers.name in {gbc: 0} ) {
+      this.updateName(e);
     }
+  },
+
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+
+    var name = e.target.helpers['properties.name']
+    var nameValue = name.value()
+    if(nameValue && nameValue.startsWith('@')) {
+      return
+    }
+
+    var gbc = e.target.helpers['properties._storage_options.gbc']
+    var text = gbc.getSelectText()
+    var result = this.CLASS_ALIAS + '-' + text.trim()
+    this.properties.name = name.input.value = result
+
+    return
   },
 
   edit: function(e) {
     if(this.map.editEnabled) {
+        var gbt = L.Storage.GB_TYPE_JIANSU; //类别属性和减速路面一样，
+        var gbcOptions = L.Storage.getGBOptions(gbt)
+        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
+
         //解决侧别的问题
         L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
         var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
@@ -134,10 +204,18 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
     stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
     stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
 
+    var jslmTs = this.getOption('jslmTs');
+    stringMap['jslmTs'] = jslmTs;
+    var num = 1;
+    var lr = +this.getOption('lr') || 1;
+    if(lmd.POS_MIDDLE === lr) num = 2;
+    stringMap['num'] = num;
+
     return stringMap;
   },
 });
 
+/*
 //纵向减速标线
 lmd.tjZxbx = function(){
   var data = []
@@ -170,6 +248,7 @@ lmd.tjZxbx = function(){
 
 
 lmd.tjs.push({ label: '纵向减速标线', process: lmd.tjZxbx});
+*/
 
 L.Storage.DataLayer.prototype._lineToClass[L.Storage.Zxbx.prototype.CLASS_NAME] = L.Storage.Zxbx;
 
