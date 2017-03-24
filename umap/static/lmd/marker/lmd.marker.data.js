@@ -331,7 +331,7 @@ for(var i = 0, len = temp.length; i < len; i++){
 
 
 lmd.marker.push({name: '指路标志',childs:[null]});
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(横向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线形诱导标(横向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'>=80',size:'600*800'})
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'400*600'})
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'220*400'})
@@ -348,7 +348,7 @@ for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][1]['wife'].push(temp[i])
 }
 
-lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线性诱导性(纵向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
+lmd.marker[lmd.MARKER_ROAD]['childs'].push({name:'线形诱导标(纵向)','shape':'矩形', 'class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_ROAD]['childs'][2]['childs'].push({speed:'0-120',size:'600*1200'})
 temp = [
 	"指路38 两侧通行",
