@@ -68,7 +68,7 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
     var lr = +this.getOption('lr') || 1;
     if(lmd.POS_MIDDLE === lr) num = 2;
     stringMap['num'] = num;
-    
+
     return stringMap;
   },
 });
@@ -161,7 +161,7 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
 
       var gbaControl = e.target.helpers['properties._storage_options.gba']
       this.properties._storage_options.gba = gbaControl.input.value = area
-    } else if (e.helpers.name in {gbc: 0} ) {
+    } else if (e.helper.name in {gbc: 0} ) {
       this.updateName(e);
     }
   },
