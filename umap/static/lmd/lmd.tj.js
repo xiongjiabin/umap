@@ -18,7 +18,7 @@ function CsvGenerator(dataArray, fileName, separator, addQuotes) {
             var newRow = [];
             for(var i = 0, len = row.length; i < len; i++){
                 if(typeof row[i] === 'string'){
-                  newRow.push(row[i].replaceAll(separator,"  ").replaceAll("\n","  "));
+                  newRow.push(row[i].replaceAll(separator,"  ").replaceAll("\n","  ")); //去掉可能输入的tab和enter
                 }else{
                   newRow.push(row[i]);
                 }
