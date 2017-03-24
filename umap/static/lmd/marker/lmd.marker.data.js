@@ -602,7 +602,8 @@ temp = [
 	"辅助20 驾驶考试路线",
 	"辅助21 校车停靠点",
 	"辅助22 组合辅助-模版",
-	"辅助22 组合辅助"
+	"辅助22 组合辅助",
+	"自定义",
 ]
 for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_HELP]['childs'][1]['wife'].push(temp[i])
@@ -658,7 +659,8 @@ temp = [
 	"告示7 急弯下坡减速慢行标志",
 	"告示8 系安全带标志",
 	"告示9 大型车靠右",
-	"告示10 校车停靠站点"
+	"告示10 校车停靠站点",
+	"自定义"
 ]
 for(var i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_NOTIFICATION]['childs'][1]['wife'].push(temp[i])
