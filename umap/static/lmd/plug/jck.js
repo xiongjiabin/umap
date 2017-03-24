@@ -12,7 +12,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
        this.properties._storage_options['crossType'] = "1";
        this.properties._storage_options['scale'] = 5;
        this.properties._storage_options['rotate'] = 0;
-       this.properties._storage_options['color'] = 'Red';
+       this.properties._storage_options['color'] = 'White';
        this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
@@ -20,8 +20,8 @@ L.Storage.Jck = L.Storage.Hide.extend({
 
   getDisplayName: function(){
     var sn = this.getOption('sn') || ''
-    return '<tspan x=0 dy=0>**' + this.properties.name + '**</tspan>'+
-           '<tspan x=0 dy=1.2em>(' + L.Storage.LmdFeatureMixin.showSubNice.call(this,sn) + ')</tspan>'
+    return '<tspan x=30 dy=0>**' + this.properties.name + '**</tspan>'+
+           '<tspan x=30 dy=1.2em>(' + L.Storage.LmdFeatureMixin.showSubNice.call(this,sn) + ')</tspan>'
   },
 
   getBasicOptions: function(){

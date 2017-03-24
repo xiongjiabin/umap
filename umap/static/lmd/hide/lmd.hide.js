@@ -15,9 +15,9 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
 
-      this.properties._storage_options['scale'] = 5;
-      this.properties._storage_options['rotate'] = 0;
-      this.properties._storage_options['color'] = 'Black';
+      this.properties._storage_options['scale'] = this.properties._storage_options['scale'] || 5;
+      this.properties._storage_options['rotate'] = this.properties._storage_options['rotate'] || 0;
+      this.properties._storage_options['color'] = this.properties._storage_options['color'] || 'Black';
       this.properties.name = this.defaultName;
     }
 
@@ -86,10 +86,21 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
               this.properties._storage_options.gbn = gbnControl.input.value = gbn
           }
       }
-    } else{
-      //nothing to do
-    }
+    } else if (e.helper.name === 'sn' || e.helper.name === 'lr') {
+        var lr = +this.getOption('lr')
+        var sn = +this.getOption('sn')
+        var data = this.map.getAnchorLatLngBySubNo(sn)
+        var pos = lr == 2 ? 'right' : 'left'
+        if(data && (data[pos] !== undefined)){
+            this.properties._storage_options['rotate'] = data[pos]
+            this.updateStyle()
+            if(data.point){
+              this.setLatLng(data.point)
+            }
+        }
+    } else {
 
+    }
   },
 
   //added by xiongjiabin
