@@ -9,12 +9,21 @@ function CsvGenerator(dataArray, fileName, separator, addQuotes) {
         this.separator = '"' + this.separator + '"';
     }
 
+
     this.getDownloadLink = function () {
         var separator = this.separator;
         var addQuotes = this.addQuotes;
 
         var rows = this.dataArray.map(function (row) {
-            var rowData = row.join(separator);
+            var newRow = [];
+            for(var i = 0, len = row.length; i < len; i++){
+                if(typeof row[i] === 'string'){
+                  newRow.push(row[i].replaceAll(separator,"  ").replaceAll("\n","  "));
+                }else{
+                  newRow.push(row[i]);
+                }
+            }
+            var rowData = newRow.join(separator);
 
             if (rowData.length && addQuotes) {
                 return '"' + rowData + '"';
@@ -81,6 +90,10 @@ lmd.getTjData = function(feature, no, titles){
 
 lmd.processData = function(data){
 
+  var isNum = function( val ){
+      return /^\d+.*\d+$/.test(val)
+  }
+
   data.sort(function(a,b){
       if(!a['sortField']){
         return -1;
@@ -90,6 +103,13 @@ lmd.processData = function(data){
       }
       var ak1 = +a['sortField']['k1'];
       var bk1 = +b['sortField']['k1'];
+      if(ak1 === bk1){
+        var ak2 = isNum(a['sortField']['k2']) ? +a['sortField']['k2'] : (a['sortField']['k2'] || '');
+        var bk2 = isNum(b['sortField']['k2']) ? +b['sortField']['k2'] : (b['sortField']['k2'] || '');
+        if(ak2 > bk2) return 1;
+        if(ak2 < bk2) return -1;
+        return 0;
+      }
       return ak1 - bk1;
   });
 
@@ -113,15 +133,17 @@ lmd.tjIndicators = function(){
                 mss:'版面尺寸(cm)',
                 pillarType: '支撑型式',
                 num:'数量(块)',
+                fgm: '反光膜(m2)',
+                fgmyq: '反光膜要求',
                 ds:'状态',
+                description:'备注',
                 pic: '图形',
-                description:'备注'
               }
   data.push(lmd.objectToArray(titles))
   delete titles.no
 
   //this means map
-  var i = 1,className = null,pillars = {},tmp = null,len = 0
+  var i = 1,className = null,pillars = {},markers = {}, tmp = null,len = 0
   this.eachDataLayer(function (datalayer) {
     datalayer.eachFeature(function (feature) {
         className = feature.getClassName()
@@ -135,15 +157,21 @@ lmd.tjIndicators = function(){
     })
   })
 
+  lmd.processData(data)
+
   var sn = 0,pos = 0
   for(i = 1,len = data.length; i < len; i++){
      sn = data[i][1]
      pos = data[i][2]
-     data[i][7] = pillars[pos+sn] || '无支撑'
+     if (markers[ pos + sn ]) {
+        data[i][7] = '增加版面'
+     } else {
+        data[i][7] = pillars[ pos + sn ] || ''
+        markers[ pos + sn ] = 1
+     }
   }
   pillars = null
 
-  lmd.processData(data)
   new CsvGenerator(data,  '标志一览表.csv').download(true);
 }
 

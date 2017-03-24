@@ -338,8 +338,10 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
           this.caculateHelpXY()
           this._redraw();
       }
+    } else if(e.helper.name in {ds: 0}) {
+       this.getFocus();
     } else {
-       //noting to process
+
     }
 
     if(needToProcessSize){
