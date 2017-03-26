@@ -4,6 +4,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
   dsColors: [null, 'White', 'Lime','Fuchsia'],
   defaultColor: 'White',
   defaultName: '大型减速丘',
+  CLASS_ALIAS: '大型减速丘',
 
   initialize: function(map, latlng, options) {
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)

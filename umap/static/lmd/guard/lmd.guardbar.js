@@ -165,15 +165,22 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
 
       this.on('remove', function(e){
-         if(this.brotherOtherSide) {
+         if (this.brotherOtherSide) {
              this.brotherOtherSide.remove();
              this.brotherOtherSide = null;
+         }
+
+         if (this.textHelpObject) {
+             this.textHelpObject.remove();
+             this.textHelpObject = null;
          }
       })
 
     },
 
     doMoreThings: function() {
+      this._follow();
+
       var latlngs = this.getLatLngs();
       var geojson = this.toGeoJSON();
       if(this.brotherOtherSide) {
@@ -198,6 +205,57 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           return this.brotherOtherSide;
       }
       return null;
+    },
+
+    //如果有txt属性需要填充的话，就得增加_follow函数处理
+    _follow: function(e){
+      var text = this.getOption('text');
+      var lat = +this.getOption('textLat');
+      var lng = +this.getOption('textLng');
+      if (!text || !lat || !lng) {
+          if(this.textHelpObject) {
+              this.textHelpObject.remove();
+              this.textHelpObject = null;
+          }
+          return;
+      }
+
+      var size = 35;
+      var color = this.getOption('color') || "Blue";
+      var tail = this.getOption('tail') || (27 * text.length);
+      var formatText = '<text font-family="Verdana" font-size="' + size + '">' + text + '</text>' +
+                       '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 0,15 ' + tail + ',0"></path>';
+
+      var options = {
+        rotate: +this.getOption('rotate'),
+        color: this.getOption('color'),
+        svgText: formatText,
+        interactive: false
+      };
+
+      var scaleZoom = lmd.getLmdZoom(this.map)
+      var scale = this.getOption('scale');
+      (scale === null) && (scale = 5);
+      options['scale'] = +scale * scaleZoom;
+      console.log('tail,length,scale,ratio:',tail,text.length,scale,tail/text.length);
+
+
+      var txtX = +this.getOption('textX');
+      var txtY = +this.getOption('textY');
+
+      var scaleZoom = lmd.getLmdZoom(this.map);
+      var centerPoint = this.map.latLngToLayerPoint({lat:lat,lng:lng});
+      var destX = centerPoint['x'] + txtX * scaleZoom;
+      var destY = centerPoint['y'] + txtY * scaleZoom;
+      var latlng = this.map.layerPointToLatLng([destX, destY]);
+
+      if (!this.textHelpObject) {
+          this.textHelpObject = new L.SVGObject(latlng, options).addTo(this.map);
+      }else{
+          this.textHelpObject.setSvgText(formatText)
+                             .updateStyle(options)
+                             .setLatLng(latlng);
+      }
     },
 
     isCopy: function(){
@@ -252,6 +310,19 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           //'properties._storage_options.gbm', //材料
           'properties._storage_options.ds',
         ];
+    },
+
+    getTextOptions: function(){
+      return [
+        'properties._storage_options.text',
+        'properties._storage_options.scale',
+        'properties._storage_options.rotate',
+        'properties._storage_options.tail',
+        'properties._storage_options.textX',
+        'properties._storage_options.textY',
+        'properties._storage_options.textLat',
+        'properties._storage_options.textLng'
+      ]
     },
 
     getShapeOptions: function () {
@@ -365,6 +436,24 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
                   console.error('没有找到对应的桩号坐标，是不是没有设置为路?')
               }
               //console.timeEnd('get line between sub :', gbss + '->' + gbse)
+
+              //偏移发生变化，重新计算文字的相对x和y位置
+              var rotate = +this.getOption('rotate');
+              var degrees = (rotate) / 180 * Math.PI;
+              var offset = this.getOption('offset');
+              var textX = 0;
+              var textY = 0;
+              offset += 20;
+              if(offset != 0){
+                  textX = offset * Math.cos(degrees);
+                  textY = offset * Math.sin(degrees);
+              }
+              var textXControl = this.getElementByName('textX');
+              var textYControl = this.getElementByName('textY');
+              var _storage_options = this.properties._storage_options;
+              textXControl && (textXControl.value = _storage_options.textX = textX);
+              textYControl && (textYControl.value = _storage_options.textY = textY);
+
           }
       }
 
@@ -482,11 +571,45 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
 
       var gbc = e.target.helpers['properties._storage_options.gbc']
+      if(!gbc) {
+        return
+      }
       var text = gbc.getSelectText()
       var result = text.trim()
       this.properties.name = name.input.value = result
+      this.CLASS_ALIAS = result;
 
       return
+    },
+
+    getClassAlias: function(){
+       if(this.CLASS_ALIAS) return this.CLASS_ALIAS;
+       var gbtype = this.gbType
+       var gbcat  = +this.getOption('gbc')
+       var classObject = L.Storage.getGBClass(gbtype, gbcat)
+       if(classObject) {
+         this.CLASS_ALIAS = classObject['name'] || this.getOption('name');//类别
+       }else{
+         this.CLASS_ALIAS = this.getOption('name')
+       }
+       return this.CLASS_ALIAS;
+    },
+
+    updateText: function(e){
+      var text = this.getOption('text');
+      if(text && text.startsWith('@')) {
+        return;
+      }
+      var sns = this.getOption('gbss')
+      var sne = this.getOption('gbse')
+      var snsString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sns)
+      var sneString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sne)
+      var classAlias = this.getClassAlias();
+      this.properties._storage_options.text = classAlias + '(' + snsString + '-' + sneString + ')'
+      if (e) {
+          var textControl = this.getElementByName('text');
+          textControl && (textControl.value = this.properties._storage_options.text);
+      }
     },
 
     resetTooltip: function(e) {
@@ -496,10 +619,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
       if (!e) return;
       var needDrawAgain = false
+      var selfValue = e.helper.value()
+      var _storage_options = this.properties._storage_options;
 
       if(e.helper.name === 'gbc') {
+          this.updateName(e);
+          this.updateText(e);
           this._redraw();
-          this.updateName(e)
 
           if(this.gbType === L.Storage.GB_TYPE_HULAN){
               var gbc = +this.getOption('gbc')
@@ -518,14 +644,15 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           //计算长度
           var gbss = this.getOption('gbss') * 1000
           var gbse = this.getOption('gbse') * 1000
+          var lr = +this.getOption('lr')
           var multipe = 1
           var distance = 0
-          if(gbss > gbse){
+          if (gbss > gbse) {
               distance = gbss - gbse
           }else{
               distance = gbse - gbss
           }
-          if ( +this.getOption('lr') === lmd.POS_BOTH){
+          if (lr === lmd.POS_BOTH) {
               multipe = 2;
           }
           distance = Math.ceil(distance * multipe)
@@ -554,6 +681,41 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               }
           }
 
+          //计算文字的位置
+          if (gbse > gbss) {
+              var snMiddle = (gbss + gbse) / 2000;
+              var data = this.map.getAnchorLatLngBySubNo(snMiddle);
+              var pos = (lr == lmd.POS_RIGHT || lr == lmd.POS_MIDDLE_RIGHT) ? 'right' : 'left';
+              var rotateControl = this.getElementByName('rotate');
+              var txtLatControl = this.getElementByName('textLat');
+              var txtLngControl = this.getElementByName('textLng');
+              if(data && (data[pos] !== undefined)){
+                  rotateControl && (_storage_options.rotate = rotateControl.value = data[pos]);
+                  txtLatControl && (_storage_options.textLat = txtLatControl.value = data.point[0]);
+                  txtLngControl && (_storage_options.textLng = txtLngControl.value = data.point[1]);
+              }else{
+                  rotateControl && (_storage_options.rotate = rotateControl.value = 0);
+                  txtLatControl && (_storage_options.textLat = txtLatControl.value = 0);
+                  txtLngControl && (_storage_options.textLng = txtLngControl.value = 0);
+              }
+
+              var rotate = +this.getOption('rotate');
+              var offset = +this.getOption('offset');
+              var degrees = (rotate ) / 180 * Math.PI
+              var textX = 0;
+              var textY = 0;
+              offset += 20;
+              if(offset != 0){
+                 textX = offset * Math.cos(degrees);
+                 textY = offset * Math.sin(degrees);
+              }
+              var textXControl = this.getElementByName('textX');
+              var textYControl = this.getElementByName('textY');
+              textXControl && (textXControl.value = _storage_options.textX = textX);
+              textYControl && (textYControl.value = _storage_options.textY = textY);
+          }
+          this.updateText(e);
+
           needDrawAgain = true
       }else if(e.helper.name in {'gbs': 0}){
 
@@ -576,17 +738,15 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
                   this.properties._storage_options.gba = gbaControl.input.value = area
               }
           }
-      }else if(e.helper.name in {'lr': 0}){
-          needDrawAgain = true
       }else if(e.helper.name === 'ds') {
-          var selfValue = e.helper.value()
           //设备状态更新导致颜色更新 http://lamudatech.com:3000/xiongjiabin/umap/issues/9
           var dsColors = this.dsColors || []
           var color = dsColors[selfValue] || 'Blue'
           this.properties._storage_options['color'] = color
           this.setStyle()
+          this._follow()
       }else {
-        //nothing to do
+
       }
 
 
@@ -613,35 +773,17 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         }
       }
 
+    },
+
+    getElementByName: function(name){
+      var elems = document.getElementsByName(name);
+      if (elems.length > 0) {
+          return elems[0];
+      }
+      return null;
     }
 });
 
-/*L.Storage.Biaoxian = L.Storage.Guardbar.extend({
-  gbType: L.Storage.GB_TYPE_BIAOXIAN,
-  dsColors: [null, 'White', 'White','White'], //所有都一样
-
-  //added by xiongjiabin
-  getBasicOptions: function () {
-      return [
-        'properties._storage_options.gbc',//类别
-        'properties._storage_options.lr',
-        'properties._storage_options.gbss',//起始桩号
-        'properties._storage_options.gbse',
-        'properties._storage_options.gbl',//总长
-        //'properties._storage_options.gba',//面积
-        'properties._storage_options.gbs',//间距
-        'properties._storage_options.gbn',//数量
-        'properties._storage_options.hColor',//改成color
-        'properties._storage_options.gbm', //材料
-        'properties._storage_options.ds',
-      ];
-  },
-
-  getClassName: function () {
-      return 'biaoxian';
-  },
-});
-*/
 L.Storage.Lunkuo = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LUNKUO,
   dsColors: [null, 'Yellow', 'Lime','Fuchsia'],
@@ -745,48 +887,10 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
   },
 });
 
-/*L.Storage.JianSuQiu = L.Storage.Guardbar.extend({
-  gbType: L.Storage.GB_TYPE_JIANSUQIU,
-  dsColors: [null, 'White', 'Lime','Fuchsia'],
-
-  getClassName: function () {
-      return 'jiansuqiu';
-  },
-
-  //added by xiongjiabin
-  getBasicOptions: function () {
-      return [
-        'properties._storage_options.gbc',//类别
-        'properties._storage_options.lr',
-        'properties._storage_options.gbss',//起始桩号
-        'properties._storage_options.gbse',
-        'properties._storage_options.gbl',//总长
-        'properties._storage_options.gbs',//间距
-        'properties._storage_options.gbn',//数量
-        'properties._storage_options.ds',
-      ];
-  },
-
-});*/
 
 L.Storage.Biangou = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_BIANGOU,
   dsColors: [null, 'Blue', 'Lime','Fuchsia'],
-
-  preInit: function() {
-    if (!this.properties['className']) {
-      this.properties['className'] = this.getClassName()
-    }
-
-    if (!this.properties._storage_options.gbc) {
-      this.properties._storage_options = {
-        gbc: "1",
-        color: "Blue",
-        weight:"10"
-      }
-
-    }
-  },
 
   getClassName: function (){
       return 'biangou'

@@ -4,6 +4,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
   dsColors: [null, 'White', 'White','White'],
   defaultColor: 'White',
   defaultName: '人行横道线',
+  CLASS_ALIAS: '人行横道线',
 
   initialize: function(map, latlng, options) {
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)

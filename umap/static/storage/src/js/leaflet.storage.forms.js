@@ -993,7 +993,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //road
         road: {handler: 'Switch', label: '是否定义为主路',helpEntries:'roadHelp'},
-        tail: {handler: 'Range', min:220, max:600, step:10,label: '尾巴'},
+        tail: {handler: 'Range', min:220, max:900, step:10,label: '尾巴'},
 
         //影藏元素
         hShape: {handler: 'ShaperSwitcher', label: '形式'},
@@ -1045,6 +1045,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         textX:  {handler: 'Range', min:-200,max:200,step:1,label: '相对位置X'},
         textY: {handler: 'Range', min:-200,max:200,step:1,label: '相对位置Y'},
         text: {label: '附带文字内容'},
+        textLat: {handler: 'FloatInput', label: L._('Latitude')},
+        textLng: {handler: 'FloatInput', label: L._('Longitude')},
     },
 
     initialize: function (obj, fields, options) {
