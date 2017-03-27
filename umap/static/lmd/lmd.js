@@ -134,7 +134,15 @@ L.Storage.Map.include({
                if(!feature.properties._storage_options['road']){
                    if(!feature.properties['className']){ //寻找没有设置是路，但是公里数比较比较高的
                        lineGeojson = feature.toGeoJSON()
-                       temp = turf.lineDistance(lineGeojson)
+                       if(!lineGeojson || lineGeojson.type === 'Point'
+                          || lineGeojson.type === 'MultiPoint'){
+                            continue;
+                       }
+                       try{
+                         temp = turf.lineDistance(lineGeojson)
+                       }catch (e){
+                         continue;
+                       }
                        if(temp >= 3){ //if 3公里以上的，默认为路
                            console.log('公里数为' + temp + '公里,默认为路')
                        }else{

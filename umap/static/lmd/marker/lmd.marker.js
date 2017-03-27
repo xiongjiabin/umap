@@ -116,6 +116,17 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         return;
     }
     var size = 35;
+    var splitTexts = text.split('<br>');
+    var i = 0, len = splitTexts.length;
+    var dy = 0;
+    if (len > 1){
+        text = '';
+        for (; i < len; i++) {
+            text += '<tspan x=0 dy=' + dy +'em>' + splitTexts[i] + '</tspan>';
+            dy = 1.2;
+        }
+    }
+
     var formatText = '<text font-family="Verdana" font-size="' + size + '">' + text + '</text>';
 
     var options = {

@@ -237,7 +237,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var scale = this.getOption('scale');
       (scale === null) && (scale = 5);
       options['scale'] = +scale * scaleZoom;
-      console.log('tail,length,scale,ratio:',tail,text.length,scale,tail/text.length);
+      //console.log('tail,length,scale,ratio:',tail,text.length,scale,tail/text.length);
 
 
       var txtX = +this.getOption('textX');
@@ -781,7 +781,16 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           return elems[0];
       }
       return null;
-    }
+    },
+    
+    getDisplayName: function(){
+      var sns = this.getOption('gbss');
+      var sne = this.getOption('gbse');
+      var snsString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sns);
+      var sneString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sne);
+      var name = this.properties.name || this.getClassAlias();
+      return name + '(' + snsString + '-' + sneString + ')'
+    },
 });
 
 L.Storage.Lunkuo = L.Storage.Guardbar.extend({
