@@ -184,7 +184,7 @@ lmd.tjPillars = function(){
                 pt:'立柱类型',
                 ds:'状态',
                 pd: '直径',
-                pt: '厚度',
+                //pt: '厚度',
                 ph: '高度',
                 pb: '基础尺寸',
                 description:'备注'

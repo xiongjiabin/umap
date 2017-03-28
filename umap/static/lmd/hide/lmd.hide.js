@@ -48,12 +48,13 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
     if (!e) return;
     this.setSvgText(this.getSvgData())
+    var gbs, distance, gbn, gbnControl, gbss, gbse, gblControl
 
     if(e.helper.name in {'gbss':0,'gbse':0}){
         //计算长度
-        var gbss = this.getOption('gbss') * 1000
-        var gbse = this.getOption('gbse') * 1000
-        var distance = 0
+        gbss = this.getOption('gbss') * 1000
+        gbse = this.getOption('gbse') * 1000
+        distance = 0
         if(gbss > gbse){
             distance = gbss - gbse
         }else{
@@ -61,15 +62,15 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
         }
         distance = Math.ceil(distance)
 
-        var gblControl = e.target.helpers['properties._storage_options.gbl']
+        gblControl = e.target.helpers['properties._storage_options.gbl']
         if(gblControl) {
             this.properties._storage_options.gbl = gblControl.input.value = distance
         }
 
-        var gbs = +this.getOption('gbs')
+        gbs = +this.getOption('gbs')
         if(gbs > 0){
-            var gbn = Math.ceil(distance / gbs) + 1
-            var gbnControl = e.target.helpers['properties._storage_options.gbn']
+            gbn = Math.ceil(distance / gbs) + 1
+            gbnControl = e.target.helpers['properties._storage_options.gbn']
             if(gbnControl){
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn
             }
@@ -77,11 +78,11 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
     } else if(e.helper.name in {'gbs': 0}){
 
-      var gbs = +this.getOption('gbs')
-      var distance = +this.getOption('gbl')
+      gbs = +this.getOption('gbs')
+      distance = +this.getOption('gbl')
       if(gbs > 0 && distance > 0){
-          var gbn = Math.ceil(distance / gbs) + 1
-          var gbnControl = e.target.helpers['properties._storage_options.gbn']
+          gbn = Math.ceil(distance / gbs) + 1
+          gbnControl = e.target.helpers['properties._storage_options.gbn']
           if(gbnControl){
               this.properties._storage_options.gbn = gbnControl.input.value = gbn
           }

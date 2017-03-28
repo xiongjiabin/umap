@@ -67,7 +67,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
 
   gbnDisplay: function(gbn, value){
       if(!gbn) return
-      var unitStr = this.units[value] | ''
+      //var unitStr = this.units[value] | ''
       if(this.units[value]){
           gbn.label.innerHTML = '数量 （' + this.units[value] + ')'
       }else{

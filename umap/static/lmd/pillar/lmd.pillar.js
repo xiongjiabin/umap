@@ -55,7 +55,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       return true;
   },
 
-  getSvgData(type,sn, color, tail) {
+  getSvgData: function(type,sn, color, tail) {
     var typeSvg = {
       1: '<circle cx="92" cy="-17" r="15" />' +
          '<rect width="178" height="20" x="0" y="-10" />' +
@@ -90,6 +90,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
          '<text style="font-size:70px;" x="220" y="20">{{桩号}}</text>', //附着式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
+    var snStr
     tail = tail || 320
     color = color || 'Yellow'
     if(sn || (sn === 0)){ //sn可能为0
@@ -148,7 +149,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
   //name是自动生成的，依据所选择的参数
   updateName: function(e){
     if(!e) return
-    var reg = /^\W*\d*\s+(.+)$/
+    //var reg = /^\W*\d*\s+(.+)$/
     var name = e.target.helpers['properties.name']
     var nameValue = name.value()
     if(nameValue && nameValue.startsWith('@')) {

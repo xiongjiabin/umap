@@ -275,12 +275,12 @@ L.Storage.LmdUpdateXYMixin = {
     this._popupHandlersAdded = true; // prevent Leaflet from binding event on bindPopup
 
     this.on('editable:drawing:clicked', function(e) {
-      this.caculateHelpXY()
+      this.caculateHelpXY(e)
     }, this)
 
     //增加处理remove事件，remove的时候去掉helpPath，事件比del更可靠
     //解决保存以后helppath不消失的问题
-    this.on('remove', function(e){
+    this.on('remove', function(){
        if(this.helpPath) {
            this.helpPath.remove();
            this.helpPath = null;

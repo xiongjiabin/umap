@@ -118,7 +118,7 @@ temp = [
 	"警45 避险车道（预告500m 横）",
 	"警45 避险车道（预告1km 横）"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_WARMING]['childs'][2]['wife'].push(temp[i])
 }
 
@@ -130,7 +130,7 @@ temp = [
 	"警31 斜杠符号-三道",
 	"警31 斜杠符号-二道"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_WARMING]['childs'][3]['wife'].push(temp[i])
 }
 
@@ -141,7 +141,7 @@ lmd.marker[lmd.MARKER_WARMING]['childs'][4]['childs'].push({speed:'<70',size:'90
 temp = [
 	"警30 叉形符号"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_WARMING]['childs'][4]['wife'].push(temp[i])
 }
 
@@ -152,7 +152,7 @@ lmd.marker[lmd.MARKER_FORBID]['childs'][1]['childs'].push({speed:'71-99',size:'1
 lmd.marker[lmd.MARKER_FORBID]['childs'][1]['childs'].push({speed:'40-70',size:'80',icon:'2-1-3.png'})
 lmd.marker[lmd.MARKER_FORBID]['childs'][1]['childs'].push({speed:'<40',size:'60',icon:'2-1-4.png'})
 //禁令标志之圆形
-var temp = [
+temp = [
 	"禁3 会车让行",
 	"禁4 禁止通行",
 	"禁5 禁止驶入",
@@ -202,35 +202,35 @@ var temp = [
 	"禁41 禁止运输危险物品车辆驶入",
 	"禁42 海关"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_FORBID]['childs'][1]['wife'].push(temp[i])
 }
 
 lmd.marker[lmd.MARKER_FORBID]['childs'].push({name:'三角形','class': lmd.MARKER_CLASS_OPAQUE, prex:'L',childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_FORBID]['childs'][2]['childs'].push({speed:'40-70',size:'90',icon:'2-2-1.png'})
 lmd.marker[lmd.MARKER_FORBID]['childs'][2]['childs'].push({speed:'<40',size:'70', icon:'2-2-2.png'})
-var temp = [
+temp = [
 	"禁2 减速让行"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_FORBID]['childs'][2]['wife'].push(temp[i])
 }
 
 lmd.marker[lmd.MARKER_FORBID]['childs'].push({name:'八角形','class':lmd.MARKER_CLASS_OPAQUE, prex:'L',childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_FORBID]['childs'][3]['childs'].push({speed:'40-70',size:'80',icon:'2-3-1.png'})
 lmd.marker[lmd.MARKER_FORBID]['childs'][3]['childs'].push({speed:'<40',size:'60', icon:'2-3-2.png'})
-var temp = [
+temp = [
 	"禁1 停车让行"
 ]
 
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_FORBID]['childs'][3]['wife'].push(temp[i])
 }
 
 lmd.marker[lmd.MARKER_FORBID]['childs'].push({name:'矩形','class':lmd.MARKER_CLASS_RECT,childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_FORBID]['childs'][4]['childs'].push({speed:'40-70',size:'120*170',icon:'2-4-1.png'})
 lmd.marker[lmd.MARKER_FORBID]['childs'][4]['childs'].push({speed:'<40',size:'90*130', icon:'2-4-2.png'})
-var temp = [
+temp = [
 	"禁43 区域限制速度-模版",
 	"禁43 区域限制速度",
 	"禁44 区域限制速度解除-模版",
@@ -240,7 +240,7 @@ var temp = [
 	"禁47 区域禁止停车",
 	"禁48 区域禁止停车解除"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_FORBID]['childs'][4]['wife'].push(temp[i])
 }
 
@@ -250,7 +250,7 @@ lmd.marker[lmd.MARKER_INDICATION]['childs'][1]['childs'].push({speed:'100-120',s
 lmd.marker[lmd.MARKER_INDICATION]['childs'][1]['childs'].push({speed:'71-99',size:'100',icon:'3-1-2.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][1]['childs'].push({speed:'40-70',size:'80',icon:'3-1-3.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][1]['childs'].push({speed:'<40',size:'60',icon:'3-1-4.png'})
-var temp = [
+temp = [
 	"指示1 直行",
 	"指示2 向左转弯",
 	"指示3 向右转弯",
@@ -269,17 +269,17 @@ var temp = [
 	"指示29 机动车行驶",
 	"指示31 非机动车行驶"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][1]['wife'].push(temp[i])
 }
 
 lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'正方形','class':lmd.MARKER_CLASS_SQUARE,prex:'L', childs:[null],wife:[null]});
 lmd.marker[lmd.MARKER_INDICATION]['childs'][2]['childs'].push({speed:'40-70',size:'80',icon:'3-5-1.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][2]['childs'].push({speed:'<40',size:'60',icon:'3-5-2.png'})
-var temp = [
+temp = [
 	"指示18 会车先行"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][2]['wife'].push(temp[i])
 }
 
@@ -288,7 +288,7 @@ lmd.marker[lmd.MARKER_INDICATION]['childs'].push({name:'长方形','class':lmd.M
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'100-120',size:'190*140',icon:'3-3-1.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'71-99',size:'160*120',icon:'3-3-2.png'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['childs'].push({speed:'40-70',size:'140*100',icon:'3-3-3.png'})
-var temp = [
+temp = [
 	"指示17 路口优先通行",
 	"指示19 人行横道",
 	"指示20 右转车道",
@@ -311,7 +311,7 @@ var temp = [
 	"指示101 超车道",
 	"指示102 行车道"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][3]['wife'].push(temp[i])
 }
 
@@ -320,12 +320,12 @@ lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'100-120',s
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'71-99',size:'100*50'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'40-70',size:'80*40'})
 lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['childs'].push({speed:'<40',size:'60*30'})
-var temp = [
+temp = [
 	"指示12 单行路(向右)",
 	"指示12 单行路(向左)",
 	"指示13 单行路(直行)"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_INDICATION]['childs'][4]['wife'].push(temp[i])
 }
 
@@ -344,7 +344,7 @@ temp = [
 	"指路37 线形诱导2组右",
 	"指路37 线形诱导3组右"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][1]['wife'].push(temp[i])
 }
 
@@ -355,7 +355,7 @@ temp = [
 	"指路39 右侧通行",
 	"指路40 左侧通行"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][2]['wife'].push(temp[i])
 }
 
@@ -419,7 +419,7 @@ temp = [
 	"指路35 隧道出口距离预告1",
 	"指路80 文字性表述"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][3]['wife'].push(temp[i])
 }
 
@@ -556,7 +556,7 @@ temp = [
 	"指路78 设置在指路标志版面中的方向5",
 	"指路79 设置在指路标志版面外的方向"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][4]['wife'].push(temp[i])
 }
 
@@ -605,7 +605,7 @@ temp = [
 	"辅助22 组合辅助",
 	"自定义",
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_HELP]['childs'][1]['wife'].push(temp[i])
 }
 
@@ -642,7 +642,7 @@ temp = [
 	"中间封闭3",
 	"左道封闭"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_SAFE]['childs'][1]['wife'].push(temp[i])
 }
 
@@ -662,7 +662,7 @@ temp = [
 	"告示10 校车停靠站点",
 	"自定义"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_NOTIFICATION]['childs'][1]['wife'].push(temp[i])
 }
 
@@ -689,7 +689,7 @@ temp = [
 	"旅游16 滑雪",
 	"旅游17 滑冰"
 ]
-for(var i = 0, len = temp.length; i < len; i++){
+for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_TOUR]['childs'][1]['wife'].push(temp[i])
 }
 
@@ -700,7 +700,7 @@ len = undefined
 
 lmd.getMarkerCategory = function(){
   var result = [];
-  for(var i = 0, len = lmd.marker.length; i < len; i++){
+  for(i = 0, len = lmd.marker.length; i < len; i++){
     var marker = lmd.marker[i]
     if( marker ){
       result.push(['' + i,marker['name']])
@@ -736,7 +736,7 @@ lmd.getMarkerCategoryThirdWife = function( category,level ){
   var second = first['childs'][level]
   if(!second) return []
   var result = []
-  var unit = second['prex'] || ''
+  //var unit = second['prex'] || ''
   for(var i = 1, len = second['wife'].length; i < len; i++){
     var wife = second['wife'][i]
     if(wife){
@@ -792,7 +792,7 @@ lmd.getMarkerCategoryValue = function( options ){
   var msh = options['msh'] || 1
   var mss = options['mss'] || 1
   var result = {mt:'',mic:'',msh:'',mss:''}
-  var temp = lmd.marker[mt]
+  temp = lmd.marker[mt]
   if( temp ){
       result['mt'] = temp['name'] // 那种告示牌
       temp = temp['childs'][mic]

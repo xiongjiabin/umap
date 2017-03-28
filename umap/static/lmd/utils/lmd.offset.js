@@ -155,14 +155,15 @@ L.PolylineOffset = {
 
     var center = s1.original[1];
     var points = [];
+    var startAngle,endAngle;
 
     if (distance < 0) {
-      var startAngle = s1.offsetAngle;
-      var endAngle = s2.offsetAngle;
+       startAngle = s1.offsetAngle;
+       endAngle = s2.offsetAngle;
     } else {
       // switch start and end angle when going right
-      var startAngle = s2.offsetAngle;
-      var endAngle = s1.offsetAngle;
+       startAngle = s2.offsetAngle;
+       endAngle = s1.offsetAngle;
     }
 
     if (endAngle < startAngle) {
@@ -227,7 +228,7 @@ L.PolylineOffset = {
            if ((i < (len-1)) &&
                Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']) <= tolerance &&
                Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y'] <= tolerance)){
-
+               
            }else{
                ring.push(tmpPoint)
            }

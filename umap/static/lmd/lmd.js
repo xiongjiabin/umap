@@ -72,12 +72,14 @@ L.Storage.Map.include({
     if (this._SUBNO_BUFFER[scaleSubNo]) {
       return this._SUBNO_BUFFER[scaleSubNo]
     }
+    var floorSubNo, ceilSubNo;
     var floorOldSubNo = floorSubNo = Math.floor( scaleSubNo )
     var ceilOldSubNo = ceilSubNo  = Math.ceil( scaleSubNo )
     var floorData = null
     var ceilData = null
     var floorOldData = null
     var result = {}
+    var subHelpData
 
     if(floorSubNo === ceilSubNo) {
       floorSubNo = floorSubNo - 1
@@ -85,7 +87,7 @@ L.Storage.Map.include({
     }
 
     for (i = 0, len = this.datalayers_index.length; i < len; i++) {
-      var subHelpData = this.datalayers_index[i].options &&
+      subHelpData = this.datalayers_index[i].options &&
                         this.datalayers_index[i].options.subHelpData
       if(!subHelpData) continue
       for(j = 0, len1 = subHelpData.length; j < len1; j++) {
@@ -399,7 +401,7 @@ L.Storage.Map.include({
     helpSubNo = helpSubNo || this.HELP_SUBNO
     if(helpSubNo > 0){
       for (i = 0; i < this.datalayers_index.length && !validSubHelp; i++) {
-        var subHelpData = this.datalayers_index[i].options && this.datalayers_index[i].options.subHelpData
+        subHelpData = this.datalayers_index[i].options && this.datalayers_index[i].options.subHelpData
         if(!subHelpData) continue
         for(j = 0,len = subHelpData.length; j < len; j++){
           subHelp = subHelpData[j]
@@ -422,7 +424,7 @@ L.Storage.Map.include({
     //not found in the history, try to find all
     if(!result){
       for (i = 0; i < this.datalayers_index.length && !result; i++) {
-        var subHelpData = this.datalayers_index[i].options && this.datalayers_index[i].options.subHelpData
+        subHelpData = this.datalayers_index[i].options && this.datalayers_index[i].options.subHelpData
         if(!subHelpData) continue
         for(j = 0,len = subHelpData.length; j < len; j++){
           if( i === validI && validJ === j){
@@ -449,6 +451,7 @@ L.Storage.Map.include({
     var result = []
     var duplicate = []
     var subHelpData = []
+    var subHelp
     for (; i < len; i++) {
       //如果这个图层影藏的话，不需要继续处理
       //fixed bug http://lamudatech.com:3000/xiongjiabin/umap/issues/8

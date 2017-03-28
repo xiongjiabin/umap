@@ -105,7 +105,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
 
   },
   //如果有txt属性需要填充的话，就得增加_follow函数处理
-  _follow: function(e){
+  _follow: function(){
     var text = this.getOption('text');
     text = text && text.trim();
     if (!text) {
@@ -174,8 +174,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       this._icon && (this._icon.style.border = "");
   },
 
-  _getIconUrl: function(name) {
-    var name = name
+  _getIconUrl: function(/*name*/) {
     var baseUrl = '/static/storage/src/img/'
     var mt = this.getOption('mt')
     var mic = this.getOption('mic')
@@ -280,7 +279,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     var mic = e.target.helpers['properties._storage_options.mic']
     var mss = e.target.helpers['properties._storage_options.mss']
     var size = e.target.helpers['properties._storage_options.size']
-    var result = null, needToProcessSize = false
+    var result = null, needToProcessSize = false,mssResult
     var selfValue = e.helper.value()
 
     if (e.helper.field === 'properties._storage_options.mt') {
@@ -290,7 +289,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       mic.resetOptions(mshOptions);
 
       this.properties._storage_options['mss'] = mss.select.value = ''
-      var mssResult = lmd.getMarkerCategoryThird(selfValue, mshOptions[0][0],this.getOption('speed'))
+      mssResult = lmd.getMarkerCategoryThird(selfValue, mshOptions[0][0],this.getOption('speed'))
       mss.resetOptions(mssResult[0])
       if(mssResult[1] > 1){
           this.properties._storage_options['mss'] = mss.select.value = mssResult[1]
@@ -311,7 +310,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       var mt = this.getOption('mt');
 
       this.properties._storage_options['mss'] = mss.select.value = ''
-      var mssResult = lmd.getMarkerCategoryThird(mt, selfValue,this.getOption('speed'))
+      mssResult = lmd.getMarkerCategoryThird(mt, selfValue,this.getOption('speed'))
       mss.resetOptions(mssResult[0])
       if(mssResult[1] > 1){
           this.properties._storage_options['mss'] = mss.select.value = mssResult[1]

@@ -74,7 +74,7 @@ L.SVG.include({
   //we want to include a direct svg object
   _initSVGOjbect: function(layer) {
     var svgObject = layer._svgObject = L.SVG.create('g');
-    var svgObjectChild = layer._svgObjectChild = L.SVG.create('g')
+    layer._svgObjectChild = L.SVG.create('g')
     if (layer.options.className) {
       L.DomUtil.addClass(svgObject, layer.options.className)
     }
