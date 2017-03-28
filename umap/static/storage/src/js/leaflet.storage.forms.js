@@ -1047,6 +1047,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         text: {label: '附带文字内容'},
         textLat: {handler: 'FloatInput', label: L._('Latitude')},
         textLng: {handler: 'FloatInput', label: L._('Longitude')},
+        zoomCreate: {handler:'IntInput', label: '元素创建时zoom'},
     },
 
     initialize: function (obj, fields, options) {

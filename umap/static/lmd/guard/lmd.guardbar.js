@@ -162,6 +162,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         var classObject = L.Storage.getGBClass(gbtype, gbcat)
 
         this.properties.name = this.defaultName || classObject['name'] || ''
+        this.properties._storage_options['zoomCreate'] = this.map.getZoom()
       }
 
       this.on('remove', function(e){
@@ -194,7 +195,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var offset = geojson.properties._storage_options.offset = 0 - geojson.properties._storage_options.offset;
       if(latlngs && latlngs.length > 1) {
-          var offsetLatLngs = this.getOffSetLatlngs(2 * offset, latlngs)
+          var zoom = this.getOption('zoomCreate') || this.map.getZoom();
+          var scale = this.map.getZoomScale(zoom, this.map.getZoom());
+          console.log('scale:',scale,zoom,this.map.getZoom());
+          var offsetLatLngs = this.getOffSetLatlngs(2 * offset / scale, latlngs);
           this.brotherOtherSide = new L.Storage.Guardbar(
                      this.map,
                      offsetLatLngs,
@@ -236,8 +240,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var scaleZoom = lmd.getLmdZoom(this.map)
       var scale = this.getOption('scale');
       (scale === null) && (scale = 5);
-      options['scale'] = +scale * scaleZoom;
-      //console.log('tail,length,scale,ratio:',tail,text.length,scale,tail/text.length);
+      options['scale'] = (+scale) * scaleZoom;
+      console.log('tail,length,scale,ratio:',tail,text.length,options['scale'],tail/text.length);
 
 
       var txtX = +this.getOption('textX');
@@ -337,7 +341,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     getAdvancedOptions: function () {
         return [
             'properties._storage_options.smoothFactor',
-            'properties._storage_options.zoomTo'
+            'properties._storage_options.zoomTo',
+            'properties._storage_options.zoomCreate'
         ];
     },
 
@@ -415,9 +420,15 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       return false;
     },
 
+    getEvents: function() {
+      return {
+        zoom: this._follow,
+      };
+    },
+
     _redraw: function (e) {
 
-      if(e && e.helper.name in {'offset': 0}){
+      if(e && e.helper && e.helper.name in {'offset': 0}){
           var gbss = this.getOption('gbss')
           var gbse = this.getOption('gbse')
           if( gbse && gbse > gbss){
@@ -782,7 +793,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
       return null;
     },
-    
+
     getDisplayName: function(){
       var sns = this.getOption('gbss');
       var sne = this.getOption('gbse');
