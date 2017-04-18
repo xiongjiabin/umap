@@ -72,7 +72,7 @@ L.Storage.Map.include({
     if (this._SUBNO_BUFFER[scaleSubNo]) {
       return this._SUBNO_BUFFER[scaleSubNo]
     }
-    var floorSubNo, ceilSubNo;
+    var floorSubNo, ceilSubNo
     var floorOldSubNo = floorSubNo = Math.floor( scaleSubNo )
     var ceilOldSubNo = ceilSubNo  = Math.ceil( scaleSubNo )
     var floorData = null

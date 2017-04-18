@@ -219,7 +219,7 @@ lmd.tjJianSuQiu = function(){
   var data = []
   var titles = {no:'序号',
                 sn: '桩号',
-                roadWidth: '设置道路宽度',
+                roadWidth: '设置宽度',
                 pos: '侧别',
                 name: '名称',
                 ds: '状态',

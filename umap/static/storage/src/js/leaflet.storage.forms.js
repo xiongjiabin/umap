@@ -768,6 +768,14 @@ L.FormBuilder.MaterialSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+L.FormBuilder.LmbjMaterialSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    ["0","无"],
+    ["1","反光漆"],
+    ["2","反光膜"]
+  ]
+});
+
 L.FormBuilder.XiujianSwitch = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     ["1","修剪树木"],
@@ -1037,7 +1045,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         dtqType: {handler:'DangTuQiangSwitch', label: '设施名称'},
 
         showText: {handler: 'Switch', label: '显示文字桩号'},
-        roadWidth: {handler:'FloatInput',label:'设置道路宽度(米)'},
+        roadWidth: {handler:'FloatInput',label:'设置宽度(米)'},
         roadWidth2: {handler:'FloatInput',label:'道路宽度(米)'},
         roadWidth3: {handler:'FloatInput',label: '线宽'},
 
@@ -1048,6 +1056,11 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         textLat: {handler: 'FloatInput', label: L._('Latitude')},
         textLng: {handler: 'FloatInput', label: L._('Longitude')},
         zoomCreate: {handler:'IntInput', label: '元素创建时zoom'},
+        fontSize: {handler: 'Range', min: 10, max:40, step:1, label: '文字大小'},
+
+        //立面标记
+        lmbjm: {handler: 'LmbjMaterialSwitcher', label: '材料'},
+
     },
 
     initialize: function (obj, fields, options) {

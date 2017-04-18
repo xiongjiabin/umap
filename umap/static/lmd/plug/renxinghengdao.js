@@ -51,18 +51,19 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       return true;
   },
 
-  getSvgData(sn, color, height, width) {
+  getSvgData(sn, color, height, width, fontSize) {
     var typeSvg = {
       1: '<path class="leaflet-interactive" stroke-dasharray="3,3" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" ' +
          'd="m -{{height}},0 {{height2}},0 "/>'
     }
-    var textTemplate = '<text style="font-size:14px;text-decoration: underline;" x="{{height}}" y="5">' + this.defaultName + '{{sn}}</text>'
+    var textTemplate = '<text style="font-size:{{fontSize}}px;text-decoration: underline;" x="{{height}}" y="5">' + this.defaultName + '{{sn}}</text>'
     var svgStr = typeSvg[1]
 
     height = +height || 50
     height2 = height * 2
     color = color || defaultColor
     width = +width || 20
+    fontSize = +fontSize || 14;
     //var space = width * 2.5
 
     svgStr = svgStr.replace(/{{height}}/g,height).
@@ -71,10 +72,15 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
                     replace(/{{width}}/g,width);
                     //replace(/{{space}}/g,space);
 
+
     var showText = this.getOption('showText')
     if(showText){
       var snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
-      svgStr += textTemplate.replace('{{height}}',height + 2).replace('{{sn}}',snStr)
+      textTemplate =  textTemplate.replace('{{height}}',height + 2)
+                      .replace('{{sn}}',snStr)
+                      .replace('{{fontSize}}',fontSize)
+
+      svgStr += textTemplate
     }
 
     return svgStr
@@ -85,7 +91,8 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     var height = this.getOption('height')
     var color = this.getOption('color')
     var width = this.getOption('width')
-    this.setSvgText(this.getSvgData(sn,color, height,width))
+    var fontSize = this.getOption('fontSize')
+    this.setSvgText(this.getSvgData(sn,color, height,width,fontSize))
     L.Storage.SVGObject.prototype._redraw.call(this)
   },
 
@@ -94,6 +101,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     var height = this.getOption('height')
     var color = this.getOption('color')
     var width = this.getOption('width')
+    var fontSize = this.getOption('fontSize')
     /*this.setSvgText(this.getSvgData(sn,color,height,width))*/
 
     if(!e) return
@@ -104,7 +112,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       var pos = 'left'
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
-          this.setSvgText(this.getSvgData(sn,color,height,width))
+          this.setSvgText(this.getSvgData(sn,color,height,width,fontSize))
           this.updateStyle()
           if(data.point){
               this.setLatLng(data.point)
@@ -113,7 +121,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     }else if(e.helper.name === 'ds') {
         color = this.dsColors[selfValue] || this.defaultColor
         this.properties._storage_options['color'] = color
-        this.setSvgText(this.getSvgData(sn,color,height,width))
+        this.setSvgText(this.getSvgData(sn,color,height,width,fontSize))
         this.updateStyle()
     }else if(e.helper.name in {roadWidth2:0,roadWidth:0,roadWidth3:0,gbs:0}) {
         var gbnControl = e.target.helpers['properties._storage_options.gbn'];
@@ -139,6 +147,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.roadWidth3',//线宽
       'properties._storage_options.gbs',//间距
       'properties._storage_options.gbn',//数量
+      'properties._storage_options.gba',//预告标线面积
       'properties._storage_options.hColor',
       'properties._storage_options.gbm',//材料
       'properties._storage_options.ds'
@@ -152,7 +161,8 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.scale',
       'properties._storage_options.height',
       'properties._storage_options.width',
-      'properties._storage_options.showText'
+      'properties._storage_options.showText',
+      'properties._storage_options.fontSize'
     ];
   },
 
@@ -175,7 +185,9 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         return false
     }
 
-    L.Storage.LmdFeatureMixin.edit.call(this, e);
+    var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
+    var gba = builder && builder.helpers['properties._storage_options.gba']
+    gba && gba.label && (gba.label.innerHTML = '预告标线面积(平方米)')
   },
 
 
@@ -186,6 +198,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     stringMap['roadWidth3'] = this.getOption('roadWidth3')
     stringMap['gbs'] = this.getOption('gbs')
     stringMap['gbn'] = this.getOption('gbn')
+    stringMap['gba'] = this.getOption('gba')
     return stringMap
   },
 
@@ -197,10 +210,11 @@ lmd.tjRxhdx = function(){
   var titles = {no:'序号',
                 sn: '桩号',
                 roadWidth2: '道路宽度',
-                roadWidth: '设置道路宽度',
+                roadWidth: '设置宽度',
                 roadWidth3: '线宽',
                 gbs: '间距',
                 gbn: '数量',
+                gba: '预告标线面积(平方米)',
                 name: '名称',
                 ds: '状态',
                 description:'备注'

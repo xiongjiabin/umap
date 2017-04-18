@@ -26,7 +26,7 @@ L.Storage.Lmbj = L.Storage.Hide.extend({
     //'properties._storage_options.gbl',//总长
     'properties._storage_options.gba',//面积
     //'properties._storage_options.hColor',//颜色
-    'properties._storage_options.gbm', //材料
+    'properties._storage_options.lmbjm', //材料
     'properties._storage_options.ds', //设施状态
     ]
   },
@@ -50,10 +50,10 @@ L.Storage.Lmbj = L.Storage.Hide.extend({
   getStringMap: function(){
     var stringMap = L.Storage.Hide.prototype.getStringMap.call(this);
     var gba =  +(this.getOption('gba'));
-    var gbm = +(this.getOption('gbm'));
+    var lmbjm = +(this.getOption('lmbjm'));
 
     stringMap['gba'] = gba;
-    stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
+    stringMap['lmbjm'] = lmd.getOptionsToMap(L.FormBuilder.LmbjMaterialSwitcher.prototype.selectOptions)[lmbjm] || '';
 
     return stringMap;
   },
@@ -69,7 +69,7 @@ lmd.tjLmbj = function(){
                 gba: '面积(m2)',
                 pos: '侧别',
                 //hColor: '颜色',
-                gbm: '材料',
+                lmbjm: '材料',
                 ds: '状态',
                 description:'备注'
               }

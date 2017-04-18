@@ -51,7 +51,7 @@ L.Storage.guardbarData = [
     {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE},
     {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
     {name:'连续示警墩', type: L.Storage.GB_RECT},
-    {name:'防护墙', type: L.Storage.GB_RECT},
+    {name:'防护墙', type: L.Storage.GB_NORMAL_LINE},
   ]},
   {name:'轮廓标',
    defaultData:{ color: "Yellow"},

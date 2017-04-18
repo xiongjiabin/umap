@@ -700,7 +700,7 @@ len = undefined
 
 lmd.getMarkerCategory = function(){
   var result = [];
-  for(i = 0, len = lmd.marker.length; i < len; i++){
+  for(var i = 0, len = lmd.marker.length; i < len; i++){
     var marker = lmd.marker[i]
     if( marker ){
       result.push(['' + i,marker['name']])
@@ -792,7 +792,7 @@ lmd.getMarkerCategoryValue = function( options ){
   var msh = options['msh'] || 1
   var mss = options['mss'] || 1
   var result = {mt:'',mic:'',msh:'',mss:''}
-  temp = lmd.marker[mt]
+  var temp = lmd.marker[mt]
   if( temp ){
       result['mt'] = temp['name'] // 那种告示牌
       temp = temp['childs'][mic]
