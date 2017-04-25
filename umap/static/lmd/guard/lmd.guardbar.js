@@ -19,7 +19,8 @@ L.Storage.guardbarData = [
    defaultData: {
      color: 'White',
      weight: 20,
-     opacity: 1
+     opacity: 1,
+     gbm: '4'
    },
    childs: [
     {name:'标线',type: L.Storage.GB_RECT, defaultOptions: {}}, //一言难尽的修改
@@ -79,6 +80,8 @@ L.Storage.guardbarData = [
     {name:'事故多发',type: L.Storage.GB_VERTICAL_LINE},
     {name:'隧道洞口',type: L.Storage.GB_VERTICAL_LINE},
     {name:'学校',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'交叉口',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'陡坡',type: L.Storage.GB_VERTICAL_LINE},
   ]},
   {name:'减速丘',
    defaultData:{ color: "White"},

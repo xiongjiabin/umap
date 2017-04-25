@@ -760,7 +760,7 @@ L.FormBuilder.MaterialSwitcher = L.FormBuilder.EmptySwitcher.extend({
     ["1","溶剂型"],
     ["2","热熔普通型"],
     ["3","热熔反光型"],
-    ["4","热熔突起型"],
+    ["4","热熔凸起型"],
     ["5","双组分"],
     ["6","水性"],
     ["7","树脂防滑型"],

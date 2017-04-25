@@ -38,6 +38,10 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
       return this.CLASS_NAME; //历史遗留问题，用标线来代替横向减速标线
   },
 
+  setStyle: function (options) {
+      L.Storage.BarTypeRect.call(this,options)
+  },
+
   //name是自动生成的，依据所选择的参数
   updateName: function(e){
     if(!e) return
@@ -166,6 +170,9 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
     }
   },
 
+  setStyle: function (options) {
+      L.Storage.BarTypeRect.call(this,options)
+  },
   //name是自动生成的，依据所选择的参数
   updateName: function(e){
     if(!e) return
