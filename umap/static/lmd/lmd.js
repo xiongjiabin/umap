@@ -155,54 +155,72 @@ L.Storage.Map.include({
                    }
                }else{
                    //如果是条路的话
-                   lineGeojson = feature.toGeoJSON()
+                   lineGeojson = feature.toGeoJSON();
                }
 
-               sliced = turf.lineSlice(floorPoint,ceilPoint,lineGeojson)
-               if(sliced){
-                 temp = 1000 * turf.lineDistance(sliced)
-                 if(temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
-                     console.log("距离不满足，继续找下一个:" + temp)
-                     continue; //继续寻找下一个
-                 }
-                 temp = turf.point(sliced.geometry.coordinates[0])
-                 if((turf.distance(temp,floorPoint) * 1000) > 5){
-                     sliced.geometry.coordinates.reverse()
-                 }
-               }else {
-                   continue;
-               }
-
-
-               if(result['point']) {
-                   factor = turf.distance(floorPoint,ceilPoint) * 5 // *1000 / 200
-               }else{
-                   factor = turf.distance(floorPoint,ceilPoint) * 10 // * 1000 / 100
-                   //实际的距离可能不是100米，俩个桩号之间，所以要生成一个factor
-                   along = turf.along(sliced, (scaleSubNo - floorSubNo )/10 * factor )
-                   if(along) {
-                       temp = along.geometry.coordinates
-                       result['point'] = [temp[1],temp[0]]
+               //解决一个bug的问题，当这个line是multiline的时候，turf的方式不管用，得转化成一个一个lineString xiongjaibin 2017-05-11
+               var lineGeos = [];
+               if(lineGeojson.geometry.type === 'MultiLineString'){
+                   for(i = 0; i < lineGeojson.geometry.coordinates.length; i++){
+                       lineGeos.push(turf.lineString(lineGeojson.geometry.coordinates[i]));
                    }
-               }
-
-               var m1 = 0
-               if(((scaleSubNo - floorSubNo )/10 - 0.002) > 0){
-                   m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
                }else{
-                   m1 = turf.along(sliced, 0)
+                   lineGeos.push(lineGeojson);
                }
-               var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
-               var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
-               var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)
-               //console.log('m1-a1:right:' + right )
-               //console.log('a1-m1:left :' + left )
 
-               result['left'] = left
-               result['right'] = right
+               for(i = 0; i < lineGeos.length; i++) {
+                   var tempLineGeoJson = lineGeos[i]
 
-               this._SUBNO_BUFFER[scaleSubNo] = result
-               return this._SUBNO_BUFFER[scaleSubNo]
+                   try{
+                   sliced = turf.lineSlice(floorPoint,ceilPoint,tempLineGeoJson)
+                   if(sliced){
+                       temp = 1000 * turf.lineDistance(sliced)
+                       if(!temp || temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
+                           console.log("距离不满足，继续找下一个:" + temp)
+                           continue; //继续寻找下一个
+                       }
+                       temp = turf.point(sliced.geometry.coordinates[0])
+                       if((turf.distance(temp,floorPoint) * 1000) > 5){
+                           sliced.geometry.coordinates.reverse()
+                       }
+                   }else {
+                       continue;
+                   }
+
+                   if(result['point']) {
+                       factor = turf.distance(floorPoint,ceilPoint) * 5 // *1000 / 200
+                   }else{
+                       factor = turf.distance(floorPoint,ceilPoint) * 10 // * 1000 / 100
+                       //实际的距离可能不是100米，俩个桩号之间，所以要生成一个factor
+                       along = turf.along(sliced, (scaleSubNo - floorSubNo )/10 * factor )
+                       if(along) {
+                           temp = along.geometry.coordinates
+                           result['point'] = [temp[1],temp[0]]
+                       }
+                   }
+
+                   var m1 = 0
+                   if(((scaleSubNo - floorSubNo )/10 - 0.002) > 0){
+                       m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
+                   }else{
+                       m1 = turf.along(sliced, 0)
+                   }
+                   var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
+                   var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
+                   var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)
+                   }catch(e){
+                       console.log('是不是有断头路');
+                       continue;
+                   }
+                   //console.log('m1-a1:right:' + right )
+                   //console.log('a1-m1:left :' + left )
+
+                   result['left'] = left
+                   result['right'] = right
+
+                   this._SUBNO_BUFFER[scaleSubNo] = result
+                   return this._SUBNO_BUFFER[scaleSubNo]
+                }
             }
         }
     }
@@ -276,40 +294,58 @@ L.Storage.Map.include({
                  //如果是条路的话
                  lineGeojson = feature.toGeoJSON()
              }
-               //如果是条路的话
-               lineGeojson = feature.toGeoJSON()
-               sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,lineGeojson)
-               if( sliced ){
-                 temp = 1000 * turf.lineDistance(sliced)
-                 if( temp < 1) { //这个地方不是一段100米的桩号，是查找的桩号之间的距离，不可能小于1米，小于1米，说明没有找到
-                     console.log("距离不满足，继续找下一个:" + temp)
-                     continue; //继续寻找下一个
-                 }
-                 temp = turf.point(sliced.geometry.coordinates[0])
-                 if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
-                   sliced.geometry.coordinates.reverse()
-                 }
 
-                 //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
-                 var temp1 = null, temp2 = null
-                 var newCoordinates = []
-                 for(j = 0; j < sliced.geometry.coordinates.length; j++){
-                     temp2 = sliced.geometry.coordinates[j]
-                     if(!temp1 ){
-                         newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
-                     }else{
-                         if(temp1[0] === temp2[0] && temp1[1] === temp2[1] && temp1[2] === temp2[2]){
-
-                         }else{
-                            newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
-                         }
-                     }
-                    temp1 = temp2
+             //解决一个bug的问题，当这个line是multiline的时候，turf的方式不管用，得转化成一个一个lineString xiongjaibin 2017-05-11
+             var lineGeos = [];
+             if(lineGeojson.geometry.type === 'MultiLineString'){
+                 for(i = 0; i < lineGeojson.geometry.coordinates.length; i++){
+                     lineGeos.push(turf.lineString(lineGeojson.geometry.coordinates[i]));
                  }
+             }else{
+                 lineGeos.push(lineGeojson);
+             }
 
-                 return newCoordinates
-               }
-            }
+             for(i = 0; i < lineGeos.length; i++) {
+               var tempLineGeoJson = lineGeos[i]
+
+               try{
+
+                   sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,tempLineGeoJson)
+                   if( sliced ){
+                       temp = 1000 * turf.lineDistance(sliced)
+                       if(!temp || temp < 1) { //这个地方不是一段100米的桩号，是查找的桩号之间的距离，不可能小于1米，小于1米，说明没有找到
+                           console.log("距离不满足，继续找下一个:" + temp)
+                           continue; //继续寻找下一个
+                       }
+                       temp = turf.point(sliced.geometry.coordinates[0])
+                       if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
+                           sliced.geometry.coordinates.reverse()
+                       }
+
+                       //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
+                       var temp1 = null, temp2 = null
+                       var newCoordinates = []
+                       for(j = 0; j < sliced.geometry.coordinates.length; j++){
+                           temp2 = sliced.geometry.coordinates[j]
+                           if(!temp1 ){
+                               newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
+                           }else{
+                               if(temp1[0] === temp2[0] && temp1[1] === temp2[1] && temp1[2] === temp2[2]){
+
+                               }else{
+                                   newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
+                               }
+                          }
+                          temp1 = temp2
+                      }
+
+                      return newCoordinates
+                   }
+                }catch(e){
+                    continue
+                }
+             }
+          }
         }
     }
 
@@ -480,14 +516,10 @@ L.Storage.Map.include({
 
   _MARKER_SHOW: [],
   handleShowMarker: function(){
-    var MAX_SHOWED = 10
-    //console.time('showmarker')
+    var MAX_SHOWED = 40
     var results = this.getLatLngsInBounds()
     var temp = null,index = 0
     var i = 0, step = Math.floor((results.length ) / (MAX_SHOWED ))
-    while(this._MARKER_SHOW.length > 0){
-      this._MARKER_SHOW.pop().remove()
-    }
     var markerShowIndex = []
     if(results.length > 0) markerShowIndex.push(0)
     step = step || 1
@@ -496,23 +528,42 @@ L.Storage.Map.include({
     }
     if(results.length > 1) markerShowIndex.push(results.length - 1)
 
-    var myIcon = L.divIcon({className: 'storage-circle-icon'});
-    for(i = 0; i < markerShowIndex.length ; i++){
-      index = markerShowIndex[i]
-      if(!results[index]) continue
-       temp = L.marker([results[index][0],results[index][1]],{
-          title: results[index][2],
-          interactive: false,
-          icon: myIcon
-      }).bindTooltip(results[index][2]/10 + '',{className:'padding1', permanent:true}).addTo(this)
-      //xiongjiabin  添加permanent：true，让其不去监听preclick事件，不去发生变化当点击等事件的时候
-      temp.openTooltip()
-      this._MARKER_SHOW.push(temp)
+    for(i = 0; i < markerShowIndex.length ; i++) {
+        index = markerShowIndex[i]
+        if(!results[index]) continue
+        if(this._MARKER_SHOW[results[index][2]]) continue
+        this.createSubMarker(results[index]);
+        this._MARKER_SHOW[results[index][2]] = 1;
     }
-    //console.log(results)
-    //console.log(markerShowIndex)
-    results = null
-    //console.timeEnd('showmarker')
+  },
+
+  createSubMarker: function( result  ) {
+      var latlng = [result[0],result[1]];
+      var sn = +result[2];
+      var k = sn / 10;
+      var sk = sn % 10;
+      var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 20,0 -40,0"></path>' +
+                       '<text x="40" y="-6" style="writing-mode:tb;font-size:14pt">' + sk + '</text>';
+      if(sk === 0) {
+        formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 40,0 -80,0"></path>' +
+                         '<text x="60" y="-10" style="writing-mode:tb;font-size:18pt">K' + k + '</text>';
+      }
+
+      var options = {
+        rotate: 0,
+        color: 'white',
+        scale: 10,//* lmd.getLmdZoom(this),
+        svgText: formatText,
+        interactive: false,
+      };
+
+
+      var data = this.getAnchorLatLngBySubNo(sn / 10);
+      if(data) {
+          options['rotate'] = data['right'];
+      }
+
+      return new L.SVGObject(latlng, options).addTo(this);
   },
 
   createDefaultLayer: function(names){
@@ -534,6 +585,22 @@ L.Storage.Map.include({
     }
     return count;
   },
+
+  getSubAngle: function(begin, end){
+     var beginLatLng = this.getAnchorLatLngBySubNo(begin);
+     if(!beginLatLng) return 0;
+     var endLatLng = this.getAnchorLatLngBySubNo(end);
+     if(!endLatLng) return 0;
+     var beginPoint = turf.point([beginLatLng['point'][1],beginLatLng['point'][0]]);
+     var endPoint  = turf.point([endLatLng['point'][1],endLatLng['point'][0]]);
+
+     //有关bearing的意思，详见 http://www.icsm.gov.au/mapping/web_images/figure_magnetic_bearing.jpg
+     var angle  = Math.round(turf.bearing(beginPoint,endPoint));
+     if(angle < 0){
+       angle = 360 + angle;
+     }
+     return angle;
+  }
 })
 
 L.DomUtil.setTransformRotate = function(el, offset, scale, rotate) {

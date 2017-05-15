@@ -241,6 +241,11 @@ ul.photon-autocomplete {
     background-position: -80px -200px;
 }
 
+.storage-draw-lure,
+.storage-toolbar .storage-draw-lure {
+    background-position: 0px -200px;
+}
+
 .storage-draw-pillar,
 .storage-toolbar .storage-draw-pillar {
     background-position: -120px -240px;

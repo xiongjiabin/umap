@@ -977,6 +977,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         helpX:  {handler: 'IntInput', label: '辅助X'},
         helpY:  {handler: 'IntInput', label: '辅助Y'},
         isBindSN: {handler: 'Switch', label: '是否绑定桩号',helpEntries:'isBindSNHelp'},
+        rotateCenter: {handler: 'Range', min:0,max:360, step: 1, label: '中心旋转'},
 
         //护栏部分
         gbc: {handler: 'GuardbarCatSwitcher', label: '类别'},
@@ -1060,6 +1061,11 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //立面标记
         lmbjm: {handler: 'LmbjMaterialSwitcher', label: '材料'},
+
+        //打印框
+        gbssAngle: {handler: 'FloatInput', label: '起始桩号角度(自动生成)'},
+        gbseAngle: {handler: 'FloatInput', label: '结束桩号角度(自动生成)'},
+        centerGPS: {label:'中心GPS'}
 
     },
 

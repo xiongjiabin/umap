@@ -244,7 +244,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var scale = this.getOption('scale');
       (scale === null) && (scale = 5);
       options['scale'] = (+scale) * scaleZoom;
-      console.log('tail,length,scale,ratio:',tail,text.length,options['scale'],tail/text.length);
+      //console.log('tail,length,scale,ratio:',tail,text.length,options['scale'],tail/text.length);
 
 
       var txtX = +this.getOption('textX');

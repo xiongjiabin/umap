@@ -327,6 +327,16 @@ L.Storage.DrawAllBiaoxianAction = L.Storage.BaseAction.extend({
   }
 });
 
+L.Storage.DrawAllLureAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-lure dark',
+      tooltip: '警诱设施',
+      subActions: [
+      ]
+  }
+});
+
 L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
 
     options: {
@@ -565,6 +575,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdPillarAction);
         this.options.actions.push(L.S.DrawLmdGuardAction);
         this.options.actions.push(L.S.DrawAllBiaoxianAction);
+        this.options.actions.push(L.S.DrawAllLureAction);
         this.options.actions.push(L.S.DrawLmdLabelAction);
         this.options.actions.push(L.S.DrawOtherAction);
 
