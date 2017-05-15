@@ -61,7 +61,7 @@ L.Storage.guardbarData = [
    childs: [
     null,
     {name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
-    {name:'柱状轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
+    {name:'柱式轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
   {name: '防眩设施',
    defaultData:{ color: "White",lr: 3},//default middle
@@ -686,11 +686,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           if (lr === lmd.POS_BOTH) {
               multipe = 2;
           }
-          distance = Math.ceil(distance * multipe)
 
           var gblControl = e.target.helpers['properties._storage_options.gbl']
           if(gblControl) {
-              this.properties._storage_options.gbl = gblControl.input.value = distance
+              this.properties._storage_options.gbl = gblControl.input.value = Math.ceil(distance * multipe)
 
               var gbaControl = e.target.helpers['properties._storage_options.gba']
               if(gbaControl){
@@ -705,7 +704,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
           var gbs = +this.getOption('gbs')
           if(gbs > 0){
-              var gbn = Math.ceil(distance / gbs) + 1
+              var gbn = (Math.ceil(distance / gbs) + 1) * multipe
               var gbnControl = e.target.helpers['properties._storage_options.gbn']
               if(gbnControl){
                   this.properties._storage_options.gbn = gbnControl.input.value = gbn
@@ -752,8 +751,14 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
         var gbs = +this.getOption('gbs')
         var distance = +this.getOption('gbl')
+        var lr = +this.getOption('lr')
+        var multipe = 1
+        if (lr === lmd.POS_BOTH) {
+            multipe = 2;
+        }
+
         if(gbs > 0 && distance > 0){
-            var gbn = Math.ceil(distance / gbs) + 1
+            var gbn = (Math.ceil( distance / (gbs * multipe) ) + 1) * multipe
             var gbnControl = e.target.helpers['properties._storage_options.gbn']
             if(gbnControl){
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn

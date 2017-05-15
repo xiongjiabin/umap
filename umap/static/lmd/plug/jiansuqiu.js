@@ -24,7 +24,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
       //console.log(preOptions)
       this.properties._storage_options = {
         gbc: 1,
-        scale:  10,
+        scale:  15,
         rotate:  0,
         color: this.defaultColor,
         sn: '',
@@ -61,7 +61,8 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
       2: '<path class="leaflet-interactive" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 0,0 {{height}},0"/>' +
          '<path class="leaflet-interactive" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 0,0 -{{height}},0"/>'
     }
-    var textTemplate = '<text style="font-size:14px;" x="{{height}}" y="5">减速丘{{sn}}</text>'
+    var name = this.properties.name || '减速丘';
+    var textTemplate = '<text style="font-size:14px;" x="{{height}}" y="5">' + name + '{{sn}}</text>'
 
     var svgStr = typeSvg[1]
     if(lr == lmd.POS_BOTH) {
@@ -124,6 +125,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
         this.updateStyle()
     }else if(e.helper.name === 'gbc'){
         this.updateName(e)
+        this.setSvgText(this.getSvgData(lr,sn,color,height,width))
     }
   },
 
