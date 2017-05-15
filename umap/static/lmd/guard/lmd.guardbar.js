@@ -94,12 +94,15 @@ L.Storage.guardbarData = [
     {name:'预制减速垄',type: L.Storage.GB_VERTICAL_LINE},
     {name:'预制断开式减速垄',type: L.Storage.GB_VERTICAL_LINE},
   ]},
-  {name:'边沟',childs: [
+  {name:'边沟',
+    posData: L.FormBuilder.LeftRightChoice.prototype.choicesLRBoth,
+    childs: [
     null,
     {name:'浅碟形边沟',type: L.Storage.GB_NORMAL_LINE},
-    {name:'加铺盖板',type: L.Storage.GB_NORMAL_LINE},
+    {name:'边沟加铺盖板',type: L.Storage.GB_NORMAL_LINE},
     {name:'矩形边沟',type: L.Storage.GB_NORMAL_LINE},
     {name:'梯形边沟',type: L.Storage.GB_NORMAL_LINE},
+    {name:'掩埋式边沟',type: L.Storage.GB_NORMAL_LINE},
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]},{
     name: '警诱',
