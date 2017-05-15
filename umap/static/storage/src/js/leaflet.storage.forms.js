@@ -1065,7 +1065,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //打印框
         gbssAngle: {handler: 'FloatInput', label: '起始桩号角度(自动生成)'},
         gbseAngle: {handler: 'FloatInput', label: '结束桩号角度(自动生成)'},
-        centerGPS: {label:'中心GPS'}
+        centerGPS: {label:'中心GPS'},
+
+        //预告标线设置个数
+        ygbxszgs: {handler: 'IntInput', label: '预告标线设置个数'},
 
     },
 

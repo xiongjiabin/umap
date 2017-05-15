@@ -137,6 +137,9 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
             gbn = gbn.toFixed(2);
         }
         this.properties._storage_options.gbn = gbnControl.input.value = gbn;
+    }else if(e.helper.name in {ygbxszgs: 0}){
+        var gbaControl = e.target.helpers['properties._storage_options.gba'];
+        this.properties._storage_options.gba = gbaControl.input.value = +selfValue * 1.1416;
     }
   },
 
@@ -149,6 +152,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.roadWidth3',//线宽
       'properties._storage_options.gbs',//间距
       'properties._storage_options.gbn',//数量
+      'properties._storage_options.ygbxszgs',//预告标线设置个数
       'properties._storage_options.gba',//预告标线面积
       'properties._storage_options.hColor',
       'properties._storage_options.gbm',//材料
@@ -201,6 +205,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     stringMap['gbs'] = this.getOption('gbs')
     stringMap['gbn'] = this.getOption('gbn')
     stringMap['gba'] = this.getOption('gba')
+    stringMap['ygbxszgs'] = this.getOption('ygbxszgs')
     return stringMap
   },
 
@@ -216,6 +221,7 @@ lmd.tjRxhdx = function(){
                 roadWidth3: '线宽',
                 gbs: '间距',
                 gbn: '数量',
+                ygbxszgs: '预告标线设置个数',
                 gba: '预告标线面积(平方米)',
                 name: '名称',
                 ds: '状态',
