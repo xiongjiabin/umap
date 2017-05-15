@@ -19,14 +19,16 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     if (!this.properties['className']) {
       this.properties['className'] = this.getClassName()
 
-      //console.log(preOptions)
+
       this.properties._storage_options = {
         scale:  10,
         rotate:  0,
         color: this.defaultColor,
         sn: '',
         showText: true,
-        height:50
+        height:50,
+        gbm: "2",
+        hColor: "1" //defalut white
       }
       this.properties.name = this.defaultName
     }

@@ -11,6 +11,7 @@ L.Storage.BxZxxd = L.Storage.Hide.extend({
        this.properties._storage_options['lineType'] = "1";
        this.properties._storage_options['lineWidth'] = "10";
        this.properties._storage_options['hColor'] = "2";
+       this.properties._storage_options['gbm'] = "2";
        this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
@@ -18,7 +19,9 @@ L.Storage.BxZxxd = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    return '<tspan x=0 dy=0>**' + this.properties.name + '**</tspan>'+
+    var lineType = this.getOption('lineType') || 2;
+    var lineTypeStr = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.allSelectOptions)[lineType] || '';
+    return '<tspan x=0 dy=0>**' + this.properties.name + '-' + lineTypeStr + '**</tspan>'+
            '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
   },
 
