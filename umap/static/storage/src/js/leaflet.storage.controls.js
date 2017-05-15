@@ -332,8 +332,10 @@ L.Storage.DrawAllLureAction = L.Storage.BaseAction.extend({
       helpMenu: true,
       className: 'storage-draw-lure dark',
       tooltip: '警诱设施',
-      subActions: [
-      ]
+  },
+
+  addHooks: function() {
+     this.map.startLure();
   }
 });
 

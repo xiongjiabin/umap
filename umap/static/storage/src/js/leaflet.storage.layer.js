@@ -621,7 +621,7 @@ L.Storage.DataLayer = L.Class.extend({
         );
     },
 
-    _lineToClass: {},
+    _lineToClass: {},//分开来放的原因是因为js的加载顺序
     _lineToLayer: function(geojson, latlngs) {
         var lineClass = {
           'polyline': L.Storage.Polyline,

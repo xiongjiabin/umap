@@ -12,6 +12,7 @@ L.Storage.GB_TYPE_FANGXUAN = 4
 L.Storage.GB_TYPE_JIANSU = 5
 L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobject中实现 xiongjiabin 17_3_03
 L.Storage.GB_TYPE_BIANGOU = 7
+L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
 
 L.Storage.guardbarData = [
   null,
@@ -31,7 +32,7 @@ L.Storage.guardbarData = [
   ]},
   { name: '防护设施',
     defaultData:{
-      gbc: "10", //默认示警墩
+      gbc: "1", //默认示警墩
       weight:"10",
       color: "red",
     },
@@ -46,13 +47,13 @@ L.Storage.guardbarData = [
     {name:'波形梁护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
     {name:'外展示警墩', type:L.Storage.GB_NORMAL_LINE},
     {name:'桥梁混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
-    {name:'示警墩', type: L.Storage.GB_RECT},
-    {name:'示警桩', type: L.Storage.GB_CIRCLE},
-    {name:'中间隔离', type: L.Storage.GB_NORMAL_LINE},
-    {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE},
-    {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
-    {name:'连续示警墩', type: L.Storage.GB_RECT},
-    {name:'防护墙', type: L.Storage.GB_NORMAL_LINE},
+    /*{name:'示警墩', type: L.Storage.GB_RECT, show: false}, //这些事第一个版本的数据，为了保证兼容，放在这里可以显示出来
+    {name:'示警桩', type: L.Storage.GB_CIRCLE, show: false},
+    {name:'中间隔离', type: L.Storage.GB_NORMAL_LINE, show: false},
+    {name:'机非隔离', type: L.Storage.GB_NORMAL_LINE, show: false},
+    {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE, show: false},
+    {name:'连续示警墩', type: L.Storage.GB_RECT, show: false},
+    {name:'防护墙', type: L.Storage.GB_NORMAL_LINE, show: false},*/
   ]},
   {name:'轮廓标',
    defaultData:{ color: "Yellow"},
@@ -99,7 +100,20 @@ L.Storage.guardbarData = [
     {name:'矩形边沟',type: L.Storage.GB_NORMAL_LINE},
     {name:'梯形边沟',type: L.Storage.GB_NORMAL_LINE},
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
-  ]}
+  ]},{
+    name: '警诱',
+    defaultData:{
+      gbc: "1", //默认连续示警墩
+      weight:"10",
+      color: "red",
+    },
+    childs: [
+    null,
+    {name:'示警墩', type: L.Storage.GB_RECT},
+    {name:'连续示警墩', type: L.Storage.GB_RECT},
+    {name:'示警桩', type: L.Storage.GB_CIRCLE},
+    {name:'其他警示设施', type: L.Storage.GB_NORMAL_LINE},
+  ]},
 ];
 
 L.Storage.getGBOptions = function(gbt){
@@ -146,6 +160,7 @@ L.Storage.getGBPosData = function(gbt){
 L.Storage.Guardbar = L.Storage.Polyline.extend({
     gbType: L.Storage.GB_TYPE_HULAN,
     dsColors: [null, 'Red', 'Lime','Fuchsia'],
+    CLASS_NAME: 'guardbar',
 
     preInit: function() {
       if (!this.properties['className']) {
@@ -200,9 +215,23 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       if(latlngs && latlngs.length > 1) {
           var zoom = this.getOption('zoomCreate') || this.map.getZoom();
           var scale = this.map.getZoomScale(zoom, this.map.getZoom());
-          console.log('scale:',scale,zoom,this.map.getZoom());
+          //console.log('scale:',scale,zoom,this.map.getZoom());
           var offsetLatLngs = this.getOffSetLatlngs(2 * offset / scale, latlngs);
-          this.brotherOtherSide = new L.Storage.Guardbar(
+          var lineClass = {
+            'polyline': L.Storage.Polyline,
+            'guardbar': L.Storage.Guardbar,
+            'biaoxian': L.Storage.Biaoxian,
+            'lunkuo'  : L.Storage.Lunkuo,
+            'fangxuan': L.Storage.Fangxuan,
+            'jiansu'  : L.Storage.Jiansu,
+            'biangou' : L.Storage.Biangou
+          }//copy from leaflet.storage.layer.js line 626
+          var className = L.Storage.DataLayer.prototype._lineToClass[this.getClassName()];
+          if(!className) {
+              className = lineClass[this.getClassName()] || L.Storage.Guardbar;
+          }
+
+          this.brotherOtherSide = new className(
                      this.map,
                      offsetLatLngs,
                      {'geojson': geojson, 'datalayer': null},
@@ -285,20 +314,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           L.FormBuilder.LeftRightChoice.prototype.choices = L.Storage.getGBPosData(gbt) ||
                                                             L.FormBuilder.LeftRightChoice.prototype.choicesNoM;
 
-          var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
+          L.Storage.LmdFeatureMixin.edit.call(this, e);
 
-          if(this.gbType === L.Storage.GB_TYPE_HULAN){
-            var gbc = +this.getOption('gbc')
-            var gbsControl = builder.helpers['properties._storage_options.gbs']
-            var gbnControl = builder.helpers['properties._storage_options.gbn']
-            if(gbc === 10 || gbc === 11 ){ //示警墩
-              gbsControl.show()
-              gbnControl.show()
-            }else{
-              gbsControl.clear().hide()
-              gbnControl.clear().hide()
-            }
-        }
       }
     },
 
@@ -311,8 +328,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           'properties._storage_options.gbse',
           'properties._storage_options.gbl',//总长
           //'properties._storage_options.gba',//面积
-          'properties._storage_options.gbs',//间距
-          'properties._storage_options.gbn',//数量
+          //'properties._storage_options.gbs',//间距
+          //'properties._storage_options.gbn',//数量
           'properties._storage_options.gblev',//级别
           //'properties._storage_options.gbm', //材料
           'properties._storage_options.ds',
@@ -478,7 +495,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     },
 
     getClassName: function () {
-        return 'guardbar';
+        return this.CLASS_NAME;
     },
 
     getContextMenuEditItems: function (e) {
@@ -640,19 +657,6 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           this.updateName(e);
           this.updateText(e);
           this._redraw();
-
-          if(this.gbType === L.Storage.GB_TYPE_HULAN){
-              var gbc = +this.getOption('gbc')
-              var gbsControl = e.target.helpers['properties._storage_options.gbs']
-              var gbnControl = e.target.helpers['properties._storage_options.gbn']
-              if(gbc === 10 || gbc === 11 ){
-                gbsControl.show()
-                gbnControl.show()
-              }else{
-                gbsControl.clear().hide()
-                gbnControl.clear().hide()
-              }
-          }
 
       } else if(e.helper.name in {'gbss':0,'gbse':0, 'lr':0 }){
           //计算长度
