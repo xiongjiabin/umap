@@ -13,6 +13,7 @@ L.Storage.GB_TYPE_JIANSU = 5
 L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobject中实现 xiongjiabin 17_3_03
 L.Storage.GB_TYPE_BIANGOU = 7
 L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
+L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 
 L.Storage.guardbarData = [
   null,
@@ -113,7 +114,19 @@ L.Storage.guardbarData = [
     {name:'连续示警墩', type: L.Storage.GB_RECT},
     {name:'示警桩', type: L.Storage.GB_CIRCLE},
     {name:'其他警示设施', type: L.Storage.GB_NORMAL_LINE},
-  ]},
+  ]}, {
+    name: '隔离设施',
+    defaultData:{
+        gbc: "1", //默认
+        weight:"10",
+        color: "red",
+    },
+    childs: [
+      null,
+      {name:'移动护栏', type: L.Storage.GB_NORMAL_LINE},
+      {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
+    ]},
+
 ];
 
 L.Storage.getGBOptions = function(gbt){
