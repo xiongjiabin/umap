@@ -294,7 +294,6 @@ L.Storage.DrawOtherAction = L.Storage.BaseAction.extend({
         L.Storage.SubDrawJianSuQiuAction,
         L.Storage.SubDrawBiangouAction,
         L.Storage.SubDrawLmdAreaAction,
-        L.Storage.SubDrawTuQiLuBiaoAction,
         L.Storage.SubDrawDangTuQiangAction,
       ]
   }
@@ -322,6 +321,7 @@ L.Storage.DrawAllBiaoxianAction = L.Storage.BaseAction.extend({
       className: 'storage-draw-biaoxian dark',
       tooltip: '全部的标线',
       subActions: [
+        L.Storage.SubDrawTuQiLuBiaoAction,
         L.Storage.DrawBiaoxianAction,
       ]
   }

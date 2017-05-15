@@ -50,7 +50,12 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     this.setSvgText(this.getSvgData())
     var gbs, distance, gbn, gbnControl, gbss, gbse, gblControl
 
-    if(e.helper.name in {'gbss':0,'gbse':0}){
+    if(e.helper.name in {'gbss':0,'gbse':0,'sn':0,'lr':0 }){
+        var lr = +this.getOption('lr')
+        var multipe = 1
+        if (lr === lmd.POS_BOTH) {
+            multipe = 2
+        }
         //计算长度
         gbss = this.getOption('gbss') * 1000
         gbse = this.getOption('gbse') * 1000
@@ -64,30 +69,48 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
         gblControl = e.target.helpers['properties._storage_options.gbl']
         if(gblControl) {
-            this.properties._storage_options.gbl = gblControl.input.value = distance
+            this.properties._storage_options.gbl = gblControl.input.value = distance * multipe
         }
 
         gbs = +this.getOption('gbs')
         if(gbs > 0){
-            gbn = Math.ceil(distance / gbs) + 1
+            gbn = (Math.ceil(distance / gbs) + 1) * multipe
             gbnControl = e.target.helpers['properties._storage_options.gbn']
             if(gbnControl){
                 this.properties._storage_options.gbn = gbnControl.input.value = gbn
             }
         }
 
-    } else if(e.helper.name in {'gbs': 0}){
+        var sn = this.getOption('sn')
+        if(sn !== null){
+            sn = +sn;
+            var data = this.map.getAnchorLatLngBySubNo(sn)
+            var pos = lr == LMD.POS_RIGHT ? 'right' : 'left'
+            if(data && (data[pos] !== undefined)){
+                this.properties._storage_options['rotate'] = data[pos]
+                this.updateStyle()
+                if(data.point){
+                    this.setLatLng(data.point)
+                }
+            }
+        }
 
+    } else if(e.helper.name in {'gbs': 0}){
+      var lr = +this.getOption('lr')
+      var multipe = 1
+      if (lr === lmd.POS_BOTH) {
+          multipe = 2
+      }
       gbs = +this.getOption('gbs')
       distance = +this.getOption('gbl')
       if(gbs > 0 && distance > 0){
-          gbn = Math.ceil(distance / gbs) + 1
+          gbn = (Math.ceil(distance / (gbs * multipe)) + 1) * 2
           gbnControl = e.target.helpers['properties._storage_options.gbn']
           if(gbnControl){
               this.properties._storage_options.gbn = gbnControl.input.value = gbn
           }
       }
-    } else if (e.helper.name === 'sn' || e.helper.name === 'lr') {
+    } /*else if (e.helper.name === 'sn' || e.helper.name === 'lr') {
         var lr = +this.getOption('lr')
         var sn = +this.getOption('sn')
         var data = this.map.getAnchorLatLngBySubNo(sn)
@@ -99,7 +122,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
               this.setLatLng(data.point)
             }
         }
-    } else {
+    }*/ else {
 
     }
   },
@@ -120,7 +143,8 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     }
 
     //解决侧别的问题, 只有左右，中间
-    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth;
+    L.FormBuilder.LeftRightChoice.prototype.choices = this.posData ||
+                                                      L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth;
 
     return L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
@@ -162,6 +186,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
 L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
   defaultName: '突起路标',
+  posData: L.FormBuilder.LeftRightChoice.prototype.choicesNoM,
 
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
