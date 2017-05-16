@@ -40,6 +40,20 @@ L.S.UI = L.Evented.extend({
         L.DomUtil.add('i', 'storage-close-icon', closeLink);
         var label = L.DomUtil.create('span', '', closeLink);
         label.title = label.innerHTML = L._('Close');
+
+        if(e.data.name){
+            var editorName = L.DomUtil.create('li', 'storage-close-link', actionsContainer);
+            var editorLabel = L.DomUtil.create('span', '', editorName);
+            editorLabel.title = editorLabel.innerHTML = e.data.name;
+            editorLabel.style.color = 'yellow';
+
+            if(e.data.obj){
+                L.DomEvent.on(editorName,'click', function(){
+                    this.bringToCenter && this.bringToCenter();
+                },e.data.obj);
+            }
+        }
+
         if (e.actions) {
             for (var i = 0; i < e.actions.length; i++) {
                 actionsContainer.appendChild(e.actions[i]);
@@ -56,6 +70,7 @@ L.S.UI = L.Evented.extend({
             L.DomUtil.addClass(this.parent, 'storage-ui');
         }
         L.DomEvent.on(closeLink, 'click', this.closePanel, this);
+
     },
 
     closePanel: function () {

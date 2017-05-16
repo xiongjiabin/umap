@@ -245,7 +245,7 @@ lmd.tjPrintRect = function(){
         }
         if(errorTxt){
           feature.bringToCenter();
-          feature.map.ui.alert({content: feature.getOption('name') + ':' + errorTxt, level:'error'});
+          feature.map.ui.alert({content: feature.properties.name + ':' + errorTxt, level:'error'});
           throw new Error();
         }
         pages.push( stringmap )

@@ -599,9 +599,9 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var gbcat  = +this.getOption('gbc')
       var classObject = L.Storage.getGBClass(gbtype, gbcat)
       if(classObject) {
-        stringMap['gbc'] = classObject['name'] || this.getOption('name');//类别
+        stringMap['gbc'] = classObject['name'] || this.properties.name//类别
       }else{
-        stringMap['gbc'] = this.getOption('name')
+        stringMap['gbc'] = this.properties.name
       }
 
       return stringMap
@@ -635,9 +635,9 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
        var gbcat  = +this.getOption('gbc')
        var classObject = L.Storage.getGBClass(gbtype, gbcat)
        if(classObject) {
-         this.CLASS_ALIAS = classObject['name'] || this.getOption('name');//类别
+         this.CLASS_ALIAS = classObject['name'] || this.properties.name;//类别
        }else{
-         this.CLASS_ALIAS = this.getOption('name')
+         this.CLASS_ALIAS = this.properties.name
        }
        return this.CLASS_ALIAS;
     },

@@ -825,7 +825,8 @@ L.Storage.DataLayersControl = L.Control.extend({
             .on(add, 'click', L.DomEvent.stop)
             .on(add, 'click', this.newDataLayer, this);
 
-        this.map.ui.openPanel({data: {html: container}, className: 'dark'});
+        this.map.ui.openPanel({data: {obj:this,html: container, name: this.CLASS_ALIAS || this.properties.name}, className: 'dark'});
+        this.map.editedFeature = this;
     }
 
 });

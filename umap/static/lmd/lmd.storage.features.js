@@ -51,12 +51,7 @@ L.Storage.LmdFeatureMixin = {
     var advancedActions = L.DomUtil.createFieldset(container, L._(
       'Advanced actions'));
     this.getAdvancedEditActions(advancedActions);
-    this.map.ui.openPanel({
-      data: {
-        html: container
-      },
-      className: 'dark'
-    });
+    this.map.ui.openPanel({data: {obj:this, html: container,name: this.CLASS_ALIAS || this.properties.name},className: 'dark'});
     this.map.editedFeature = this;
     if (!this.isOnScreen()) this.bringToCenter(e);
 
