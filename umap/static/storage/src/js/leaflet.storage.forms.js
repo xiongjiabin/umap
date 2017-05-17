@@ -1007,7 +1007,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //影藏元素
         hShape: {handler: 'ShaperSwitcher', label: '形式'},
         hColor: {handler: 'ColorSwitcher', label: '颜色'},
-        hHeight: {handler: 'IntInput', label: '高度(m)'},
+        hHeight: {handler: 'FloatInput', label: '高度(m)'},
         bulk: {handler: 'IntInput', label: '体积(m3)'},
         lineType: {handler:'LineSwitcher', label: '形式'},
         lineWidth: {handler: 'LineWidthSwitcher', label: '线宽'},

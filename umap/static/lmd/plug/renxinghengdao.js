@@ -211,6 +211,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     stringMap['gbs'] = this.getOption('gbs')
     stringMap['gbn'] = this.getOption('gbn')
     stringMap['gba'] = this.getOption('gba')
+    stringMap['lane'] = this.getOption('lane') || 1
     stringMap['ygbxszgs'] = this.getOption('ygbxszgs')
     return stringMap
   },
@@ -226,6 +227,7 @@ lmd.tjRxhdx = function(){
                 roadWidth: '设置宽度',
                 roadWidth3: '线宽',
                 gbs: '间距',
+                lane: '设置道数',
                 gbn: '数量',
                 ygbxszgs: '预告标线设置个数',
                 gba: '预告标线面积(平方米)',
