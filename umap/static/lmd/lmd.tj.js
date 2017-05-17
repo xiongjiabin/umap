@@ -283,7 +283,7 @@ lmd.tjLunkuo = function(){
   new CsvGenerator(data,  '轮廓设施表.csv').download(true);
 }
 
-//减速路面
+//薄层铺装
 lmd.tjJiansu = function(){
   var data = []
   var titles = {no:'序号',
@@ -311,7 +311,7 @@ lmd.tjJiansu = function(){
 
   lmd.processData(data)
 
-  new CsvGenerator(data,  '减速路面.csv').download(true);
+  new CsvGenerator(data,  '薄层铺装.csv').download(true);
 }
 
 //边沟
@@ -510,7 +510,7 @@ lmd.tjs = [{
     label: '防眩设施',
     process: lmd.tjFangxuan
   },{
-    label: '减速路面',
+    label: '薄层铺装',
     process: lmd.tjJiansu
   },{
     label: '边沟',

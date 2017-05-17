@@ -60,6 +60,15 @@ var lmd = {
       return results
   },
 
+  getRotateLeftRight: function( lr , defaultPos){
+      lr = +lr;
+      var pos = defaultPos || 'right';
+      if(lr === lmd.POS_LEFT || lr === lmd.POS_MIDDLE_LEFT){
+          pos = 'left';
+      }
+      return pos;
+  }
+
 };
 
 L.Storage.Map.include({

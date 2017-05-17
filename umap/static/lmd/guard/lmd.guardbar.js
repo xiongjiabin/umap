@@ -9,7 +9,7 @@ L.Storage.GB_TYPE_BIAOXIAN = 1 //标线也是逃兵，不符合这些原有的�
 L.Storage.GB_TYPE_HULAN = 2
 L.Storage.GB_TYPE_LUNKUO = 3
 L.Storage.GB_TYPE_FANGXUAN = 4
-L.Storage.GB_TYPE_JIANSU = 5
+L.Storage.GB_TYPE_JIANSU = 5 // 后来改成 薄层铺装,原来的减速路面
 L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobject中实现 xiongjiabin 17_3_03
 L.Storage.GB_TYPE_BIANGOU = 7
 L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
@@ -64,7 +64,7 @@ L.Storage.guardbarData = [
     {name:'柱式轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
   {name: '防眩设施',
-   defaultData:{ color: "White",lr: 3},//default middle
+   defaultData:{ color: "White",lr: 3, offset: 0},//default middle
    posData: L.FormBuilder.LeftRightChoice.prototype.choicesM,
    childs: [
     null,
@@ -73,7 +73,7 @@ L.Storage.guardbarData = [
     {name:'植树', type: L.Storage.GB_NORMAL_LINE},
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]},
-  {name:'减速路面',
+  {name:'薄层铺装',
    defaultData:{ color: "white"},
    childs: [
     null,
@@ -186,7 +186,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         this.properties._storage_options = {
           gbc: "1",
           weight:"10",
-          offset: 40
+          offset: 40,
+          lr: lmd.POS_LEFT
         }
         for(var i in defaultData){
           this.properties._storage_options[i] = defaultData[i]
@@ -222,7 +223,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           this.brotherOtherSide.remove && this.brotherOtherSide.remove();
           this.brotherOtherSide = null;
       }
-      var pos = +this.getOption('lr');
+      var pos = +this.getOption('lr') || lmd.POS_LEFT;
       if (pos != lmd.POS_BOTH) {
           return null;
       }
@@ -330,7 +331,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           L.FormBuilder.LeftRightChoice.prototype.choices = L.Storage.getGBPosData(gbt) ||
                                                             L.FormBuilder.LeftRightChoice.prototype.choicesNoM;
 
-          L.Storage.LmdFeatureMixin.edit.call(this, e);
+          return L.Storage.LmdFeatureMixin.edit.call(this, e);
 
       }
     },
@@ -487,7 +488,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               //偏移发生变化，重新计算文字的相对x和y位置
               var rotate = +this.getOption('rotate');
               var degrees = (rotate) / 180 * Math.PI;
-              var offset = this.getOption('offset');
+              //var offset = this.getOption('offset');
               var textX = 0;
               var textY = 0;
               offset += 20;
@@ -661,7 +662,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
     resetTooltip: function(e) {
 
-      if(this._rings.length > 0) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
+      if(this._rings && this._rings.length > 0) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
           L.Storage.FeatureMixin.resetTooltip.call(this,e)
       }
       if (!e) return;
@@ -678,7 +679,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           //计算长度
           var gbss = this.getOption('gbss') * 1000
           var gbse = this.getOption('gbse') * 1000
-          var lr = +this.getOption('lr')
+          var lr = +this.getOption('lr') || lmd.POS_LEFT
           var multipe = 1
           var distance = 0
           if (gbss > gbse) {
@@ -718,7 +719,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           if (gbse > gbss) {
               var snMiddle = (gbss + gbse) / 2000;
               var data = this.map.getAnchorLatLngBySubNo(snMiddle);
-              var pos = (lr == lmd.POS_RIGHT || lr == lmd.POS_MIDDLE_RIGHT) ? 'right' : 'left';
+              var pos = lmd.getRotateLeftRight(lr);
               var rotateControl = this.getElementByName('rotate');
               var txtLatControl = this.getElementByName('textLat');
               var txtLngControl = this.getElementByName('textLng');
@@ -754,7 +755,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
         var gbs = +this.getOption('gbs')
         var distance = +this.getOption('gbl')
-        var lr = +this.getOption('lr')
+        var lr = +this.getOption('lr') || lmd.POS_LEFT
         var multipe = 1
         if (lr === lmd.POS_BOTH) {
             multipe = 2;
@@ -793,8 +794,9 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         var gbss = this.getOption('gbss')
         var gbse = this.getOption('gbse')
         if(gbss && gbse && gbse > gbss){
-            var gl   = +this.getOption('lr') || 1
-            var offset = this.getOption('offset') || 40
+            var gl   = +this.getOption('lr') || lmd.POS_LEFT
+            var offset = this.getOption('offset')
+            if(offset === null ) offset = 40;
             if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
 
             //console.time('get line between sub :', gbss + '->' + gbse)
@@ -859,6 +861,8 @@ L.Storage.Lunkuo = L.Storage.Guardbar.extend({
 L.Storage.Fangxuan = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_FANGXUAN,
   dsColors: [null, 'White', 'Lime','Fuchsia'],
+  GBC_TYPE_FANGXUAN_NET: 2,
+  units: ['块','米','棵',''],
 
   getClassName: function () {
       return 'fangxuan';
@@ -878,10 +882,63 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
       ];
   },
 
+  resetTooltip: function(e) {
+
+    L.Storage.Guardbar.prototype.resetTooltip.call(this.e);
+    if(!e) return;
+    var gbnControl = e.target.helpers['properties._storage_options.gbn']
+    var gbsControl = e.target.helpers['properties._storage_options.gbs']
+    var gbc, gbss, gbse, gbl,gbs,gbn;
+
+    gbc = +this.getOption('gbc');
+    if(e.helper.name === 'gbc') {
+        if(gbc === this.GBC_TYPE_FANGXUAN_NET) {//防眩网
+            gbsControl && gbsControl.label && (gbsControl.label.innerHTML = '渐变段长度(米)')
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '标准段长度(米)')
+        }else{
+            gbsControl && gbsControl.label && (gbsControl.label.innerHTML = '间距(米)')
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '数量(' + this.units[gbc - 1] + ')')
+        }
+    }
+
+    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'gbs':0,'gbc':0}){
+        gbl = +this.getOption('gbl');
+        gbs = +this.getOption('gbs');
+        if(gbc === this.GBC_TYPE_FANGXUAN_NET){
+            this.properties._storage_options.gbn = gbnControl.input.value = gbl - 2 * gbs;
+        }else{
+            this.properties._storage_options.gbn = gbnControl.input.value = (Math.ceil(gbl / gbs) + 1)
+        }
+    }
+  },
+
+  edit: function(e) {
+
+    if(this.map.editEnabled) {
+        var builder = L.Storage.Guardbar.prototype.edit.call(this,e);
+        var gbnControl = builder.helpers['properties._storage_options.gbn']
+        var gbsControl = builder.helpers['properties._storage_options.gbs']
+        var gbc = +this.getOption('gbc');
+        if(gbc === this.GBC_TYPE_FANGXUAN_NET) {//防眩网
+            gbsControl && gbsControl.label && (gbsControl.label.innerHTML = '渐变段长度(米)')
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '标准段长度(米)')
+        }else{
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '数量(' + this.units[gbc - 1] + ')')
+        }
+    }
+  },
+
+  getStringMap: function(){
+      var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
+      var gbc = +this.getOption('gbc');
+      stringMap['gbn'] = stringMap['gbn'] + this.units[gbc - 1] || '';
+      return stringMap;
+  },
 });
 
 L.Storage.Jiansu = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_JIANSU,
+  CLASS_ALIAS: '薄层铺装',
   dsColors: [null, 'White', 'Lime','Fuchsia'],
 
   getClassName: function () {
@@ -925,6 +982,16 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
                                                                     '间距(米):' + ret['space'].join('_');
           }
       }
+  },
+
+  //name是自动生成的，依据所选择的参数
+  updateName: function(e){
+    if(!e) return
+
+    L.Storage.Guardbar.prototype.updateName.call(this,e);
+    this.CLASS_ALIAS = '薄层铺装';
+
+    return
   },
 
   getStringMap: function(){
