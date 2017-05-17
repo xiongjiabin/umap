@@ -38,3 +38,20 @@ L.Storage.Map.include({
     return this.editTools.startLure();
   }
 });
+
+L.Storage.SubDrawLureAction = L.Storage.SubAction.extend({
+
+    options: {
+        toolbarIcon: {
+          html: '警诱设施(示警墩/示警桩)',
+          tooltip: '包含示警墩,示警桩,连续示警墩等'
+        }
+    },
+
+    addHooks: function () {
+        this.map.startLure();
+        L.Storage.SubAction.prototype.addHooks.call(this)
+    }
+});
+
+L.Storage.DrawAllLureAction.prototype.options.subActions.push(L.Storage.SubDrawLureAction);

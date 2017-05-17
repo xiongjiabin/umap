@@ -288,7 +288,6 @@ L.Storage.DrawOtherAction = L.Storage.BaseAction.extend({
       className: 'storage-draw-other dark',
       tooltip: '其他基础设施,减速路面&减速丘',
       subActions: [
-        L.Storage.SubDrawLunkuoAction,
         L.Storage.SubDrawFangxuanAction,
         L.Storage.SubDrawJiansuAction,
         L.Storage.SubDrawJianSuQiuAction,
@@ -332,11 +331,11 @@ L.Storage.DrawAllLureAction = L.Storage.BaseAction.extend({
       helpMenu: true,
       className: 'storage-draw-lure dark',
       tooltip: '警诱设施',
+      subActions:[
+        L.Storage.SubDrawLunkuoAction,
+      ]
   },
 
-  addHooks: function() {
-     this.map.startLure();
-  }
 });
 
 L.Storage.DrawLmdMarkerAction = L.Storage.BaseAction.extend({
