@@ -28,7 +28,8 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         showText: true,
         height:50,
         gbm: "2",
-        hColor: "1" //defalut white
+        hColor: "1", //defalut white
+        lane: 1,
       }
       this.properties.name = this.defaultName
     }
@@ -125,18 +126,19 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         this.properties._storage_options['color'] = color
         this.setSvgText(this.getSvgData(sn,color,height,width,fontSize))
         this.updateStyle()
-    }else if(e.helper.name in {roadWidth2:0,roadWidth:0,roadWidth3:0,gbs:0}) {
+    }else if(e.helper.name in {roadWidth2:0,roadWidth:0,roadWidth3:0,gbs:0,lane:0}) {
         var gbnControl = e.target.helpers['properties._storage_options.gbn'];
         var roadWidth = +this.getOption('roadWidth'); //设置宽度
         var roadWidth2 = +this.getOption('roadWidth2');//道路宽度
         var roadWidth3 = +this.getOption('roadWidth3');//线宽
         var gbs = +this.getOption('gbs'); //间距
+        var lane = +this.getOption('lane') || 1;
         var gbn = 0;
         if(roadWidth3 + gbs) {
             gbn = roadWidth2 * roadWidth3 * (roadWidth * (roadWidth3 / (roadWidth3 + gbs)));
             gbn = gbn.toFixed(2);
         }
-        this.properties._storage_options.gbn = gbnControl.input.value = gbn;
+        this.properties._storage_options.gbn = gbnControl.input.value = gbn * lane;
     }else if(e.helper.name in {ygbxszgs: 0}){
         var gbaControl = e.target.helpers['properties._storage_options.gba'];
         this.properties._storage_options.gba = gbaControl.input.value = +selfValue * 1.1416;
@@ -151,6 +153,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.roadWidth',//设置宽度
       'properties._storage_options.roadWidth3',//线宽
       'properties._storage_options.gbs',//间距
+      'properties._storage_options.lane',//设置道数
       'properties._storage_options.gbn',//数量
       'properties._storage_options.ygbxszgs',//预告标线设置个数
       'properties._storage_options.gba',//预告标线面积
@@ -191,9 +194,12 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         return false
     }
 
+    //修改label代码
     var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
     var gba = builder && builder.helpers['properties._storage_options.gba']
+    var lane = builder && builder.helpers['properties._storage_options.lane']
     gba && gba.label && (gba.label.innerHTML = '预告标线面积(平方米)')
+    lane && lane.label && (lane.label.innerHTML = '设置道数(一个交叉口可能设置多个人行横道)')
   },
 
 
