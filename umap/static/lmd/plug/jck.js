@@ -231,20 +231,3 @@ L.Storage.Map.include({
       return this.editTools.startJck();
   }
 });
-
-L.Storage.SubDrawJckAction = L.Storage.SubAction.extend({
-
-    options: {
-        toolbarIcon: {
-          html: '交叉口',
-          tooltip: '定义好交叉口'
-        }
-    },
-
-    addHooks: function () {
-        this.map.startJck();
-        L.Storage.SubAction.prototype.addHooks.call(this)
-    }
-});
-
-L.Storage.DrawOtherAction.prototype.options.subActions.push(L.Storage.SubDrawJckAction);

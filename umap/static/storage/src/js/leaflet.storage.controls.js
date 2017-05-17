@@ -160,6 +160,18 @@ L.Storage.DrawLmdGuardAction = L.Storage.BaseAction.extend({
   }
 });
 
+L.Storage.DrawJckAction = L.Storage.BaseAction.extend({
+  options: {
+      helpMenu: true,
+      className: 'storage-draw-jck dark',
+      tooltip: '交叉口'
+  },
+
+  addHooks: function () {
+      this.map.startJck();
+  }
+});
+
 L.Storage.SubDrawLunkuoAction = L.Storage.SubAction.extend({
   options: {
       toolbarIcon: {
@@ -577,8 +589,9 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
         this.options.actions.push(L.S.DrawLmdGuardAction);
         this.options.actions.push(L.S.DrawAllBiaoxianAction);
         this.options.actions.push(L.S.DrawAllLureAction);
-        this.options.actions.push(L.S.DrawLmdLabelAction);
+        this.options.actions.push(L.S.DrawJckAction);
         this.options.actions.push(L.S.DrawOtherAction);
+        this.options.actions.push(L.S.DrawLmdLabelAction);
 
         if (this.map.options.enableMarkerDraw) {
             this.options.actions.push(L.S.DrawMarkerAction);
