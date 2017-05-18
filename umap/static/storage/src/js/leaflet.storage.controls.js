@@ -220,8 +220,8 @@ L.Storage.SubDrawJiansuAction = L.Storage.SubAction.extend({
 
   options: {
       toolbarIcon: {
-          html: '减速路面',
-          tooltip: '减速路面'
+          html: '薄层铺装',
+          tooltip: '薄层铺装'
       }
   },
 

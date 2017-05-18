@@ -85,7 +85,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
         if(sn !== null){
             sn = +sn;
             var data = this.map.getAnchorLatLngBySubNo(sn)
-            var pos = lr == LMD.POS_RIGHT ? 'right' : 'left'
+            var pos = lr == lmd.POS_RIGHT ? 'right' : 'left'
             if(data && (data[pos] !== undefined)){
                 this.properties._storage_options['rotate'] = data[pos]
                 this.updateStyle()

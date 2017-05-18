@@ -889,6 +889,8 @@ L.FormBuilder.jgSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+L.FormBuilder.CustomerSwitcher = L.FormBuilder.EmptySwitcher.extend({});
+
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
@@ -1069,6 +1071,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //预告标线设置个数
         ygbxszgs: {handler: 'IntInput', label: '预告标线设置个数'},
+
+        //自定义类型
+        category: {handler: 'CustomerSwitcher', label: '类型'},
 
     },
 

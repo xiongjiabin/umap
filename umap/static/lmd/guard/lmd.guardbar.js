@@ -572,8 +572,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var sns = this.getOption('gbss')
       var sne = this.getOption('gbse')
-      var snsString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sns)
-      var sneString = L.Storage.LmdFeatureMixin.showSubNice.call(this,sne)
+      var snsString = sns ? L.Storage.LmdFeatureMixin.showSubNice.call(this,sns):''
+      var sneString = sne ? L.Storage.LmdFeatureMixin.showSubNice.call(this,sne):''
       if(sne > sns ){
         stringMap['gbss'] = snsString
         stringMap['gbse'] = sneString
