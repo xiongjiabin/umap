@@ -175,8 +175,8 @@ L.Storage.DrawJckAction = L.Storage.BaseAction.extend({
 L.Storage.SubDrawLunkuoAction = L.Storage.SubAction.extend({
   options: {
       toolbarIcon: {
-          html: '轮廓线',
-          tooltip: '轮廓线'
+          html: '轮廓标',
+          tooltip: '轮廓标'
       }
   },
 
@@ -837,7 +837,7 @@ L.Storage.DataLayersControl = L.Control.extend({
             .on(add, 'click', L.DomEvent.stop)
             .on(add, 'click', this.newDataLayer, this);
 
-        this.map.ui.openPanel({data: {obj:this,html: container, name: this.CLASS_ALIAS || this.properties.name}, className: 'dark'});
+        this.map.ui.openPanel({data: {html: container}, className: 'dark'});
         this.map.editedFeature = this;
     }
 
@@ -1434,7 +1434,20 @@ L.S.Editable = L.Editable.extend({
 
     connectCreatedToMap: function (layer) {
         // Overrided from Leaflet.Editable
-        var datalayer = this.map.defaultDataLayer();
+        var datalayer = null;
+        var classAlias = layer && layer.getClassName && layer.getClassName();
+        if(classAlias){
+            datalayer = this.map.getFacilityDefaultLayer(classAlias);
+            if(datalayer && datalayer.isVisible()){
+
+            } else {
+                datalayer = null;
+                this.map.ui.alert({content: '没有找到对应的层或者对应的层没有加载，使用默认的层添加此设施', level: 'info'});
+            }
+        }
+        if(!datalayer){
+            datalayer = this.map.defaultDataLayer();
+        }
         datalayer.addLayer(layer);
         layer.isDirty = true;
         return layer;

@@ -964,7 +964,7 @@ L.Storage.DataLayer = L.Class.extend({
                     var datalayer = this.clone();
                     datalayer.edit();
                 }, this);
-        this.map.ui.openPanel({data: {obj:this, html: container,name: this.CLASS_ALIAS || this.properties.name}, className: 'dark'});
+        this.map.ui.openPanel({data: { html: container}, className: 'dark'});
         this.map.editedFeature = this;
 
     },

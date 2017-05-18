@@ -1210,7 +1210,7 @@
     var EditableMixin = {
 
         createEditor: function (map) {
-            map = map || this._map;
+            map = map || this._map || this.map;
             var Klass = this.options.editorClass || this.getEditorClass(map);
             return new Klass(map, this, this.options.editOptions);
         },
