@@ -62,8 +62,12 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
       ["15","15cm"]
     ];
 
-    var builder = L.Storage.Hide.prototype.edit.call(this,e);
+    var speed = this.getOption('speed');
+    var msg = (speed === null) ? ' 请在地图属性中填写默认速度' : ' 设计速度:'+ speed;
 
+    var builder = L.Storage.Hide.prototype.edit.call(this,e);
+    var gba = builder && builder.helpers['properties._storage_options.gba']
+    gba && gba.label && (gba.label.innerHTML += '<span style="color:yellow">' + msg + '</span>');
     return builder;
   },
 
@@ -77,6 +81,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
       var lineWidth = + (this.getOption('lineWidth') || 10);
       var lane = +(this.getOption('lane') || 1);
       var gbaControl = e.target.helpers['properties._storage_options.gba']
+      var descriptionControl = e.target.helpers['properties.description'];
 
       var area = 0;
       var len = +this.getOption('gbl');
@@ -87,7 +92,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
         }else{
           area = lineWidth / 100 * len * 6 / 15;
         }
-        this.properties.description = '设计速度:' + speed;
+        descriptionControl.input.value = this.properties.description = '设计速度:' + speed;
       }else if(lineType === 2){ //实线
         area = lineWidth / 100 * len;
       }

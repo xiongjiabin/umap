@@ -51,7 +51,7 @@ L.Storage.LmdFeatureMixin = {
     var advancedActions = L.DomUtil.createFieldset(container, L._(
       'Advanced actions'));
     this.getAdvancedEditActions(advancedActions);
-    this.map.ui.openPanel({data: {obj:this, html: container,name: this.CLASS_ALIAS || this.properties.name},className: 'dark'});
+    this.map.ui.openPanel({data: {obj:this, html: container,name: this.CLASS_ALIAS || (this.properties && this.properties.name)},className: 'dark'});
     this.map.editedFeature = this;
     if (!this.isOnScreen()) this.bringToCenter(e);
 
@@ -97,16 +97,19 @@ L.Storage.LmdFeatureMixin = {
   },
 
   showSubNice: function(sn){
-    var a = parseInt(sn)
-    var temp = Math.round(+sn * 1000 - a * 1000)
+      if(null === sn){
+          return ''
+      }
+      var a = parseInt(sn)
+      var temp = Math.round(+sn * 1000 - a * 1000)
 
-    if(temp < 10){
-      temp = '00' + temp
-    }else if(temp < 100) {
-      temp = '0' + temp
-    }
+      if(temp < 10) {
+          temp = '00' + temp
+      }else if(temp < 100) {
+          temp = '0' + temp
+      }
 
-    return 'K' + a + '+' + temp
+      return 'K' + a + '+' + temp
   }
 }
 

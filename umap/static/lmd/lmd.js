@@ -576,7 +576,7 @@ L.Storage.Map.include({
   },
 
   createDefaultLayer: function(names){
-
+    names = names || this.defaultLayerNames;
     if(!Array.isArray(names)) return 0;
 
     var oldNames = {};
@@ -593,6 +593,42 @@ L.Storage.Map.include({
       count++;
     }
     return count;
+  },
+
+  defaultLayerNames : ['标志','标线','防护设施','警示诱导','交叉口','清除危险物', '打印框', '文字', '底图', '其他'],
+  getFacilityDefaultLayer: function( classAlias ){
+      var aliasToLayerNames = {
+          'lmdMarker': 0, //标志
+          'lmdPillar': 0, //立柱
+          'tqlb': 1, //突起路标
+          'biaoxian':1, //横向减速标线
+          'zxbx': 1,//纵向减速标线
+          'rxhdx': 1, //人行横道县
+          'cxd': 1, //车行道边缘线
+          'cxdfjx': 1, //车行道分界线
+          'bxzxxd': 1, //中心线单
+          'bxzxxs': 1, //中心线双
+          'lmbj': 1, //立面标记
+          'guardbar': 2, //防护
+          'lunkuo': 3, //轮廓
+          'lure': 3, //警佑
+          'jck': 4, //交叉口
+          'lmdArea': 5, //清除障碍物
+          'prect': 6, //打印框
+          'lmdLabel': 7, //文字
+      }
+      var index = aliasToLayerNames[classAlias];
+      if(index === undefined) {
+          index = this.defaultLayerNames.length - 1;
+      }
+      var layerName = this.defaultLayerNames[index];
+      if(!layerName) return null;
+      var nameToLayer = [];
+      this.eachDataLayer(function (datalayer) {
+          nameToLayer[datalayer.getName()] = datalayer;
+      });
+
+      return nameToLayer[layerName];
   },
 
   getSubAngle: function(begin, end){

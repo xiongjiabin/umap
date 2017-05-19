@@ -51,12 +51,12 @@ L.Storage.BxZxxs = L.Storage.Hide.extend({
     }
 
     L.FormBuilder.LineSwitcher.prototype.selectOptions = [
-      ["3","虚实线"],
-      ["4","双实线"]
+        ["3","虚实线"],
+        ["4","双实线"]
     ];
     L.FormBuilder.LineWidthSwitcher.prototype.selectOptions = [
-      ["10","10cm"],
-      ["15","15cm"]
+        ["10","10cm"],
+        ["15","15cm"]
     ];
 
     var builder = L.Storage.Hide.prototype.edit.call(this,e);
@@ -70,20 +70,20 @@ L.Storage.BxZxxs = L.Storage.Hide.extend({
 
     //处理面积部分计算
     if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0}){
-      var lineType = + (this.getOption('lineType') || 1);
-      var lineWidth = + (this.getOption('lineWidth') || 10);
-      var lane = 1;
-      var gbaControl = e.target.helpers['properties._storage_options.gba']
+        var lineType = + (this.getOption('lineType') || 1);
+        var lineWidth = + (this.getOption('lineWidth') || 10);
+        var lane = 1;
+        var gbaControl = e.target.helpers['properties._storage_options.gba']
 
-      var area = 0;
-      var len = +this.getOption('gbl');
-      if(lineType === 3){ //虚实线
-        area = 1.4 * len * lineWidth / 100;
-      }else if(lineType === 4){ //双实线
-        area = 2* len * lineWidth / 100;
-      }
-      area = (area * lane).toFixed(2);
-      this.properties._storage_options.gba = gbaControl.input.value = area;
+        var area = 0;
+        var len = +this.getOption('gbl');
+        if(lineType === 3){ //虚实线
+            area = 1.4 * len * lineWidth / 100;
+        }else if(lineType === 4){ //双实线
+            area = 2* len * lineWidth / 100;
+        }
+        area = (area * lane).toFixed(2);
+        this.properties._storage_options.gba = gbaControl.input.value = area;
     }
   },
 

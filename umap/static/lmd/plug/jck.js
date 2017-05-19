@@ -38,7 +38,6 @@ L.Storage.Jck = L.Storage.Hide.extend({
      return this.CLASS_NAME
   },
 
-
   getStringMap: function(){
     var stringMap = L.Storage.Hide.prototype.getStringMap.call(this);
     var crossType = + (this.getOption('crossType') || 1);
