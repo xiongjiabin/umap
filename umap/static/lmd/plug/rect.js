@@ -271,7 +271,7 @@ lmd.tjPrintRect = function(){
       'gbseAngle': +page['gbseAngle']
     })
   }
-
+  project.totalPages = normalPages.length;
   project.pages = normalPages;
 
   new JsonGenerator(project, 'print.lmd').download(true);

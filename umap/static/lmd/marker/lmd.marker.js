@@ -127,7 +127,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         }
     }
 
-    var formatText = '<text font-family="Verdana" font-size="' + size + '">' + text + '</text>';
+    var formatText = '<text  font-size="' + size + '">' + text + '</text>';
 
     var options = {
       rotate: +this.getOption('rotate'),

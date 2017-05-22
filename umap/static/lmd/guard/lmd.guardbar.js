@@ -276,7 +276,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var size = 35;
       var color = this.getOption('color') || "Blue";
       var tail = this.getOption('tail') || (27 * text.length);
-      var formatText = '<text font-family="Verdana" font-size="' + size + '">' + text + '</text>' +
+      var formatText = '<text  font-size="' + size + '">' + text + '</text>' +
                        '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 0,15 ' + tail + ',0"></path>';
 
       var options = {

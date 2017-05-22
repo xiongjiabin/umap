@@ -1,33 +1,18 @@
 .storage-rect-icon {
     /*border: 1px solid white;*/
     border-radius: 5px 5px 5px 5px;
-
     text-align: center;
 }
 
 .storage-square-icon {
     /*border: 1px solid white;*/
     border-radius: 5px 5px 5px 5px;
-
     text-align: center;
-}
-
-.storage-opaque-icon {
-
-}
-
-
-.storage-pillar-icon {
-
-}
-.storage-pillar-icon img{
-
 }
 
 .storage-lmdcircle-icon {
     /*border: 1px solid white;*/
     border-radius: 50px 50px 50px 50px;
-
     text-align: center;
 }
 /*.leaflet-interactive:focus {
@@ -37,8 +22,9 @@
    border: 3px solid #06fc54
 }
 
-svg text1{
-   text-decoration:underline;
+svg text{
+   font-family:  "Microsoft YaHei",  "STHeiti", "WenQuanYi Micro Hei";
+   letter-spacing: 4px;
 }
 
 .padding1 {
@@ -50,4 +36,18 @@ svg text1{
 .leaflet-tooltip-left:before,
 .leaflet-tooltip-right:before {
   display:none;
+}
+
+/*给桩号的svg text样式*/
+.subm {
+    font-size: 18px;
+    writing-mode:tb;
+}
+.subkm{
+    font-size: 22px;
+    writing-mode:tb
+}
+/*给立柱的svg text样式*/
+.pillt {
+    font-size:70px;
 }

@@ -552,10 +552,10 @@ L.Storage.Map.include({
       var k = sn / 10;
       var sk = sn % 10;
       var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 20,0 -40,0"></path>' +
-                       '<text x="40" y="-6" style="writing-mode:tb;font-size:14pt">' + sk + '</text>';
+                       '<text x="40" y="-6" class="subm">' + sk + '</text>';
       if(sk === 0) {
         formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 40,0 -80,0"></path>' +
-                         '<text x="60" y="-10" style="writing-mode:tb;font-size:18pt">K' + k + '</text>';
+                         '<text x="60" y="-10" class="subkm">K' + k + '</text>';
       }
 
       var options = {

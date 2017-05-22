@@ -41,7 +41,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
   getSvgData: function() {
     var name = this.getDisplayName()
     var size = this.getOption('size') || 35
-    return '<text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
+    return '<text  font-size="' + size + '">' + name + '</text>'
   },
 
   resetTooltip: function(e){

@@ -36,7 +36,7 @@ L.Storage.LmdLabel = L.Storage.SVGObject.extend({
   getSvgData: function() {
     var name = this.getDisplayName()|| '请输入文字'
     var size = this.getOption('size') || 35
-    return '<text font-family="Verdana" font-size="' + size + '">' + name + '</text>'
+    return '<text  font-size="' + size + '">' + name + '</text>'
   },
 
   resetTooltip: function(e){
