@@ -30,10 +30,10 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
   //added by xiongjiabin
   getBasicOptions: function() {
     return [
-      'properties._storage_options.mt',
-      'properties._storage_options.mic',
-      'properties._storage_options.msh',
-      'properties._storage_options.mss',
+      'properties._storage_options.mt', //类型
+      'properties._storage_options.mic', //图形
+      'properties._storage_options.msh', // 内容
+      'properties._storage_options.mss', //速度&尺寸
       'properties._storage_options.size',
       'properties._storage_options.lr',
       'properties._storage_options.sn',

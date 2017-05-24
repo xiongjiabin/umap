@@ -37,10 +37,27 @@ L.PolylineOffset = {
     return offsetSegments;
   },
 
-  pointsToLatLngs: function(pts, map) {
+  pointsToLatLngs: function(pts, map, tolerance) {
     var ll = [];
-    for(var i=0, l=pts.length; i<l; i++) {
-      ll[i] = map.layerPointToLatLng(pts[i]);
+    if(pts.length <= 0) return [];
+    var tempPoint = pts[0];
+    var newPts = [tempPoint];
+    ll.push(map.layerPointToLatLng(tempPoint));
+    for(var i = 1, l = pts.length; i < l; i++) {
+        tempPoint = pts[i];
+        if( Math.abs(tempPoint['x'] - newPts[newPts.length - 1]['x']) <= tolerance &&
+            Math.abs(tempPoint['y'] - newPts[newPts.length - 1]['y']) <= tolerance) {
+            if(i === pts.length - 1){
+                if(newPts.length > 1){
+                    ll[ll.length - 1] = map.layerPointToLatLng(tempPoint);
+                }else{
+                    ll.push(map.layerPointToLatLng(tempPoint));
+                }
+            }
+            continue;
+        }
+        newPts.push(tempPoint);
+        ll.push(map.layerPointToLatLng(tempPoint));
     }
     return ll;
   },
@@ -192,8 +209,8 @@ L.PolylineOffset = {
 
   L.Polyline.include({
     getOffSetLatlngs: function(offset, latlngs, tolerance){
-      if(!offset) return latlngs
-      tolerance = tolerance || 6 //熊佳斌 相隔太近的points，小于10个像素的排除掉
+      //if(!offset) return latlngs
+      tolerance = tolerance || 30 //熊佳斌 相隔太近的points，小于10个像素的排除掉
       latlngs  = latlngs || this._latlngs
       var results = []
       var newLatlngs = []
@@ -202,11 +219,11 @@ L.PolylineOffset = {
       this._offsetProjectLatlngs(offset, latlngs, results, tolerance)
       //let points to latlngs
       if(results.length === 1){
-        newLatlngs = L.PolylineOffset.pointsToLatLngs(results[0],this.map)
+        newLatlngs = L.PolylineOffset.pointsToLatLngs(results[0],this.map,tolerance)
       } else {
         for(i = 0, len = results.length; i < len; i++){
           if(!results[i]) break
-          newLatlngs.push(L.PolylineOffset.pointsToLatLngs(results[i],this.map))
+          newLatlngs.push(L.PolylineOffset.pointsToLatLngs(results[i],this.map,tolerance))
         }
       }
       return newLatlngs
@@ -223,12 +240,14 @@ L.PolylineOffset = {
         for (i = 1; i < len; i++) {
            tmpPoint = this.map.latLngToLayerPoint(latlngs[i]);
            //丢掉相隔太近的点
+           //console.log('begin');
            //console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
            //console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))
+           //console.log('end' + tolerance);
            if ((i < (len-1)) &&
                Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']) <= tolerance &&
-               Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y'] <= tolerance)){
-               
+               Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']) <= tolerance){
+               //console.log(tolerance);
            }else{
                ring.push(tmpPoint)
            }

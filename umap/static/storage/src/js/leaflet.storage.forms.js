@@ -671,6 +671,16 @@ L.FormBuilder.DirectionChoice = L.FormBuilder.MultiChoice.extend({
     ],
 });
 
+L.FormBuilder.FangxiangChoice = L.FormBuilder.MultiChoice.extend({
+
+    default: 1,
+    choices: [
+        [1, '顺'],
+        [2, '逆'],
+        [3, '双向']
+    ],
+});
+
 
 L.FormBuilder.PillSuppSwitcher = L.FormBuilder.Select.extend({
 
@@ -878,6 +888,16 @@ L.FormBuilder.tcrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+//立柱的直径
+L.FormBuilder.DiameterSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["60", "60mm"],
+    ["76", "76mm"],
+    ["89", "89mm"]
+  ]
+});
+
 //警告减速丘版面尺寸
 L.FormBuilder.jgSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
@@ -1074,6 +1094,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
 
         //自定义类型
         category: {handler: 'CustomerSwitcher', label: '类型'},
+        //线性诱导标方向
+        direction: {handler: 'FangxiangChoice', label: '方向'},
+        diameter:{handler:'DiameterSwitcher', label: '立柱直径'},
 
     },
 

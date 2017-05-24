@@ -14,6 +14,7 @@ L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobje
 L.Storage.GB_TYPE_BIANGOU = 7
 L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
 L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
+L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
 
 L.Storage.guardbarData = [
   null,
@@ -61,6 +62,8 @@ L.Storage.guardbarData = [
    childs: [
     null,
     {name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
+    //一个上午的时间，不同的渲染样式，需要不通的fill 2017-5-23
+    //{name:'附着式轮廓标',type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdcross',weight:2,fill:false}},
     {name:'柱式轮廓标', type: L.Storage.GB_CROSS, defaultOptions:{lmdtype:'lmdtrian',weight:2,fill:true}},
   ]},
   {name: '防眩设施',
@@ -128,8 +131,19 @@ L.Storage.guardbarData = [
       null,
       {name:'移动护栏', type: L.Storage.GB_NORMAL_LINE},
       {name:'路宅分离', type: L.Storage.GB_NORMAL_LINE},
-    ]},
-
+    ]},{
+      name: '线性诱导设施',
+      defaultData:{
+          gbc: "1", //默认
+          weight:"12",
+          color: "white",
+      },
+      childs: [
+        null,
+        {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+        {name:'混泥土柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+        {name:'波形梁护栏附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+      ]},
 ];
 
 L.Storage.getGBOptions = function(gbt){
@@ -442,7 +456,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var gl   = +this.getOption('lr') || lmd.POS_LEFT
       var offset = this.getOption('offset') * 2
-      if(gl !== 2) offset = 0 - offset
+      if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
 
       //console.time('get line between sub :', gbss + '->' + gbse)
       //var oldLatlngs = this.getLatLngs()
@@ -468,17 +482,18 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       if(e && e.helper && e.helper.name in {'offset': 0}){
           var gbss = this.getOption('gbss')
           var gbse = this.getOption('gbse')
+          var lr = +this.getOption('lr')
           if( gbse && gbse > gbss){
-              var gl   = +this.getOption('lr') || lmd.POS_LEFT
-              var offset = this.getOption('offset')
-              if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
+              var gl   = lr || lmd.POS_LEFT
+              var lineOffset = offset = +this.getOption('offset')
+              if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) lineOffset = 0 - lineOffset
 
               //console.time('get line between sub :', gbss + '->' + gbse)
               //var oldLatlngs = this.getLatLngs()
               var newCoordinates = this.map.getLineBetweenSubNos(gbss,gbse)
               if(newCoordinates) {
-                  var offsetLatLngs = this.getOffSetLatlngs(offset, newCoordinates)
-                  this.setLatLngs(offsetLatLngs)
+                  var offsetLatLngs = this.getOffSetLatlngs(lineOffset, newCoordinates)
+                  if(offsetLatLngs && offsetLatLngs.length > 0) this.setLatLngs(offsetLatLngs);
                   this.editor && this.editor.reset();
               }else{
                   console.error('没有找到对应的桩号坐标，是不是没有设置为路?')
@@ -591,6 +606,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       stringMap['gba'] = this.getOption('gba');//面积
       stringMap['gbw'] = this.getOption('gbw');//宽度
       stringMap['gblev'] = this.getOption('gblev');//级别
+      stringMap['gbs'] = this.getOption('gbs');//间距
 
       var gbd = this.getOption('gbd')
       gbd = gbd || L.FormBuilder.DirectionChoice.prototype.default
@@ -796,8 +812,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         if(gbss && gbse && gbse > gbss){
             var gl   = +this.getOption('lr') || lmd.POS_LEFT
             var offset = this.getOption('offset')
-            if(offset === null ) offset = 40;
+            if(offset === null ) offset = 40
             if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
+            if(gl === lmd.POS_MIDDLE) offset = 0
+            offset = +offset;
 
             //console.time('get line between sub :', gbss + '->' + gbse)
             //var oldLatlngs = this.getLatLngs()
@@ -1075,7 +1093,7 @@ L.Storage.BarTypeLine = function(options){
   options['dashArray'] = '5,20';
   options['lineCap'] = 'butt';
   options['opacity'] = 1;
-  options['weight'] = 20;
+  options['weight'] = options.weight || 20;
   if (options.interactive) this.options.pointerEvents = 'visiblePainted';
   else this.options.pointerEvents = 'stroke';
   this.parentClass.prototype.setStyle.call(this, options);
@@ -1090,7 +1108,7 @@ L.Storage.BarTypeCustomize = function(options){
   options['dashArray'] = '';
   options['lineCap'] = 'round';
   options['opacity'] = 0.4;
-  options['weight'] = 5;
+  options['weight'] = options.weight || 5;
   if (options.interactive) this.options.pointerEvents = 'visiblePainted';
   else this.options.pointerEvents = 'stroke';
   this.parentClass.prototype.setStyle.call(this, options);

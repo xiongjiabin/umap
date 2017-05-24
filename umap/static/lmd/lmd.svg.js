@@ -16,8 +16,8 @@ L.SVG.include({
   _initPredefinedMarkers: function() {
     this._defs = L.SVG.create('defs')
     this._defs.innerHTML =
-      '<g id="lmdcross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>' +
-      '<g id="lmdtrian"><path d="M 0,8 L -8,-8 8,-8 0,8"></path></g>'
+       '<g id="lmdtrian"><path d="M 0,8 L -7,-4 7,-4 0,8"></path></g>' +
+       '<g id="lmdcross"><path d="M -8,-8 L 8,8 M -8,8 L 8,-8"></path></g>'
 
     //add other markers
     this._container.appendChild(this._defs)
@@ -64,8 +64,8 @@ L.SVG.include({
       for (j = 0, jlen = layer._rings[i].length; j < jlen; j++) {
         point = layer._rings[i][j]
         layer._polyMarker.innerHTML +=
-          '<use xlink:href="#' + lmdtype + '" x="' + point.x + '" y="' +
-          point.y + '"></use>'
+          '<use transform="rotate(0,' + point.x + ',' + point.y + ')" xlink:href="#' + lmdtype + '" x="' + point.x + '" y="' +
+          point.y + '" />'
       }
     }
     this._rootGroup.appendChild(layer._polyMarker)
