@@ -1,6 +1,6 @@
 L.Storage.LineLure = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LINELURE,
-  defaultName: '线性诱导(横向)',
+  defaultName: '单柱式线性诱导(横向)',
   CLASS_ALIAS: '线性诱导(横向)',
   CLASS_NAME: 'linelure',
 
@@ -151,10 +151,13 @@ lmd.tjLineLure = function(){
 
   //this means map
   var i = 1
+  var className = null;
   this.eachLayerFeature(function (feature) {
-      if(feature.getClassName() === L.Storage.LineLure.prototype.CLASS_NAME){
-        data.push(lmd.getTjData(feature,i,titles))
-        i++
+      className = feature.getClassName();
+      if(className === L.Storage.LineLure.prototype.CLASS_NAME ||
+         className === L.Storage.ZongLineLure.prototype.CLASS_NAME) {
+          data.push(lmd.getTjData(feature,i,titles))
+          i++
       }
   })
 

@@ -202,8 +202,9 @@ L.Storage.SVGObject = L.SVGObject.extend({
     return this._latlng;
   },
 
+  CLASS_NAME: 'svgobject',
   getClassName: function() {
-    return 'svgobject';
+    return this.CLASS_NAME;
   },
 
   getShapeOptions: function() {
