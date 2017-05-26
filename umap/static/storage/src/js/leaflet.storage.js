@@ -85,6 +85,8 @@ L.Storage.Map.include({
         L.Util.setBooleanFromQueryString(this.options, 'displayDataBrowserOnLoad');
         L.Util.setBooleanFromQueryString(this.options, 'displayCaptionOnLoad');
         L.Util.setBooleanFromQueryString(this.options, 'captionBar');
+        L.Util.setBooleanFromQueryString(this.options, 'noControl');
+        //熊佳斌， 如果是打印模式下，添加nocontrl=true，不显示任何别的空间 2017-05-26
         for (var i = 0; i < this.HIDDABLE_CONTROLS.length; i++) {
             L.Util.setNullableBooleanFromQueryString(this.options, this.HIDDABLE_CONTROLS[i] + 'Control');
         }

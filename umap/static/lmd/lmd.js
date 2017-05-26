@@ -9,6 +9,7 @@ var lmd = {
 
   init: function(map) {
 
+    if(map.options && map.options.noControl) return;
     //init the latlng show events
     L.control.coordinates({
       position: "bottomleft",
