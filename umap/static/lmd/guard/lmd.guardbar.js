@@ -15,6 +15,7 @@ L.Storage.GB_TYPE_BIANGOU = 7
 L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
 L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
+L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
 
 L.Storage.guardbarData = [
   null,
@@ -143,10 +144,24 @@ L.Storage.guardbarData = [
         {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
         {name:'混泥土柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
         {name:'波形梁护栏附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+      ]},{
+      name: '分道体',
+      posData: L.FormBuilder.LeftRightChoice.prototype.choicesM,
+      defaultData:{
+          gbc: "1",
+          weight:"10",
+          color: "red",
+          lr:lmd.POS_MIDDLE
+      },
+      childs: [
+          null,
+          {name:'柱式分道体', type: L.Storage.GB_CIRCLE},
+          {name:'片式分道体', type: L.Storage.GB_CIRCLE},
       ]},
 ];
 
 L.Storage.getGBOptions = function(gbt){
+  gbt = gbt || 0;
   if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
     return []
   }
@@ -162,28 +177,31 @@ L.Storage.getGBOptions = function(gbt){
 };
 
 L.Storage.getGBClass = function(gbt, gbc){
+  gbt = gbt || 0;
   if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
     return []
   }
   var temp = L.Storage.guardbarData[gbt]
   gbc = (+gbc) || 0
-  return temp['childs'][gbc]
+  return temp && temp['childs'][gbc]
 }
 
 L.Storage.getGBDefaultData = function(gbt){
+  gbt = gbt || 0;
   if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
     return {}
   }
   var temp = L.Storage.guardbarData[gbt]
-  return temp['defaultData']
+  return temp && temp['defaultData']
 }
 
 L.Storage.getGBPosData = function(gbt){
+  gbt = gbt || 0;
   if(gbt <= 0 || gbt >= L.Storage.guardbarData.length){
     return {}
   }
   var temp = L.Storage.guardbarData[gbt]
-  return temp['posData']
+  return temp && temp['posData']
 }
 
 
@@ -487,6 +505,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               var gl   = lr || lmd.POS_LEFT
               var lineOffset = offset = +this.getOption('offset')
               if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) lineOffset = 0 - lineOffset
+              //if(gl === lmd.POS_MIDDLE) offset = 0;
 
               //console.time('get line between sub :', gbss + '->' + gbse)
               //var oldLatlngs = this.getLatLngs()
@@ -751,6 +770,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
               var rotate = +this.getOption('rotate');
               var offset = +this.getOption('offset');
+              if(lr === lmd.POS_MIDDLE) offset = 0;
               var degrees = (rotate ) / 180 * Math.PI
               var textX = 0;
               var textY = 0;

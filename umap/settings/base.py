@@ -83,7 +83,7 @@ LOGIN_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
-JS_VERSION = '?ver=20170518'
+JS_VERSION = '?ver=20170523'
 
 STATIC_ROOT = os.path.join('static')
 MEDIA_ROOT = os.path.join('uploads')

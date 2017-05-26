@@ -410,7 +410,17 @@ L.Storage.FeatureMixin = {
     addInteractions: function () {
         this.on('contextmenu editable:vertex:contextmenu', this._showContextMenu, this);
         this.on('click', this._onClick);
+        //this.on('dblclick', this._onDblClick);
     },
+
+    /*_onDblClick: function(e){
+        if (!this.isReadOnly()) {
+            if(this._toggleEditing)
+                this._toggleEditing(e);
+            else
+                this.edit(e);
+        }
+    },*/
 
     _onClick: function (e) {
         if (this.map.measureTools && this.map.measureTools.enabled()) return;
