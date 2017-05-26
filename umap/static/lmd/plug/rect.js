@@ -98,8 +98,9 @@ L.Storage.PrintRect = L.Storage.SVGObject.extend({
     gbse = +gbse || 0;
     gbss = +gbss || 0;
     var typeSvg = {
-      "a3": '<rect class="leaflet-interactive" transform="rotate({{rotate}},{{cx}},{{cy}})" ' +
-            'style="stroke:black;fill:{{color}}; fill-opacity:0.3; stroke-width:1px" x="0" y="0" width="{{width}}" height="{{height}}"/>'
+      "a3": '<rect transform="rotate({{rotate}},{{cx}},{{cy}})" ' +
+            'style="stroke:black;fill:{{color}}; fill-opacity:0.3; stroke-width:1px" x="0" y="0" width="{{width}}" height="{{height}}"/>' +
+            '<rect transform="rotate({{rotate}},{{cx}},{{cy}})" width="20" height="20" style="fill:yellow" x="0" y="0" />'
     }
     var svgStr = typeSvg["a3"]
     var textTemplate = '<text style="font-size:14pt;" x="{{width}}" y="{{height}}">{{gbss}} - {{gbse}}</text>'
