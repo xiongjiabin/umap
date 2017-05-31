@@ -595,7 +595,11 @@ L.Storage.DataLayer = L.Class.extend({
                 this.map.ui.alert({content: L._('Skipping unkown geometry.type: {type}', {type: geometry.type}), level: 'error'});
         }
         if (layer) {
-            this.addLayer(layer);
+            if(this.map.options.noControl && layer.isHide && layer.isHide()){
+                //如果是打印模式，并且这个设施为hide模式
+            }else{
+                this.addLayer(layer);
+            }
             return layer;
         }
     },

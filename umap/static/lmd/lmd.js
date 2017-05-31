@@ -1,4 +1,4 @@
-var lmd = {
+ var lmd = {
   POS_LEFT: 1,
   POS_RIGHT: 2,
   POS_MIDDLE: 3,
@@ -570,7 +570,7 @@ L.Storage.Map.include({
 
       var data = this.getAnchorLatLngBySubNo(sn / 10);
       if(data) {
-          options['rotate'] = data['right'];
+          options['rotate'] = data['left'];
       }
 
       return new L.SVGObject(latlng, options).addTo(this);

@@ -79,7 +79,7 @@ function JsonGenerator(dataJson, fileName) {
     this.getDownloadLink = function () {
 
         var type = 'data:text/json;charset=utf-8';
-        var data = JSON.stringify(this.dataJson);
+        var data = JSON.stringify(this.dataJson,null,4);
 
         if (typeof btoa === 'function') {
             type += ';base64';

@@ -119,6 +119,8 @@ L.Storage.SVGObject = L.SVGObject.extend({
 
   preInit: function() {},
 
+  isHide: function() { return false; },
+
   addInteractions: function() {
     L.Storage.FeatureMixin.addInteractions.call(this);
     this.on('dragend', this._onDragEnd, this);
@@ -168,14 +170,14 @@ L.Storage.SVGObject = L.SVGObject.extend({
   },
 
   _redraw: function() {
-    if (this.datalayer && this.datalayer.isVisible()) {
+    if (this.datalayer && this.datalayer.isVisible() ) {
       this.updateStyle()
       this.update()
     }
   },
 
   updateStyle: function(){
-    if (this.datalayer && this.datalayer.isVisible()) {
+    if (this.datalayer && this.datalayer.isVisible() ) {
       var color = this.getOption('color');
       var scale = this.getOption('scale');
       var rotate = this.getOption('rotate');
@@ -192,7 +194,7 @@ L.Storage.SVGObject = L.SVGObject.extend({
   },
 
   _update: function(){
-    if (this.datalayer && this.datalayer.isVisible()) {
+    if (this.datalayer && this.datalayer.isVisible() ) {
       this.update()
     }
     return this
