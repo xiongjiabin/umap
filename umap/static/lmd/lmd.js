@@ -7,6 +7,8 @@
   POS_MIDDLE_RIGHT: 6, //中分右
   MIN_VALID_TWO_SUBS: 30,
 
+  DEFAULT_OFFSET: 80,
+
   init: function(map) {
 
     if(map.options && map.options.noControl) return;
@@ -555,8 +557,9 @@ L.Storage.Map.include({
       var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 20,0 -40,0"></path>' +
                        '<text x="40" y="-6" class="subm">' + sk + '</text>';
       if(sk === 0) {
-        formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 40,0 -80,0"></path>' +
-                         '<text x="60" y="-10" class="subkm">K' + k + '</text>';
+          var trikyNumber = ((k + '').length + 1) * -10;
+          formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 40,0 -80,0"></path>' +
+                         '<text x="60" y="' + trikyNumber + '" style="letter-spacing:2px" class="subkm">K' + k + '</text>';
       }
 
       var options = {

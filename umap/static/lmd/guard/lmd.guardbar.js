@@ -218,7 +218,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         this.properties._storage_options = {
           gbc: "1",
           weight:"10",
-          offset: 40,
+          offset: lmd.DEFAULT_OFFSET,
           lr: lmd.POS_LEFT
         }
         for(var i in defaultData){
@@ -832,7 +832,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
         if(gbss && gbse && gbse > gbss){
             var gl   = +this.getOption('lr') || lmd.POS_LEFT
             var offset = this.getOption('offset')
-            if(offset === null ) offset = 40
+            if(offset === null ) offset = lmd.DEFAULT_OFFSET
             if(gl === lmd.POS_LEFT || gl === lmd.POS_MIDDLE_LEFT) offset = 0 - offset
             if(gl === lmd.POS_MIDDLE) offset = 0
             offset = +offset;

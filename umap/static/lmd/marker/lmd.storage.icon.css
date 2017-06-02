@@ -40,11 +40,11 @@ svg text{
 
 /*给桩号的svg text样式*/
 .subm {
-    font-size: 18px;
+    font-size: 26px;
     writing-mode:tb;
 }
 .subkm{
-    font-size: 22px;
+    font-size: 32px;
     writing-mode:tb
 }
 /*给立柱的svg text样式*/
