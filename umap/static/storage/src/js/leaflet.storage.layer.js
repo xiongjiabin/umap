@@ -482,6 +482,7 @@ L.Storage.DataLayer = L.Class.extend({
     addRawData: function (c, type, options) {
         var self = this;
         this.rawToGeoJSON(c, type, function (geojson) {
+            if (geojson._storage) self.setOptions(geojson._storage);
             self.addData(geojson);
         }, options);
     },
@@ -1241,11 +1242,13 @@ L.Storage.DataLayer = L.Class.extend({
        }
        subCoords = null
        this.options.subHelpData = this.options.subHelpData || []
-       this.options.subHelpData.push({
-         'data': newSubCoords,
-         'min': minIndex,
-         'max': maxIndex
-       })
+       if(newSubCoords.length > 0) {
+           this.options.subHelpData.push({
+               'data': newSubCoords,
+               'min': minIndex,
+               'max': maxIndex
+           })
+       }
        return newGeoJSON
      }
 });
