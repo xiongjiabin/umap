@@ -280,7 +280,7 @@ lmd.tjLunkuo = function(){
 
   lmd.processData(data)
 
-  new CsvGenerator(data,  '轮廓设施表.csv').download(true);
+  new CsvGenerator(data,  '轮廓标.csv').download(true);
 }
 
 //薄层铺装
@@ -504,7 +504,7 @@ lmd.tjs = [{
     label: '立柱',
     process: lmd.tjPillars
   },{
-    label: '轮廓设施',
+    label: '轮廓标',
     process: lmd.tjLunkuo
   },{
     label: '防眩设施',

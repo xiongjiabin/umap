@@ -106,14 +106,17 @@ L.Storage.Map.include({
         subHelp = subHelpData[j]
         //得一段路必须在一个完整的地方，交叉的情况暂时不考虑
         if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max) {
-          floorData  = [subHelp['data'][floorSubNo][1],subHelp['data'][floorSubNo][0]]
+          floorData  = subHelp['data'][floorSubNo] &&
+                       [subHelp['data'][floorSubNo][1],subHelp['data'][floorSubNo][0]]
 
           if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
-            ceilData  = [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
+            ceilData  = subHelp['data'][ceilSubNo] &&
+                        [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
           }
 
           if(floorOldSubNo >= subHelp.min && floorOldSubNo <= subHelp.max) {
-            floorOldData  = [subHelp['data'][floorOldSubNo][1],subHelp['data'][floorOldSubNo][0]]
+            floorOldData  = subHelp['data'][floorOldSubNo] &&
+                            [subHelp['data'][floorOldSubNo][1],subHelp['data'][floorOldSubNo][0]]
           }
         }
 
