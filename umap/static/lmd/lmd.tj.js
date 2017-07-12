@@ -124,9 +124,9 @@ lmd.objectToArray = function(obj){
   return result
 }
 
-lmd.getTjData = function(feature, no, titles){
+lmd.getTjData = function(feature, no, titles, type){
   var tempData = [no]
-  var stringMap = feature.getStringMap()
+  var stringMap = feature.getStringMap(type)
   for(var temp in titles) {
     tempData.push(stringMap[temp] || '')
   }

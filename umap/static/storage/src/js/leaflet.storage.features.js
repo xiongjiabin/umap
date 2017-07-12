@@ -589,7 +589,7 @@ L.Storage.FeatureMixin = {
 
       var sn = this.getOption('sn')
       if(sn){
-        stringMap['sn'] = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
+        stringMap['gbss'] = stringMap['sn'] = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
       }else{
         stringMap['sn'] = '';
       }

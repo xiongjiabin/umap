@@ -5,6 +5,7 @@
 
 L.Storage.CheXingDao = L.Storage.Hide.extend({
   defaultName: '车行道边缘线',
+  CLASS_NAME: 'cxd',
 
   preInit: function(){
 
@@ -46,7 +47,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
   },
 
   getClassName: function(){
-     return 'cxd'
+     return this.CLASS_NAME;
   },
 
   isHide: function(){

@@ -203,7 +203,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
   },
 
 
-  getStringMap: function(){
+  getStringMap: function( type ){
     var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
     stringMap['roadWidth2'] = this.getOption('roadWidth2')
     stringMap['roadWidth'] = this.getOption('roadWidth')
@@ -213,6 +213,9 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     stringMap['gba'] = this.getOption('gba')
     stringMap['lane'] = this.getOption('lane') || 1
     stringMap['ygbxszgs'] = this.getOption('ygbxszgs')
+    if(type === 1){
+        stringMap['gba'] = [stringMap['gbn'],stringMap['gba']].join('+');
+    }
     return stringMap
   },
 

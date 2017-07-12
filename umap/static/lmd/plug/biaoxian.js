@@ -222,41 +222,6 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
   },
 });
 
-/*
-//纵向减速标线
-lmd.tjZxbx = function(){
-  var data = []
-  var titles = {no:'序号',
-                gbss: '起始桩号',
-                gbse: '结束桩号',
-                gbl: '长度(m)',
-                gba: '面积(m2)',
-                pos: '侧别',
-                hColor: '颜色',
-                gbm: '材料',
-                ds: '状态',
-                description:'备注'
-              }
-  data.push(lmd.objectToArray(titles))
-  delete titles.no
-
-  //this means map
-  var i = 1
-  this.eachLayerFeature(function (feature) {
-      if(feature.getClassName() === L.Storage.Zxbx.prototype.CLASS_NAME){
-        data.push(lmd.getTjData(feature,i,titles))
-        i++
-      }
-  })
-
-  lmd.processData(data)
-  new CsvGenerator(data,  '纵向减速标线.csv').download(true);
-}
-
-
-lmd.tjs.push({ label: '纵向减速标线', process: lmd.tjZxbx});
-*/
-
 L.Storage.DataLayer.prototype._lineToClass[L.Storage.Zxbx.prototype.CLASS_NAME] = L.Storage.Zxbx;
 
 L.S.Editable.prototype.createZxbx = function( latlng ){
@@ -292,3 +257,45 @@ L.Storage.SubDrawZxbxAction = L.Storage.SubAction.extend({
 });
 
 L.Storage.DrawAllBiaoxianAction.prototype.options.subActions.push(L.Storage.SubDrawZxbxAction);
+
+
+//综合标线统计
+lmd.tjBiaoXian = function(){
+  var data = []
+  var titles = {no:'序号',
+                name: '设施',
+                gbss: '起始桩号',
+                gbse: '结束桩号',
+                gba: '面积(m2)',
+                pos: '侧别',
+                hColor: '颜色',
+                ds: '状态',
+                description:'备注'
+              }
+  data.push(lmd.objectToArray(titles))
+  delete titles.no
+
+  var tjClasses = {};
+  tjClasses[L.Storage.BxZxxd.prototype.CLASS_NAME] = 0; //中心线单
+  tjClasses[L.Storage.BxZxxs.prototype.CLASS_NAME] = 0; //中心线双
+  tjClasses[L.Storage.Biaoxian.prototype.CLASS_NAME] = 0; //横向减速标线
+  tjClasses[L.Storage.Zxbx.prototype.CLASS_NAME] = 0; //纵向减速标线
+  tjClasses[L.Storage.CxdFjx.prototype.CLASS_NAME] = 0; //车行道分界线
+  tjClasses[L.Storage.CheXingDao.prototype.CLASS_NAME] = 0; //车行道边缘线
+  tjClasses[L.Storage.Rxhdx.prototype.CLASS_NAME] = 0; //人行横道线
+
+  //this means map
+  var i = 1
+  this.eachLayerFeature(function (feature) {
+      if(feature.getClassName() in tjClasses){
+        data.push(lmd.getTjData(feature,i,titles,1))
+        i++
+      }
+  })
+
+  lmd.processData(data)
+  new CsvGenerator(data,  '标线合计.csv').download(true);
+}
+
+
+lmd.tjs.push({ label: '标线合计', process: lmd.tjBiaoXian});
