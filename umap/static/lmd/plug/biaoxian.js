@@ -23,9 +23,8 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
 
   edit: function(e) {
     if(this.map.editEnabled) {
-        var gbt = L.Storage.GB_TYPE_JIANSU; //类别属性和减速路面一样，
-        var gbcOptions = L.Storage.getGBOptions(gbt)
-        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
+        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =
+            L.FormBuilder.DangerousType.prototype.selectOptions;
 
         //解决侧别的问题
         L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
@@ -193,9 +192,8 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
 
   edit: function(e) {
     if(this.map.editEnabled) {
-        var gbt = L.Storage.GB_TYPE_JIANSU; //类别属性和减速路面一样，
-        var gbcOptions = L.Storage.getGBOptions(gbt)
-        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =  gbcOptions;
+        L.FormBuilder.GuardbarCatSwitcher.prototype.selectOptions =
+            L.FormBuilder.DangerousType.prototype.selectOptions;
 
         //解决侧别的问题
         L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;

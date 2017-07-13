@@ -49,10 +49,12 @@ L.Storage.Jck = L.Storage.Hide.extend({
     stringMap['tcrxBx'] = this.getOption('tcrxBx');
     stringMap['tcrxNum'] = this.getOption('tcrxNum');
     stringMap['tcrxSize'] = this.getOption('tcrxSize');
+    var jsqType = +(this.getOption('jsqType'));
+    stringMap['jsqType'] = lmd.getOptionsToMap(L.FormBuilder.jsqTypeSwitcher.prototype.selectOptions)[jsqType] || '';
     stringMap['jsqBx'] = this.getOption('jsqBx');
     stringMap['jsqBz'] = this.getOption('jsqBz');
     stringMap['jsqSize'] = this.getOption('jsqSize');
-    stringMap['jsqXjjsl'] = this.getOption('jsqXjjsl');
+    stringMap['jsqWidth'] = this.getOption('jsqWidth');
     stringMap['jgNum'] = +this.getOption('jgNum');
     if(stringMap['jgNum'] > 0) {
       stringMap['jgContent'] = this.getOption('jgContent');
@@ -97,10 +99,11 @@ L.Storage.Jck = L.Storage.Hide.extend({
 
   getJsqOptions: function(){
     return [
+      'properties._storage_options.jsqType',
       'properties._storage_options.jsqBx',
       'properties._storage_options.jsqBz',
       'properties._storage_options.jsqSize',
-      'properties._storage_options.jsqXjjsl',
+      'properties._storage_options.jsqWidth',
     ]
   },
 
@@ -137,7 +140,7 @@ L.Storage.Jck = L.Storage.Hide.extend({
 
     var tcrxFields = this.getTcrxOptions();
     var builder = new L.S.FormBuilder(this, tcrxFields, {});
-    var tcrxProperties = L.DomUtil.createFieldset(container, '停车让行让行(单柱式)');
+    var tcrxProperties = L.DomUtil.createFieldset(container, '停车让行(单柱式)');
     tcrxProperties.appendChild(builder.build());
 
     var jsqFields = this.getJsqOptions();
@@ -174,10 +177,11 @@ lmd.tjJck = function(){
                 tcrxBx: '停车让行标线(m2)',
                 tcrxNum: '禁令标志(块)',
                 tcrxSize: '版面尺寸',
+                jsqType: '减速丘类型',
                 jsqBx: '减速丘标线',
                 jsqBz: '减速丘标志(块)',
                 jsqSize: '版面尺寸',
-                jsqXjjsl: '橡胶减速垄(m)',
+                jsqWidth: '减速丘设置宽度(m)',
                 jgContent: '警告标志内容',
                 jgSize:'版面尺寸',
                 jgType:'支撑形式',

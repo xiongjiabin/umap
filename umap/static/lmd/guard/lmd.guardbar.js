@@ -9,7 +9,7 @@ L.Storage.GB_TYPE_BIAOXIAN = 1 //标线也是逃兵，不符合这些原有的�
 L.Storage.GB_TYPE_HULAN = 2
 L.Storage.GB_TYPE_LUNKUO = 3
 L.Storage.GB_TYPE_FANGXUAN = 4
-L.Storage.GB_TYPE_JIANSU = 5 // 后来改成 薄层铺装,原来的减速路面
+L.Storage.GB_TYPE_BAOCENGPUZHUANG = 5 // 后来改成 薄层铺装,原来的减速路面
 L.Storage.GB_TYPE_JIANSUQIU = 6 //减速丘不符合这些规则，放在svgobject中实现 xiongjiabin 17_3_03
 L.Storage.GB_TYPE_BIANGOU = 7
 L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分拆开来
@@ -78,16 +78,13 @@ L.Storage.guardbarData = [
     {name:'其他',type: L.Storage.GB_NORMAL_LINE},
   ]},
   {name:'薄层铺装',
-   defaultData:{ color: "white"},
+   defaultData:{ color: "white", dangerousType: "1"},
+   posData: L.FormBuilder.LeftRightChoice.prototype.choicesLRBoth,
    childs: [
     null,
-    {name:'急弯',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'过村',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'事故多发',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'隧道洞口',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'学校',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'交叉口',type: L.Storage.GB_VERTICAL_LINE},
-    {name:'陡坡',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'薄层铺装(条状)',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'薄层铺装(块状)',type: L.Storage.GB_VERTICAL_LINE},
+    {name:'薄层铺装(带状)',type: L.Storage.GB_VERTICAL_LINE},
   ]},
   {name:'减速丘',
    defaultData:{ color: "White"},
@@ -975,18 +972,18 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
 });
 
 L.Storage.Jiansu = L.Storage.Guardbar.extend({
-  gbType: L.Storage.GB_TYPE_JIANSU,
-  CLASS_ALIAS: '薄层铺装',
+  gbType: L.Storage.GB_TYPE_BAOCENGPUZHUANG,
   dsColors: [null, 'White', 'Lime','Fuchsia'],
 
   getClassName: function () {
-      return 'jiansu';
+      return 'jiansu';//原来的jiansu
   },
 
   //added by xiongjiabin
   getBasicOptions: function () {
       return [
         'properties._storage_options.gbc',//类别
+        'properties._storage_options.dangerousType',//危险类型
         'properties._storage_options.lr',
         'properties._storage_options.gbss',//起始桩号
         'properties._storage_options.gbse',
@@ -1027,7 +1024,6 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
     if(!e) return
 
     L.Storage.Guardbar.prototype.updateName.call(this,e);
-    this.CLASS_ALIAS = '薄层铺装';
 
     return
   },
