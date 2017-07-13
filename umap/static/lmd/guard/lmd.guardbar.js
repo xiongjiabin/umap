@@ -919,7 +919,7 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
 
   resetTooltip: function(e) {
 
-    L.Storage.Guardbar.prototype.resetTooltip.call(this.e);
+    L.Storage.Guardbar.prototype.resetTooltip.call(this, e);
     if(!e) return;
     var gbnControl = e.target.helpers['properties._storage_options.gbn']
     var gbsControl = e.target.helpers['properties._storage_options.gbs']
@@ -942,7 +942,7 @@ L.Storage.Fangxuan = L.Storage.Guardbar.extend({
         if(gbc === this.GBC_TYPE_FANGXUAN_NET){
             this.properties._storage_options.gbn = gbnControl.input.value = gbl - 2 * gbs;
         }else{
-            this.properties._storage_options.gbn = gbnControl.input.value = (Math.ceil(gbl / gbs) + 1)
+            (gbs > 0) && (this.properties._storage_options.gbn = gbnControl.input.value = (Math.ceil(gbl / gbs) + 1));
         }
     }
   },
