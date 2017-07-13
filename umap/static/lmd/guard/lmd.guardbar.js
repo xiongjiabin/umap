@@ -139,8 +139,8 @@ L.Storage.guardbarData = [
       childs: [
         null,
         {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-        {name:'混泥土柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-        {name:'波形梁护栏附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+        {name:'混凝土附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+        {name:'波形梁钢护栏附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
       ]},{
       name: '分道体',
       posData: L.FormBuilder.LeftRightChoice.prototype.choicesM,

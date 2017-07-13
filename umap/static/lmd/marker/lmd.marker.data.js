@@ -352,14 +352,13 @@ lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'>=80',size:'600*
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'400*600'})
 lmd.marker[lmd.MARKER_ROAD]['childs'][1]['childs'].push({speed:'<80',size:'220*400'})
 temp = [
-	"指路36 线形诱导1组右",
-	"指路36 线形诱导1组左",
-	"指路37 线形诱导2组左",
-	"指路37 线形诱导3组左",
-	"指路37 线形诱导4组左右",
-	"指路37 线形诱导2组右",
-	"指路37 线形诱导3组右",
-	"指路36 线性诱导1组左右"
+	"1组左",
+	"1组右",
+	"2组左",
+	"2组右",
+	"3组左",
+	"3组右",
+	"4组左右",
 ]
 for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][1]['wife'].push(temp[i])

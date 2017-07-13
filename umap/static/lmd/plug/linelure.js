@@ -101,8 +101,7 @@ L.Storage.LineLure = L.Storage.Guardbar.extend({
         L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(mt, mic);
 
         //只有左右，中间
-        L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
-
+        L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesNoMBoth;
 
         return L.Storage.LmdFeatureMixin.edit.call(this, e);
 

@@ -19,10 +19,9 @@ L.Storage.Lure = L.Storage.Guardbar.extend({
 
   getStringMap: function(){
       var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
-      var gblev = this.getOption('gblev');
-
       return stringMap;
   }
+  
 
 });
 
