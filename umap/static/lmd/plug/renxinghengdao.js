@@ -214,7 +214,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
     stringMap['lane'] = this.getOption('lane') || 1
     stringMap['ygbxszgs'] = this.getOption('ygbxszgs')
     if(type === 1){
-        stringMap['gba'] = [stringMap['gbn'],stringMap['gba']].join('+');
+        stringMap['gba'] = +stringMap['gbn'] + (+stringMap['gba']);
     }
     return stringMap
   },

@@ -1,6 +1,7 @@
 
 L.Storage.Hide = L.Storage.SVGObject.extend({
   defaultName: '',
+  defaultColor: 'white',
 
   initialize: function(map, latlng, options) {
     L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
@@ -17,7 +18,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
       this.properties._storage_options['scale'] = this.properties._storage_options['scale'] || 5;
       this.properties._storage_options['rotate'] = this.properties._storage_options['rotate'] || 0;
-      this.properties._storage_options['color'] = this.properties._storage_options['color'] || 'Black';
+      this.properties._storage_options['color'] = this.properties._storage_options['color'] || this.defaultColor;
       this.properties.name = this.defaultName;
     }
 
@@ -179,6 +180,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     stringMap['gbn'] = this.getOption('gbn');//数量
     stringMap['gbs'] = this.getOption('gbs');//间距
     stringMap['gbw'] = this.getOption('gbw');//宽度
+    stringMap['gba'] = this.getOption('gba');//面积
 
     return stringMap
   },

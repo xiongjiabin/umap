@@ -70,7 +70,7 @@ L.Storage.BxZxxd = L.Storage.Hide.extend({
     L.Storage.Hide.prototype.resetTooltip.call(this,e);
 
     //处理面积部分计算
-    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0}){
+    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0, 'lr': 0}){
       var lineType = + (this.getOption('lineType') || 1);
       var lineWidth = + (this.getOption('lineWidth') || 10);
       var lane = 1;

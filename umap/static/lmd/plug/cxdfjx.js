@@ -76,7 +76,8 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
     L.Storage.Hide.prototype.resetTooltip.call(this,e);
 
     //处理面积部分计算
-    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0}){
+    if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0, lr:0}){
+      //增加方位判断，如果是俩侧的，长度已经是*2了，面积不用再multi 2
       var lineType = + (this.getOption('lineType') || 1);
       var lineWidth = + (this.getOption('lineWidth') || 10);
       var lane = +(this.getOption('lane') || 1);
@@ -97,7 +98,7 @@ L.Storage.CxdFjx = L.Storage.Hide.extend({
         area = lineWidth / 100 * len;
       }
 
-      area = (area * lane).toFixed(1);
+      area = (area * lane ).toFixed(1);
       this.properties._storage_options.gba = gbaControl.input.value = area;
     }
   },
