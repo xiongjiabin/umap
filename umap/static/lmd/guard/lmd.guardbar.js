@@ -44,14 +44,14 @@ L.Storage.guardbarData = [
     childs: [
     null,
     {name:'波形梁钢护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'路基混泥土护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'强梁混泥土护栏',   type: L.Storage.GB_NORMAL_LINE},
+    {name:'路基混凝土护栏', type: L.Storage.GB_NORMAL_LINE},
+    {name:'强梁混凝土护栏',   type: L.Storage.GB_NORMAL_LINE},
     {name:'金属梁柱式护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'组合式护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'缆索护栏', type: L.Storage.GB_CIRCLE,defaultOptions:{weight:20}},
-    {name:'波形梁护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
+    {name:'波形梁钢护栏外展端头',type: L.Storage.GB_NORMAL_LINE},
     {name:'外展示警墩', type:L.Storage.GB_NORMAL_LINE},
-    {name:'桥梁混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
+    {name:'中央分隔带混凝土护栏',type: L.Storage.GB_NORMAL_LINE},
     /*{name:'示警墩', type: L.Storage.GB_RECT, show: false}, //这些事第一个版本的数据，为了保证兼容，放在这里可以显示出来
     {name:'示警桩', type: L.Storage.GB_CIRCLE, show: false},
     {name:'中间隔离', type: L.Storage.GB_NORMAL_LINE, show: false},
