@@ -233,7 +233,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
     L.FormBuilder.MarkerShapeSwitcher.prototype.selectOptions = lmd.getMarkerCategoryThirdWife(mt, mic);
 
     //解决侧别的问题,marker 只有左右，中间
-    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
+    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesNoMBoth;
 
     var builder = L.Storage.LmdFeatureMixin.edit.call(this, e)
 

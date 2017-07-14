@@ -22,10 +22,13 @@ L.Storage.BxZxxs = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
+    var snsString = L.Storage.LmdFeatureMixin.showSubNice.call(this,gbss);
+    var sneString = L.Storage.LmdFeatureMixin.showSubNice.call(this,gbse);
+
     var lineType = this.getOption('lineType') || 2;
     var lineTypeStr = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.allSelectOptions)[lineType] || '';
     return '<tspan x=0 dy=0>**' + this.properties.name + '-' + lineTypeStr + '**</tspan>'+
-           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
+           '<tspan x=0 dy=1.2em>(' + snsString + '-' + sneString + ')</tspan>'
   },
 
   getBasicOptions: function(){
