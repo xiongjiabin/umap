@@ -120,7 +120,7 @@ L.Storage.FeatureMixin = {
         //添加在layer自定义的属性列表
         for (i = 0; i < this.datalayer._propertiesIndex.length; i++) {
             property = this.datalayer._propertiesIndex[i];
-            if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
+            if (L.Util.indexOf(['name', 'description','styleUrl','styleHash','className'], property) !== -1) {continue;}
             properties.push(['properties.' + property, {label: property}]);
         }
         // We always want name and description for now (properties management to come)

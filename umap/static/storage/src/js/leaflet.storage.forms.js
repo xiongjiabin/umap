@@ -652,6 +652,12 @@ L.FormBuilder.LeftRightChoice = L.FormBuilder.MultiChoice.extend({
        [3, L._('middle')],
        [4, '两侧']
     ],
+    choicesNoMBoth: [
+        [1, L._('left')],
+        [2, L._('right')],
+        [5, '中分左'],
+        [6, '中分右'],
+    ],
     allChoices:[
        [1, L._('left')],
        [2, L._('right')],
@@ -675,8 +681,8 @@ L.FormBuilder.FangxiangChoice = L.FormBuilder.MultiChoice.extend({
 
     default: 1,
     choices: [
-        [1, '顺'],
-        [2, '逆'],
+        [1, '面向小桩号方向'],
+        [2, '面向大桩号方向'],
         [3, '双向']
     ],
 });
@@ -699,7 +705,7 @@ L.FormBuilder.PillDiamSwitcher = L.FormBuilder.Select.extend({
     //第一个参数必须是字符串
     selectOptions: [
       ["60","60"],
-      ["76","70"],
+      ["70","70"],
       ["89","89"],
       ["114","114"],
       ["133","133"],
@@ -815,11 +821,13 @@ L.FormBuilder.LevelSwitch = L.FormBuilder.Select.extend({
     ["B","B"],
     ["C","C"],
     ["Am,","Am"],
+    ["SA","SA"],
+    ["SAm","SAm"],
     ["SB","SB"],
     ["SBm","SBm"],
     ["SS,","SS"],
     ["HB","HB"],
-    ["HA","HA"],
+    ["HA","HA"]
   ]
 });
 
@@ -866,6 +874,7 @@ L.FormBuilder.CrossTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
     ["2","T型"],
     ["3","十字形"],
     ["4","5支交叉"],
+    ["5","中分带开口"],
     ["99","其他"]
   ]
 });
@@ -883,8 +892,8 @@ L.FormBuilder.jsrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
 L.FormBuilder.tcrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     [undefined,"无"],
-    ["L80", "40-70_____L80"],
-    ["L60", "<40  _____L60"]
+    ["L80", "40-70_____D80"],
+    ["L60", "<40  _____D60"]
   ]
 });
 
@@ -903,10 +912,40 @@ L.FormBuilder.jgSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     [undefined,"无"],
     ["L130", "100-120_____L130"],
-    ["L110", "70-99  _____L110"],
+    ["L110", "71-99  _____L110"],
     ["L90", "40-70   _____L90"],
     ["L70", "<40     _____L70"],
   ]
+});
+
+//警告减速丘版面尺寸
+L.FormBuilder.jsqSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["L90", "40-70   _____L90"],
+    ["L70", "<40     _____L70"],
+  ]
+});
+
+L.FormBuilder.jsqTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined, "无"],
+    ["1", "大型减速丘"],
+    ["2", "预制减速垄"],
+    ["3", "预制断开式减速垄"],
+  ]
+});
+
+L.FormBuilder.DangerousType = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1", "急弯"],
+        ["2", "过村"],
+        ["3", "事故多发"],
+        ["4", "隧道洞口"],
+        ["5", "学校"],
+        ["6", "交叉口"],
+        ["7", "陡坡"],
+    ]
 });
 
 L.FormBuilder.CustomerSwitcher = L.FormBuilder.EmptySwitcher.extend({});
@@ -1045,10 +1084,11 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         tcrxNum: {handler:'IntInput', label: '数量(块)'},
         tcrxSize: {handler: 'tcrxSizeSwitcher', label: '版面尺寸'},
 
+        jsqType: {handler:'jsqTypeSwitcher', label: '减速丘类型'},
         jsqBx: {handler:'FloatInput', label: '减速丘标线(平方)'},
         jsqBz: {handler:'IntInput', label: '标志(块)'},
-        jsqSize: {handler: 'jgSizeSwitcher', label: '版面尺寸'},
-        jsqXjjsl:{handler:'FloatInput',label: '橡胶减速垄(m)'},
+        jsqSize: {handler: 'jsqSizeSwitcher', label: '版面尺寸'},
+        jsqWidth:{handler:'FloatInput',label: '设置宽度(m)'},
 
         jgContent: {label: '标志内容'},
         jgSize: {handler:'jgSizeSwitcher', label: '版面尺寸'},
@@ -1098,6 +1138,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         direction: {handler: 'FangxiangChoice', label: '方向'},
         diameter:{handler:'DiameterSwitcher', label: '立柱直径'},
 
+        dangerousType: {handler: 'DangerousType', label: '位置'},
     },
 
     initialize: function (obj, fields, options) {

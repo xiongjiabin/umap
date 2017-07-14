@@ -169,9 +169,9 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
 
       //pillar attributes
       'properties._storage_options.pd',
-      'properties._storage_options.pt',
+      /*'properties._storage_options.pt',
       'properties._storage_options.ph',
-      'properties._storage_options.pb'
+      'properties._storage_options.pb'*/
     ];
   },
 
@@ -225,8 +225,8 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     stringMap['pt'] = this.getTypeName()
 
     stringMap['pd'] = this.getOption('pd')
-    stringMap['ph'] = this.getOption('ph')
-    stringMap['pb'] = this.getOption('pb')
+    //stringMap['ph'] = this.getOption('ph')
+    //stringMap['pb'] = this.getOption('pb')
 
     return stringMap
   },
