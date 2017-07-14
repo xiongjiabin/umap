@@ -17,6 +17,8 @@ L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
 L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
 
+L.Storage.OFFSET_PLUS = 20; //定义字和设施之间的关系
+
 L.Storage.guardbarData = [
   null,
   {name: '标线',
@@ -305,13 +307,11 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var size = 35;
       var color = this.getOption('color') || "Blue";
       var tail = this.getOption('tail') || (27 * text.length);
-      var formatText = '<text  font-size="' + size + '">' + text + '</text>' +
-                       '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 0,15 ' + tail + ',0"></path>';
 
       var options = {
         rotate: +this.getOption('rotate'),
         color: this.getOption('color'),
-        svgText: formatText,
+        //svgText: formatText,
         interactive: false
       };
 
@@ -330,6 +330,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var destX = centerPoint['x'] + txtX * scaleZoom;
       var destY = centerPoint['y'] + txtY * scaleZoom;
       var latlng = this.map.layerPointToLatLng([destX, destY]);
+
+      const preTail = L.Storage.OFFSET_PLUS * scaleZoom;
+      var formatText = '<text  font-size="' + size + '">' + text + '</text>' +
+                       '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m -' +
+                       preTail + ',15 ' + (tail+preTail) + ',0"></path>';
+      options['svgText'] = formatText;
+
 
       if (!this.textHelpObject) {
           this.textHelpObject = new L.SVGObject(latlng, options).addTo(this.map);
@@ -522,7 +529,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               //var offset = this.getOption('offset');
               var textX = 0;
               var textY = 0;
-              offset += 20;
+              offset += L.Storage.OFFSET_PLUS ;
               if(offset != 0){
                   textX = offset * Math.cos(degrees);
                   textY = offset * Math.sin(degrees);
@@ -771,7 +778,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
               var degrees = (rotate ) / 180 * Math.PI
               var textX = 0;
               var textY = 0;
-              offset += 20;
+              offset += L.Storage.OFFSET_PLUS ;
               if(offset != 0){
                  textX = offset * Math.cos(degrees);
                  textY = offset * Math.sin(degrees);

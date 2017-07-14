@@ -30,8 +30,7 @@ L.Storage.LmdFeatureMixin = {
     //添加在layer自定义的属性列表
     for (i = 0; i < this.datalayer._propertiesIndex.length; i++) {
       property = this.datalayer._propertiesIndex[i];
-      if (L.Util.indexOf(['name', 'description', 'className'], property) !==
-        -1) {
+      if (L.Util.indexOf(['name', 'description', 'className','styleUrl','styleHash'], property) !== -1) {
         continue;
       }
       properties.push(['properties.' + property, {
