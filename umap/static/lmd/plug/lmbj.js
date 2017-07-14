@@ -42,7 +42,7 @@ L.Storage.Lmbj = L.Storage.Hide.extend({
 
     if (!e) return;
     this.setSvgText(this.getSvgData())
-    var distance, gbss, gbse,gbw, hHeight, gbaControl
+    var distance, gbss, gbse,gbw, hHeight, gbaControl,gba = 0;
 
     if(e.helper.name in {'gbss':0,'gbse':0, 'lr':0, 'gbw':0, 'hHeight':0}){
         var lr = +this.getOption('lr')
@@ -50,6 +50,10 @@ L.Storage.Lmbj = L.Storage.Hide.extend({
         if (lr === lmd.POS_BOTH) {
             multipe = 2
         }
+
+        gbw = +this.getOption('gbw')
+        hHeight = +this.getOption('hHeight')
+
         //计算长度
         gbss = this.getOption('gbss');
         gbse = this.getOption('gbse');
@@ -62,16 +66,15 @@ L.Storage.Lmbj = L.Storage.Hide.extend({
             }else{
                 distance = gbse - gbss
             }
-            distance = Math.ceil(distance) * multipe
+            gba = (gbw + hHeight) * distance + 2 * (gbw * hHeight);
+
         }else if( (gbss && !gbse) || (!gbss && gbse) ){
-            distance = 1 * multipe
+            gba = gbw * hHeight
         }
 
-        gbw = +this.getOption('gbw')
-        hHeight = +this.getOption('hHeight')
         gbaControl = e.target.helpers['properties._storage_options.gba']
         if(gbaControl){
-            this.properties._storage_options.gba = gbaControl.input.value = distance * gbw * hHeight
+            this.properties._storage_options.gba = gbaControl.input.value = gba * multipe
         }
     }
   },
