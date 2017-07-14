@@ -5,6 +5,8 @@
 
 L.Storage.BxZxxs = L.Storage.Hide.extend({
   defaultName: '中心线(双)',
+  posData: L.FormBuilder.LeftRightChoice.prototype.choicesM,
+
   preInit: function(){
 
     if (!this.properties._storage_options.lineType) {
@@ -12,6 +14,7 @@ L.Storage.BxZxxs = L.Storage.Hide.extend({
        this.properties._storage_options['lineWidth'] = "10";
        this.properties._storage_options['hColor'] = "2";
        this.properties._storage_options['gbm'] = "2";
+       this.properties._storage_options['lr'] =  3;
        this.properties.name = this.defaultName;
     }
     return L.Storage.Hide.prototype.preInit.call(this)
