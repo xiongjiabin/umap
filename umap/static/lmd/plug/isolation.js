@@ -1,9 +1,20 @@
 L.Storage.Isolation = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_ISOLATION,
-  defaultName: '隔离设施',
-  CLASS_ALIAS: '隔离设施',
+  //defaultName: '隔离设施',
+  //CLASS_ALIAS: '隔离设施',
   CLASS_NAME: 'isolation',
 
+  //added by xiongjiabin
+  getBasicOptions: function () {
+      return [
+        'properties._storage_options.gbc',//类别
+        'properties._storage_options.lr',
+        'properties._storage_options.gbss',//起始桩号
+        'properties._storage_options.gbse',
+        'properties._storage_options.gbl',//总长
+        'properties._storage_options.ds',
+      ];
+  },
 });
 
 L.Storage.DataLayer.prototype._lineToClass[L.Storage.Isolation.prototype.CLASS_NAME] = L.Storage.Isolation;
