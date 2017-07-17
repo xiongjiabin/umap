@@ -3,6 +3,7 @@ L.Storage.GB_RECT = 2
 L.Storage.GB_VERTICAL_LINE = 3
 L.Storage.GB_CIRCLE = 4
 L.Storage.GB_CROSS = 5
+L.Storage.GB_DOT = 6
 L.Storage.GB_OTHER = 99
 
 L.Storage.GB_TYPE_BIAOXIAN = 1 //标线也是逃兵，不符合这些原有的规则
@@ -16,6 +17,7 @@ L.Storage.GB_TYPE_LURE = 8 //警用诱导设施，新增的，从护栏里面分
 L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
 L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
+L.Storage.GB_TYPE_ZXBX = 12 //纵向标线
 
 L.Storage.OFFSET_PLUS = 20; //定义字和设施之间的关系
 
@@ -29,11 +31,7 @@ L.Storage.guardbarData = [
      gbm: '4'
    },
    childs: [
-    {name:'标线',type: L.Storage.GB_RECT, defaultOptions: {}}, //一言难尽的修改
-    {name:'横向减速标线',type: L.Storage.GB_RECT, defaultOptions: {}},
-    {name:'纵向减速标线',type: L.Storage.GB_RECT},
-    {name:'收费站广场减速标线',type: L.Storage.GB_RECT},
-    {name:'行人横穿设施',type: L.Storage.GB_NORMAL_LINE,defaultOptions:{lineCap:'butt'}}
+    {name:'横向标线',type: L.Storage.GB_RECT, defaultOptions: {}}, //一言难尽的修改
   ]},
   { name: '防护设施',
     defaultData:{
@@ -156,6 +154,16 @@ L.Storage.guardbarData = [
           null,
           {name:'柱式分道体', type: L.Storage.GB_CIRCLE},
           {name:'片式分道体', type: L.Storage.GB_CIRCLE},
+      ]},
+      {name: '纵向标线',
+       defaultData: {
+         color: 'White',
+         weight: 5,
+         opacity: 1,
+         gbm: '4'
+       },
+       childs: [
+        {name:'纵向标线',type: L.Storage.GB_DOT, defaultOptions: {}}, //一言难尽的修改
       ]},
 ];
 
@@ -450,6 +458,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           L.Storage.BarTypeLine.call(this,options)
       }else if(type === L.Storage.GB_CROSS) {
           L.Storage.BarTypeCustomize.call(this,options)
+      }else if(type === L.Storage.GB_DOT){
+          L.Storage.DotTypeLine.call(this,options)
       }else {
           L.Storage.BarTypeNormal.call(this,options)
       }
@@ -594,12 +604,12 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
           return null;
         }
         i = 0;
-        while(tempLen > 0){
+        while(tempLen >= 0){
           tempLen = tempLen - (spaces[i] || maxSpace);
           i++;
         }
-        var result = {lanes: i + 1, space:[]};
-        for(j = 0; j < i; j++){
+        var result = {lanes: i , space:[]};
+        for(j = 0; j < i - 1; j++){
           result.space.push( spaces[j] || maxSpace )
         }
         return result;
@@ -1020,7 +1030,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
               var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
               this.properties._storage_options.gba = gbaControl.input.value = area
               descControl.input.value = this.properties.description = '一处设置' + ret['lanes'] + '道,' +
-                                                                    '每道' + ret['space'].length + '条,' +
+                                                                    '每道' + jslmTs + '条,' +
                                                                     '间距(米):' + ret['space'].join('_');
           }
       }
@@ -1148,3 +1158,19 @@ L.Storage.BarTypeCustomize = function(options){
   optionsDefault['color'] = optionsDefault['fillColor'] = this.getOption('color')
   this.updatePolyMarker(optionsDefault);
 }
+
+L.Storage.DotTypeLine = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '15,5';
+  options['lineCap'] = 'butt';
+  options['opacity'] = 1;
+  options['weight'] = options.weight || 5;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};

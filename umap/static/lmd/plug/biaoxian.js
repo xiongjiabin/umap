@@ -27,8 +27,11 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
             L.FormBuilder.DangerousType.prototype.selectOptions;
 
         //解决侧别的问题
-        L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
+        L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLR;
         var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
+
+        var gbwControl = builder && builder.helpers['properties._storage_options.gbw'];
+        (gbwControl && gbwControl.label) && (gbwControl.label.innerHTML = '设置宽度(m)');
     }
   },
 
@@ -114,7 +117,7 @@ lmd.tjHxbx = function(){
 lmd.tjs.push({ label: '减速标线', process: lmd.tjHxbx});
 
 L.Storage.Zxbx = L.Storage.Guardbar.extend({
-  gbType: L.Storage.GB_TYPE_BIAOXIAN,
+  gbType: L.Storage.GB_TYPE_ZXBX,
   dsColors: [null, 'White', 'White','White'], //所有都一样
   defaultName: '纵向减速标线-急弯',
   CLASS_ALIAS: '纵向减速标线',
@@ -156,7 +159,7 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
       var jslmTs = +this.getOption('jslmTs');
       var area = 0;
       if(gbl > 0  && gbl < 30){
-
+          this.map.ui.alert({content: '总长应该大于30米', level:'error'});
       }else{
         area = 3 + (gbl - 30) * 0.3 / 2;
         area = (jslmTs * area).toFixed(2);
@@ -164,6 +167,7 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
 
       var gbaControl = e.target.helpers['properties._storage_options.gba']
       this.properties._storage_options.gba = gbaControl.input.value = area
+
     } else if (e.helper.name in {gbc: 0} ) {
       this.updateName(e);
     }
@@ -198,6 +202,10 @@ L.Storage.Zxbx = L.Storage.Guardbar.extend({
         //解决侧别的问题
         L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
         var builder = L.Storage.LmdFeatureMixin.edit.call(this, e);
+
+        var jslmTsControl = builder && builder.helpers['properties._storage_options.jslmTs'];
+        (jslmTsControl && jslmTsControl.label) && (jslmTsControl.label.innerHTML = '设置车道数');
+
     }
   },
 
