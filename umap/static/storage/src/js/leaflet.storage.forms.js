@@ -1111,6 +1111,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         roadWidth: {handler:'FloatInput',label:'设置宽度(米)'},
         roadWidth2: {handler:'FloatInput',label:'道路宽度(米)'},
         roadWidth3: {handler:'FloatInput',label: '线宽'},
+        tzxxk: {handler: 'FloatInput', label: '停止线线宽'},
+        tzxbxmj: {handler: 'FloatInput', label: '停止线标线面积'},
 
         //help text
         textX:  {handler: 'Range', min:-200,max:200,step:1,label: '相对位置X'},

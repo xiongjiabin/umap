@@ -126,8 +126,9 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         this.properties._storage_options['color'] = color
         this.setSvgText(this.getSvgData(sn,color,height,width,fontSize))
         this.updateStyle()
-    }else if(e.helper.name in {roadWidth2:0,roadWidth:0,roadWidth3:0,gbs:0,lane:0}) {
+    }else if(e.helper.name in {roadWidth2:0,roadWidth:0,roadWidth3:0,gbs:0,lane:0,tzxxk:0}) {
         var gbnControl = e.target.helpers['properties._storage_options.gbn'];
+        var tzxbxmjControl = e.target.helpers['properties._storage_options.tzxbxmj'];
         var roadWidth = +this.getOption('roadWidth'); //设置宽度
         var roadWidth2 = +this.getOption('roadWidth2');//道路宽度
         var roadWidth3 = +this.getOption('roadWidth3');//线宽
@@ -135,9 +136,12 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         var lane = +this.getOption('lane') || 1;
         var gbn = 0;
         if(roadWidth3 + gbs) {
-            gbn = roadWidth2 * roadWidth3 * (roadWidth * (roadWidth3 / (roadWidth3 + gbs)));
+            //gbn = roadWidth2 * roadWidth3 * (roadWidth * (roadWidth3 / (roadWidth3 + gbs)));
+            gbn = roadWidth * roadWidth3 * (roadWidth2 / roadWidth3 + gbs);
             gbn = gbn.toFixed(2);
         }
+        var tzxxk = +this.getOption('tzxxk');
+        this.properties._storage_options.tzxbxmj = tzxbxmjControl.input.value = roadWidth2 * tzxxk;
         this.properties._storage_options.gbn = gbnControl.input.value = gbn * lane;
     }else if(e.helper.name in {ygbxszgs: 0}){
         var gbaControl = e.target.helpers['properties._storage_options.gba'];
@@ -157,6 +161,8 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
       'properties._storage_options.gbn',//数量
       'properties._storage_options.ygbxszgs',//预告标线设置个数
       'properties._storage_options.gba',//预告标线面积
+      'properties._storage_options.tzxxk',//停止线线宽
+      'properties._storage_options.tzxbxmj',//停止线标线面积
       'properties._storage_options.hColor',
       'properties._storage_options.gbm',//材料
       'properties._storage_options.ds'
