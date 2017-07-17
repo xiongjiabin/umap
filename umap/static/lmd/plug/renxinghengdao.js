@@ -137,7 +137,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
         var gbn = 0;
         if(roadWidth3 + gbs) {
             //gbn = roadWidth2 * roadWidth3 * (roadWidth * (roadWidth3 / (roadWidth3 + gbs)));
-            gbn = roadWidth * roadWidth3 * (roadWidth2 / roadWidth3 + gbs);
+            gbn = roadWidth * roadWidth3 * roadWidth2 / (roadWidth3 + gbs);
             gbn = gbn.toFixed(2);
         }
         var tzxxk = +this.getOption('tzxxk');
