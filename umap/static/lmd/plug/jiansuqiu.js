@@ -55,14 +55,14 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
       return true;
   },
 
-  getSvgData(lr, sn, color, height, width) {
+  getSvgData(lr, sn, color, height, width, fontSize) {
     var typeSvg = {
       1: '<path class="leaflet-interactive" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 0,0 {{height}},0"/>',
       2: '<path class="leaflet-interactive" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 0,0 {{height}},0"/>' +
          '<path class="leaflet-interactive" stroke-width="{{width}}" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 0,0 -{{height}},0"/>'
     }
     var name = this.properties.name || '减速丘';
-    var textTemplate = '<text style="font-size:14px;" x="{{height}}" y="5">' + name + '{{sn}}</text>'
+    var textTemplate = '<text style="font-size:{fontSize}px;" x="{height}" y="5">' + name + '{sn}</text>'
 
     var svgStr = typeSvg[1]
     if(lr == lmd.POS_BOTH) {
@@ -71,6 +71,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     height = height || 50
     color = color || defaultColor
     width = width || 25
+    fontSize = fontSize || 14;
 
     svgStr = svgStr.replace(/{{height}}/g,height)
     svgStr = svgStr.replace(/{{color}}/g,color)
@@ -79,7 +80,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     var showText = this.getOption('showText')
     if(showText){
       var snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
-      svgStr += textTemplate.replace('{{height}}',height).replace('{{sn}}',snStr)
+      svgStr += L.Util.template(textTemplate, {height:height,sn:snStr,fontSize:fontSize});
     }
 
     return svgStr
@@ -91,7 +92,8 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     var height = this.getOption('height')
     var color = this.getOption('color')
     var width = this.getOption('width')
-    this.setSvgText(this.getSvgData(lr,sn,color, height,width))
+    var fontSize = this.getOption('fontSize')
+    this.setSvgText(this.getSvgData(lr,sn,color, height,width, fontSize))
     L.Storage.SVGObject.prototype._redraw.call(this)
   },
 
@@ -101,6 +103,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     var height = this.getOption('height')
     var color = this.getOption('color')
     var width = this.getOption('width')
+    var fontSize = this.getOption('fontSize')
     /*this.setSvgText(this.getSvgData(lr,sn,color,height,width))*/
 
     if(!e) return
@@ -112,7 +115,7 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
       var pos = lr == lmd.POS_RIGHT ? 'right' : 'left'
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
-          this.setSvgText(this.getSvgData(lr,sn,color,height,width))
+          this.setSvgText(this.getSvgData(lr,sn,color,height,width,fontSize))
           this.updateStyle()
           if(data.point){
               this.setLatLng(data.point)
@@ -121,11 +124,11 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     }else if(e.helper.name === 'ds') {
         color = this.dsColors[selfValue] || this.defaultColor
         this.properties._storage_options['color'] = color
-        this.setSvgText(this.getSvgData(lr,sn,color,height,width))
+        this.setSvgText(this.getSvgData(lr,sn,color,height,width,fontSize))
         this.updateStyle()
     }else if(e.helper.name === 'gbc'){
         this.updateName(e)
-        this.setSvgText(this.getSvgData(lr,sn,color,height,width))
+        this.setSvgText(this.getSvgData(lr,sn,color,height,width,fontSize))
     }
   },
 
@@ -147,7 +150,8 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
       'properties._storage_options.scale',
       'properties._storage_options.height',
       'properties._storage_options.width',
-      'properties._storage_options.showText'
+      'properties._storage_options.showText',
+      'properties._storage_options.fontSize'
     ];
   },
 
