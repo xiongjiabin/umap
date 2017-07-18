@@ -111,19 +111,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
               this.properties._storage_options.gbn = gbnControl.input.value = gbn
           }
       }
-    } /*else if (e.helper.name === 'sn' || e.helper.name === 'lr') {
-        var lr = +this.getOption('lr')
-        var sn = +this.getOption('sn')
-        var data = this.map.getAnchorLatLngBySubNo(sn)
-        var pos = lr == 2 ? 'right' : 'left'
-        if(data && (data[pos] !== undefined)){
-            this.properties._storage_options['rotate'] = data[pos]
-            this.updateStyle()
-            if(data.point){
-              this.setLatLng(data.point)
-            }
-        }
-    }*/ else {
+    }  else {
 
     }
   },
@@ -142,11 +130,9 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     if(!this.map.editEnabled) {
         return false
     }
-
     //解决侧别的问题, 只有左右，中间
     L.FormBuilder.LeftRightChoice.prototype.choices = this.posData ||
-                                                      L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth;
-
+        L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth;
     return L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
 
@@ -193,8 +179,10 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
   getDisplayName: function(){
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
+    var gbssString = gbss ? L.Storage.LmdFeatureMixin.showSubNice.call(this,gbss): ''
+    var gbseString = gbse ? L.Storage.LmdFeatureMixin.showSubNice.call(this,gbse): ''
     return '<tspan x=0 dy=0>**' + this.defaultName + '**</tspan>'+
-           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
+           '<tspan x=0 dy=1.2em>(' + gbssString + '-' + gbseString + ')</tspan>'
   },
 
   getBasicOptions: function(){
@@ -233,14 +221,100 @@ L.Storage.TuQiLuBiao = L.Storage.Hide.extend({
 L.Storage.DangTuQiang = L.Storage.Hide.extend({
   defaultName: '挡土墙',
 
-  resetTooltip: function(e) {
+  preInit: function(){
+    if (!this.properties._storage_options.dtqType) {
+       this.properties._storage_options['dtqType'] = "1";
+       this.properties.name = this.defaultName;
+    }
+    return L.Storage.Hide.prototype.preInit.call(this)
+  },
 
+  edit: function(e) {
+    if(!this.map.editEnabled) {
+        return false
+    }
+    //解决侧别的问题, 只有左右，中间
+    L.FormBuilder.LeftRightChoice.prototype.choices =
+        L.FormBuilder.LeftRightChoice.prototype.choicesLRMBoth
+    var builder = L.Storage.LmdFeatureMixin.edit.call(this, e)
+    var dtqType = +this.getOption('dtqType')
+    var gbaControl = builder.helpers['properties._storage_options.gba']
+    var bulkControl = builder.helpers['properties._storage_options.bulk']
+    var gbwControl  = builder.helpers['properties._storage_options.gbw']
+    dtqType = +this.getOption('dtqType') || 1;
+    if(dtqType === 1) {//挡土墙
+        gbaControl.hide()
+        bulkControl.show()
+        gbwControl.show()
+
+    }else{
+        bulkControl.hide()
+        gbaControl.show()
+        gbwControl.hide()
+    }
+  },
+
+  resetTooltip: function(e) {
     if(!e) return
     if(e.helper.name === 'dtqType') {
         this.updateName(e)
     }
 
-    L.Storage.Hide.prototype.resetTooltip.call(this,e)
+    this.setSvgText(this.getSvgData())
+    var distance, gbss, gbse
+    var gba, gbaControl, bulk, bulkControl,height, heightControl
+    var dtqType, gbw, gbwControl
+    var gbl, gblControl
+
+    if(e.helper.name in {'dtqType':0, 'gbss':0,'gbse':0,'lr':0,
+                         'gbl':0, 'hHeight':0,'gbw':0,gba:0} ) {
+        var lr = +this.getOption('lr')
+        var multipe = 1
+        if (lr === lmd.POS_BOTH) {
+            multipe = 2
+        }
+        //计算长度
+        gbss = this.getOption('gbss') * 1000
+        gbse = this.getOption('gbse') * 1000
+        distance = 0
+        if(gbss > gbse){
+            distance = gbss - gbse
+        }else{
+            distance = gbse - gbss
+        }
+        distance = Math.ceil(distance)
+        gbl = distance * multipe
+
+        gblControl = e.target.helpers['properties._storage_options.gbl']
+        if(gblControl) {
+            this.properties._storage_options.gbl =
+                gblControl.input.value = gbl
+        }
+
+        gbaControl = e.target.helpers['properties._storage_options.gba']
+        bulkControl = e.target.helpers['properties._storage_options.bulk']
+        gbwControl  = e.target.helpers['properties._storage_options.gbw']
+        dtqType = +this.getOption('dtqType')
+        height = +this.getOption('hHeight')
+        if(dtqType === 1) {//挡土墙
+            gbaControl.clear().hide()
+            bulkControl.show()
+            gbwControl.show()
+            gbw = +this.getOption('gbw')
+            bulk = gbl * gbw * (height + 1);
+            this.properties._storage_options.bulk =
+                bulkControl.input.value = bulk
+        }else{
+            bulkControl.clear().hide()
+            gbaControl.show()
+            gbwControl.clear().hide()
+            gba = gbl * height;
+            this.properties._storage_options.gba =
+                gbaControl.input.value = gba;
+        }
+    } else {
+
+    }
 
   },
 
@@ -263,21 +337,27 @@ L.Storage.DangTuQiang = L.Storage.Hide.extend({
   },
 
   getDisplayName: function(){
+
     var gbss = this.getOption('gbss') || ''
     var gbse = this.getOption('gbse') || ''
-    var name = this.properties.name || this.defaultName
-    return '<tspan x=0 dy=0>**' + name + '**</tspan>'+
-           '<tspan x=0 dy=1.2em>(' + gbss + '-' + gbse + ')</tspan>'
+    var gbssString = gbss ? L.Storage.LmdFeatureMixin.showSubNice.call(this,gbss): ''
+    var gbseString = gbse ? L.Storage.LmdFeatureMixin.showSubNice.call(this,gbse): ''
+    return '<tspan x=0 dy=0>**' + this.defaultName + '**</tspan>'+
+           '<tspan x=0 dy=1.2em>(' + gbssString + '-' + gbseString + ')</tspan>'
+
   },
 
   getBasicOptions: function(){
     return [
-    'properties._storage_options.dtqType',
+    'properties._storage_options.dtqType', //处置类型
     'properties._storage_options.lr',
+    'properties._storage_options.dtqLx',//类型
+    'properties._storage_options.dtqCL', //材料
     'properties._storage_options.gbss',//起始桩号
     'properties._storage_options.gbse',
     'properties._storage_options.gbl',//总长
     'properties._storage_options.hHeight',//高度
+    'properties._storage_options.gbw', //宽度
     'properties._storage_options.gba',//面积
     'properties._storage_options.bulk',//体积
     'properties._storage_options.ds', //设施状态

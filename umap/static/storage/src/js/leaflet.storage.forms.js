@@ -809,7 +809,38 @@ L.FormBuilder.DangTuQiangSwitch = L.FormBuilder.EmptySwitcher.extend({
     ["1","挡土墙"],
     ["2","挡土墙表面处理"],
     ["3","挡土墙+表面处理"],
-    ["99","其他"]
+    ["99","其他挡墙"]
+  ]
+});
+
+L.FormBuilder.DangTuQiangCLSwitch = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined, "无"],
+    ["1","片石"],
+    ["2","块石"],
+    ["3","砖"],
+    ["4","混凝土"],
+    ["5","钢筋混凝土"]
+  ]
+});
+
+L.FormBuilder.DangTuQiangLXSwitch = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["1","重力式"],
+    ["2","衡重式"],
+    ["3","混凝土半重力式"],
+    ["4","悬臂式"],
+    ["5","扶壁式"],
+    ["6","锚杆式"],
+    ["7","拱式"],
+    ["8","锚定板式"],
+    ["9","桩板式"],
+    ["10","垛式"],
+    ["11","加筋土式"],
+    ["12","竖向预应力锚杆式"],
+    ["13","土钉式"],
+    ["99","其他挡土墙"]
   ]
 });
 
@@ -1105,7 +1136,9 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         bjdKd: { label: '被交道宽度(以逗号隔开)'},
 
         //挡土墙
-        dtqType: {handler:'DangTuQiangSwitch', label: '设施类型'},
+        dtqType: {handler:'DangTuQiangSwitch', label: '处置类型'},
+        dtqLx: {handler:'DangTuQiangLXSwitch', label: '类型'},
+        dtqCL: {handler:'DangTuQiangCLSwitch', label: '材料'},
 
         showText: {handler: 'Switch', label: '显示文字桩号'},
         roadWidth: {handler:'FloatInput',label:'设置宽度(米)'},
