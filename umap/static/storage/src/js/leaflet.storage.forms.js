@@ -1019,6 +1019,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         popupContentTemplate: {label: L._('Popup content template'), handler: 'Textarea', helpEntries: ['dynamicProperties', 'textFormatting'], placeholder: '# {name}', inheritable: true},
         datalayer: {handler: 'DataLayerSwitcher', label: L._('Choose the layer of the feature')},
         defaultLayer: {handler: 'DefaultDataLayerSwitcher', label: L._('Default Layer'), helpEntries:'defaultLayer'},
+        tileOpacity: {handler: 'Range', min: 0.1, max: 1, step: 0.1, label: '背景透明度'},
         moreControl: {handler: 'Switch', label: L._('Do you want to display the «more» control?')},
         scrollWheelZoom: {handler: 'Switch', label: L._('Allow scroll wheel zoom?')},
         miniMap: {handler: 'Switch', label: L._('Do you want to display a minimap?')},

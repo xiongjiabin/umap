@@ -469,6 +469,7 @@ L.Storage.Map.include({
     selectTileLayer: function (tilelayer) {
         if (tilelayer === this.selected_tilelayer) { return; }
         try {
+            tilelayer.setOpacity(this.getOption('tileOpacity') || 1);
             this.addLayer(tilelayer);
             this.fire('baselayerchange', {layer: tilelayer});
             if (this.selected_tilelayer) {
@@ -1052,6 +1053,7 @@ L.Storage.Map.include({
         'description',
         'speed',
         'defaultLayer',
+        'tileOpacity',
         'licence',
         'tilelayer',
         'limitBounds',
@@ -1240,7 +1242,8 @@ L.Storage.Map.include({
                 'options.name',
                 'options.description',
                 'options.speed',
-                'options.defaultLayer'
+                'options.defaultLayer',
+                'options.tileOpacity'
             ],
             title = L.DomUtil.create('h4', '', container);
         title.innerHTML = L._('Edit map properties');
@@ -1248,7 +1251,12 @@ L.Storage.Map.include({
            callback: function (e) {
               if (e.helper.field === 'options.defaultLayer') {
                 this.updateDatalayersControl();
-              }
+            }else if(e.helper.field === 'options.tileOpacity') {
+                //console.log(this.getOption('tileOpacity'));
+                if(this.selected_tilelayer){
+                    this.selected_tilelayer.setOpacity(this.getOption('tileOpacity'));
+                }
+            }
            }
         });
         var form = builder.build();

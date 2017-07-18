@@ -39,6 +39,8 @@
     if(zoom < 16){
       scaleZoom = map.getZoomScale(zoom,16)
       scaleZoom = scaleZoom > 1? 1: scaleZoom
+    }else if(zoom > 18){
+      scaleZoom = map.getZoomScale(zoom,18)
     }else{
       scaleZoom = ZOOMS[zoom]
     }
