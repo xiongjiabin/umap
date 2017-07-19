@@ -1,3 +1,4 @@
+var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
  var lmd = {
   POS_LEFT: 1,
   POS_RIGHT: 2,
@@ -6,6 +7,16 @@
   POS_MIDDLE_LEFT: 5, //中分左
   POS_MIDDLE_RIGHT: 6, //中分右
   MIN_VALID_TWO_SUBS: 30,
+  DEFAULT_ROAD_LINE: 0.5 * MM_PER_PIX,
+  DEFAULT_ROAD_COLOR: '#00EEEE',
+  DEFAULT_FACILITY_LINE: 1 * MM_PER_PIX,
+  DEFAULT_NOTE_LINE: 0.1 * MM_PER_PIX,
+  DEFAULT_PILLAR_HEIGHT: 6 * MM_PER_PIX,
+  DEFAULT_MARKER_WIDTH: 7.5 * MM_PER_PIX,
+  DEFAULT_MARKER_FONT_HEIGHT: 3 * MM_PER_PIX,
+  DEFAULT_KSUB_HEIGHT: Math.round(6 * MM_PER_PIX),
+  DEFAULT_SUB_FONT: 3 * MM_PER_PIX,
+  DEFAULT_SUB_HEIGHT: Math.round(2.5 * MM_PER_PIX),
 
   DEFAULT_OFFSET: 80,
 
@@ -559,12 +570,14 @@ L.Storage.Map.include({
       var sn = +result[2];
       var k = sn / 10;
       var sk = sn % 10;
-      var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 20,0 -40,0"></path>' +
-                       '<text x="40" y="-6" class="subm">' + sk + '</text>';
+      var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 -' + lmd.DEFAULT_SUB_HEIGHT +
+                       ',0 ' + lmd.DEFAULT_SUB_HEIGHT * 2 + ',0"></path>' +
+                       '<text x="' + (lmd.DEFAULT_SUB_HEIGHT + 20) + '" y="-6" class="subm">' + sk + '</text>';
       if(sk === 0) {
           var trikyNumber = ((k + '').length + 1) * -10;
-          formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 40,0 -80,0"></path>' +
-                         '<text x="60" y="' + trikyNumber + '" style="letter-spacing:2px" class="subkm">K' + k + '</text>';
+          formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 -' + lmd.DEFAULT_KSUB_HEIGHT +
+                       ',0 ' + lmd.DEFAULT_KSUB_HEIGHT * 2 + ',0"></path>' +
+                       '<text x="' + (lmd.DEFAULT_KSUB_HEIGHT + 20) + '" y="' + trikyNumber + '" style="letter-spacing:2px" class="subkm">K' + k + '</text>';
       }
 
       var options = {

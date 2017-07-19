@@ -932,6 +932,7 @@ L.Storage.Map.include({
             var feature_li = L.DomUtil.create('li', feature.getClassName() + ' feature'),
                 zoom_to = L.DomUtil.create('i', 'feature-zoom_to', feature_li),
                 edit = L.DomUtil.create('i', 'show-on-edit feature-edit', feature_li),
+                dele = L.DomUtil.create('i', 'layer-delete show-on-edit', feature_li),
                 color = L.DomUtil.create('i', 'feature-color', feature_li),
                 title = L.DomUtil.create('span', 'feature-title', feature_li),
                 symbol = feature._getIconUrl ? L.S.Icon.prototype.formatUrl(feature._getIconUrl(), feature): null;
@@ -951,6 +952,9 @@ L.Storage.Map.include({
             L.DomEvent.on(edit, 'click', function () {
                 this.edit();
             }, feature);
+            L.DomEvent.on(dele, 'click', function() {
+                this.confirmDelete();
+            }, feature)
             return feature_li;
         };
 
