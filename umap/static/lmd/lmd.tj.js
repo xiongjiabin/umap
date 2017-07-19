@@ -288,6 +288,7 @@ lmd.tjJiansu = function(){
   var data = []
   var titles = {no:'序号',
                 name: '类型',
+                dangerousType: '位置',
                 gbss: '起始桩号',
                 gbse: '结束桩号',
                 pos: '侧别',

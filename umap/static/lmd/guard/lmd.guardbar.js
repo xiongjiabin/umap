@@ -1049,6 +1049,8 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
       var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
       var jslmTs = this.getOption('jslmTs');
       stringMap['jslmTs'] = jslmTs;
+      var dangerousType = +this.getOption('dangerousType');
+      stringMap['dangerousType'] = lmd.getOptionsToMap(L.FormBuilder.DangerousType.prototype.selectOptions)[dangerousType] || '';
       return stringMap;
   },
 });
