@@ -28,7 +28,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
         ps: 1,
         scale: preOptions['scale'] || 4.1,
         rotate: preOptions['rotate'] || 0,
-        color: preOptions['color'] || lmd.DEFAULT_ROAD_COLOR,
+        color: preOptions['color'] || 'Yellow',
         sn: ''
       }
     }
