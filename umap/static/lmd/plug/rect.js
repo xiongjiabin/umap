@@ -43,6 +43,10 @@ L.Storage.PrintRect = L.Storage.SVGObject.extend({
       return true;
   },
 
+  isHide: function(){
+      return true;
+  },
+
   resetTooltip: function(e){
     if( !e ) return
 

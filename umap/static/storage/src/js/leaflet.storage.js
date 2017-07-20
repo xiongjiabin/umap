@@ -216,6 +216,11 @@ L.Storage.Map.include({
         this.on('click contextmenu.show', this.closeInplaceToolbar);
         this.on('moveend',this.handleShowMarker);
         this.on('update.marker', this.handleShowMarker);
+
+        var that = this;
+        this.options.noControl && setTimeout( function(){
+            that.fire('update.marker');
+        },2000)
     },
 
     initControls: function () {
