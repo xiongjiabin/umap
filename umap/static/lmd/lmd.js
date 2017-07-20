@@ -570,19 +570,19 @@ L.Storage.Map.include({
       var sn = +result[2];
       var k = sn / 10;
       var sk = sn % 10;
-      var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="#00EEEE" fill="none" d="m 0,0 -' + lmd.DEFAULT_SUB_HEIGHT +
+      var formatText = '<path stroke-width="2px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 -' + lmd.DEFAULT_SUB_HEIGHT +
                        ',0 ' + lmd.DEFAULT_SUB_HEIGHT * 2 + ',0"></path>' +
                        '<text x="' + (lmd.DEFAULT_SUB_HEIGHT + 20) + '" y="-6" class="subm">' + sk + '</text>';
       if(sk === 0) {
           var trikyNumber = ((k + '').length + 1) * -10;
-          formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="#00EEEE" fill="none" d="m 0,0 -' + lmd.DEFAULT_KSUB_HEIGHT +
+          formatText = '<path stroke-width="4px" stroke-opacity="1" stroke="white" fill="none" d="m 0,0 -' + lmd.DEFAULT_KSUB_HEIGHT +
                        ',0 ' + lmd.DEFAULT_KSUB_HEIGHT * 2 + ',0"></path>' +
                        '<text x="' + (lmd.DEFAULT_KSUB_HEIGHT + 20) + '" y="' + trikyNumber + '" style="letter-spacing:2px" class="subkm">K' + k + '</text>';
       }
 
       var options = {
         rotate: 0,
-        color: '#00EEEE',
+        color: 'white',
         scale: 10,//* lmd.getLmdZoom(this),
         svgText: formatText,
         interactive: false,

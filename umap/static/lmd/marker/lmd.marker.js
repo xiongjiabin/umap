@@ -15,7 +15,7 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
         lr: "1",
         ds: "1",
         width:  "0",
-        height: "60",
+        height: "80",
         rotate: preOptions['rotate'] || "0",
         sn: preOptions['sn'] || '',
         color: 'Red',

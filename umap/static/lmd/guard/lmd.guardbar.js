@@ -325,7 +325,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var scaleZoom = lmd.getLmdZoom(this.map)
       var scale = this.getOption('scale');
-      (scale === null) && (scale = 5);
+      (scale === null) && (scale = 10);
       options['scale'] = (+scale) * scaleZoom;
       //console.log('tail,length,scale,ratio:',tail,text.length,options['scale'],tail/text.length);
 
@@ -341,7 +341,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       const preTail = L.Storage.OFFSET_PLUS * scaleZoom;
       var formatText = '<text  font-size="' + size + '">' + text + '</text>' +
-                       '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m -' +
+                       '<path stroke-width="1px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m -' +
                        preTail + ',15 ' + (tail+preTail) + ',0"></path>';
       options['svgText'] = formatText;
 
