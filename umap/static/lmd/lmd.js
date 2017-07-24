@@ -109,6 +109,9 @@ L.Storage.Map.include({
     if(floorSubNo === ceilSubNo) {
       floorSubNo = floorSubNo - 1
       ceilSubNo = ceilSubNo + 1
+      if(floorSubNo < 0) {
+          floorSubNo = 0;
+      }
     }
 
     for (i = 0, len = this.datalayers_index.length; i < len; i++) {
