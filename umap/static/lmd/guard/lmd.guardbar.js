@@ -674,7 +674,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var text = gbc.getSelectText()
       var result = text.trim()
       this.properties.name = name.input.value = result
-      this.CLASS_ALIAS = result;
+      //this.CLASS_ALIAS = result;
 
       return
     },

@@ -1,6 +1,6 @@
 L.Storage.ZongLineLure = L.Storage.SVGObject.extend({
   gbType: L.Storage.GB_TYPE_LINELURE, //share gbc type with linelure 横向线性
-  defaultName: '单柱式线性诱导',
+  defaultName: '单柱式',
   CLASS_ALIAS: '线性诱导(纵向)',
   CLASS_NAME: 'zlinelure',
   defaultColor: 'white',
@@ -191,8 +191,11 @@ L.Storage.ZongLineLure = L.Storage.SVGObject.extend({
       stringMap['msh'] = result['msh'];
       stringMap['mss'] = result['mss'];
 
-      stringMap['direction'] = lmd.getOptionsToMap(L.FormBuilder.DirectionChoice.prototype.choices)[direction] || '';
+      stringMap['direction'] = lmd.getOptionsToMap(L.FormBuilder.FangxiangChoice.prototype.choices)[direction] || '';
       stringMap['gbss'] = stringMap['sn'];
+
+      stringMap['name'] = stringMap['name'] + this.CLASS_ALIAS;
+
       return stringMap;
   }
 });

@@ -1,6 +1,6 @@
 L.Storage.LineLure = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LINELURE,
-  defaultName: '单柱式线性诱导(横向)',
+  defaultName: '单柱式',
   CLASS_ALIAS: '线性诱导(横向)',
   CLASS_NAME: 'linelure',
 
@@ -120,8 +120,9 @@ L.Storage.LineLure = L.Storage.Guardbar.extend({
       stringMap['msh'] = result['msh'];
       stringMap['mss'] = result['mss'];
 
-      stringMap['direction'] = lmd.getOptionsToMap(L.FormBuilder.DirectionChoice.prototype.choices)[direction] || ''
+      stringMap['direction'] = lmd.getOptionsToMap(L.FormBuilder.FangxiangChoice.prototype.choices)[direction] || ''
 
+      stringMap['name'] = stringMap['name'] + this.CLASS_ALIAS;
       return stringMap;
   }
 });
