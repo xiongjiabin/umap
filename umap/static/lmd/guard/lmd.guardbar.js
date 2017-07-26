@@ -314,7 +314,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var size = 35;
       var color = this.getOption('color') || "Blue";
-      var tail = this.getOption('tail') || (27 * text.length);
+      var tail = (+this.getOption('tail')) || (27 * text.length);
 
       var options = {
         rotate: +this.getOption('rotate'),
