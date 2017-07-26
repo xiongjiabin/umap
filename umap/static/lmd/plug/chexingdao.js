@@ -130,7 +130,7 @@ lmd.tjCheXingDao = function(){
                 lineWidth: '线宽(cm)',
                 lane: '道数',
                 gbl: '长度(m)',
-                area: '面积(m2)',
+                gba: '面积(m2)',
                 pos: '侧别',
                 hColor: '颜色',
                 gbm: '材料',

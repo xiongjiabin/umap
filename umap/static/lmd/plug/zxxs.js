@@ -118,7 +118,7 @@ lmd.tjBxZxxs = function(){
                 lineType: '形式',
                 lineWidth: '线宽(cm)',
                 gbl: '长度(m)',
-                area: '面积(m2)',
+                gba: '面积(m2)',
                 pos: '侧别',
                 hColor: '颜色',
                 gbm: '材料',
