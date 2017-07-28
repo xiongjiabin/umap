@@ -18,6 +18,11 @@ L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
 L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
 L.Storage.GB_TYPE_ZXBX = 12 //纵向标线
+L.Storage.GB_TYPE_TUMIANJING = 13 //凸面镜
+L.Storage.GB_TYPE_LCZ = 14 //里程桩
+L.Storage.GB_TYPE_HSD = 15 //黄闪灯
+
+
 
 L.Storage.OFFSET_PLUS = 20; //定义字和设施之间的关系
 
@@ -43,7 +48,7 @@ L.Storage.guardbarData = [
     null,
     {name:'波形梁钢护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'路基混凝土护栏', type: L.Storage.GB_NORMAL_LINE},
-    {name:'强梁混凝土护栏',   type: L.Storage.GB_NORMAL_LINE},
+    {name:'桥梁混凝土护栏',   type: L.Storage.GB_NORMAL_LINE},
     {name:'金属梁柱式护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'组合式护栏', type: L.Storage.GB_NORMAL_LINE},
     {name:'缆索护栏', type: L.Storage.GB_CIRCLE,defaultOptions:{weight:20}},
@@ -74,8 +79,8 @@ L.Storage.guardbarData = [
     null,
     {name:'防眩板', type: L.Storage.GB_NORMAL_LINE},
     {name:'防眩网',type: L.Storage.GB_NORMAL_LINE},
-    {name:'植树', type: L.Storage.GB_NORMAL_LINE},
-    {name:'其他',type: L.Storage.GB_NORMAL_LINE},
+    {name:'植树防眩', type: L.Storage.GB_NORMAL_LINE},
+    {name:'其他防眩设施',type: L.Storage.GB_NORMAL_LINE},
   ]},
   {name:'薄层铺装',
    defaultData:{ color: "white", dangerousType: "1"},
@@ -96,6 +101,7 @@ L.Storage.guardbarData = [
     {name:'预制断开式减速垄',type: L.Storage.GB_VERTICAL_LINE},
   ]},
   {name:'边沟',
+    defaultData:{ color: "Blue"},
     posData: L.FormBuilder.LeftRightChoice.prototype.choicesLRBoth,
     childs: [
     null,
@@ -164,6 +170,44 @@ L.Storage.guardbarData = [
        },
        childs: [
         {name:'纵向标线',type: L.Storage.GB_DOT, defaultOptions: {}}, //一言难尽的修改
+      ]},
+      {
+        name: '凸面镜',
+        defaultData:{
+            gbc: "1", //默认
+            weight:"12",
+            color: "white",
+        },
+        childs: [
+          null,
+          {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+          {name:'附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+      ]},
+      {
+        name: '里程桩',
+        defaultData:{
+            gbc: "1", //默认
+            weight:"12",
+            color: "white",
+        },
+        childs: [
+          null,
+          {name:'混凝土', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+          {name:'玻璃钢', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+          {name:'其他', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+      ]},
+      {
+        name: '黄闪灯',
+        defaultData:{
+            gbc: "1", //默认
+            weight:"12",
+            color: "white",
+        },
+        childs: [
+          null,
+          {name:'悬臂式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+          {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
+          {name:'附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
       ]},
 ];
 

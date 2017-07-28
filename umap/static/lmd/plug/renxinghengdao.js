@@ -39,7 +39,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
 
     options.svgText = this.getSvgData(_storage_options['sn'],
                                       _storage_options['color'],_storage_options['height'],
-                                      _storage_options['width'])
+                                      _storage_options['width'],_storage_options['fontSize'])
 
     var validObj = {rotate:1,scale:1,color:1}
     for(var i in _storage_options){

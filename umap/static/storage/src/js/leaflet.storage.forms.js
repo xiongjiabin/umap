@@ -851,12 +851,12 @@ L.FormBuilder.LevelSwitch = L.FormBuilder.Select.extend({
     ["A","A"],
     ["B","B"],
     ["C","C"],
-    ["Am,","Am"],
+    ["AM","AM"],
     ["SA","SA"],
     ["SAm","SAm"],
     ["SB","SB"],
     ["SBm","SBm"],
-    ["SS,","SS"],
+    ["SS","SS"],
     ["HB","HB"],
     ["HA","HA"]
   ]
@@ -958,6 +958,15 @@ L.FormBuilder.jsqSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
+//凸面镜的尺寸
+L.FormBuilder.tmjSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
+  selectOptions: [
+    [undefined,"无"],
+    ["600", "600mm"],
+    ["800", "800mm"],
+    ["1000", "1000mm"],
+  ]
+});
 L.FormBuilder.jsqTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     [undefined, "无"],
@@ -978,6 +987,38 @@ L.FormBuilder.DangerousType = L.FormBuilder.EmptySwitcher.extend({
         ["7", "陡坡"],
     ]
 });
+
+L.FormBuilder.TjssType = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1", "停车区"],
+        ["2", "观景台"],
+        ["3", "错车道"],
+        ["4", "避险车道"],
+    ]
+});
+//里程桩类别
+L.FormBuilder.LczType = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1", "混凝土"],
+        ["2", "玻璃钢"],
+        ["3", "其他"],
+    ]
+});
+//凸面镜
+L.FormBuilder.TmjType = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1", "单柱式"],
+        ["2", "附着式"],
+    ]
+});
+L.FormBuilder.Tmjwz = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1", "急弯"],
+        ["2", "交叉口"],
+
+    ]
+});
+//黄闪灯
 
 L.FormBuilder.CustomerSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
@@ -1175,6 +1216,17 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         diameter:{handler:'DiameterSwitcher', label: '立柱直径'},
 
         dangerousType: {handler: 'DangerousType', label: '位置'},
+        //土建设施
+        tjssType: {handler: 'TjssType', label: '类别'},
+        //里程桩
+        lczType: {handler: 'LczType', label: '类别'},
+        //凸面镜
+        tmjType: {handler: 'TmjType', label: '类别'},
+        tmjNum: {handler: 'IntInput', label: '数量(个)'},
+        tmjwz: {handler: 'Tmjwz', label: '位置'},
+        tmjcc:{handler:'tmjSizeSwitcher', label: '尺寸'},
+
+
     },
 
     initialize: function (obj, fields, options) {
