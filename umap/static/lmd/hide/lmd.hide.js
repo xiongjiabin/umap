@@ -51,7 +51,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
     this.setSvgText(this.getSvgData())
     var gbs, distance, gbn, gbnControl, gbss, gbse, gblControl
 
-    if(e.helper.name in {'gbss':0,'gbse':0,'sn':0,'lr':0 }){
+    if(e.helper.name in {'gbss':0,'gbse':0,'sn':0,'lr':0,'gbs':0 }){
         var lr = +this.getOption('lr')
         var multipe = 1
         if (lr === lmd.POS_BOTH) {
@@ -96,21 +96,6 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
             }
         }
 
-    } else if(e.helper.name in {'gbs': 0}){
-      var lr = +this.getOption('lr')
-      var multipe = 1
-      if (lr === lmd.POS_BOTH) {
-          multipe = 2
-      }
-      gbs = +this.getOption('gbs')
-      distance = +this.getOption('gbl')
-      if(gbs > 0 && distance > 0){
-          gbn = (Math.ceil(distance / (gbs * multipe)) + 1) * 2
-          gbnControl = e.target.helpers['properties._storage_options.gbn']
-          if(gbnControl){
-              this.properties._storage_options.gbn = gbnControl.input.value = gbn
-          }
-      }
     }  else {
 
     }

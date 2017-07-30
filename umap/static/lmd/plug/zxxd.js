@@ -59,11 +59,11 @@ L.Storage.BxZxxd = L.Storage.Hide.extend({
         ["1","虚线"],
         ["2","实线"]
     ];
-    L.FormBuilder.LineWidthSwitcher.prototype.selectOptions = [
-      ["10","10cm"],
-      ["15","15cm"],
-      ["30","30cm"]
-    ];
+    L.FormBuilder.LineWidthSwitcher.prototype.selectOptions = [];
+    var temp = "";
+    for(var i = 8; i <= 30; i++){
+        L.FormBuilder.LineWidthSwitcher.prototype.selectOptions.push([temp + i, temp + i + 'cm'])
+    }
 
     var builder = L.Storage.Hide.prototype.edit.call(this,e);
 

@@ -6,13 +6,14 @@
 L.Storage.CheXingDao = L.Storage.Hide.extend({
   defaultName: '车行道边缘线',
   CLASS_NAME: 'cxd',
+  posData: L.FormBuilder.LeftRightChoice.prototype.choicesNoM,
 
   preInit: function(){
 
     if (!this.properties._storage_options.lineType) {
        this.properties._storage_options['lineType'] = "2";
        this.properties._storage_options['lineWidth'] = "10";
-       this.properties._storage_options['lane'] = 1;
+       //this.properties._storage_options['lane'] = 1;  取消道数
        this.properties._storage_options['hColor'] = "2";
        this.properties._storage_options['gbm'] = "2";
        this.properties.name = this.defaultName;
@@ -39,7 +40,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
     'properties._storage_options.gbss',//起始桩号
     'properties._storage_options.gbse',
     'properties._storage_options.lineWidth',//线宽
-    'properties._storage_options.lane',//道数
+    //'properties._storage_options.lane',//道数
     'properties._storage_options.gbl',//总长
     'properties._storage_options.gba',//面积
     'properties._storage_options.hColor',//颜色
@@ -71,6 +72,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
       ["15","15cm"],
       ["20","20cm"]
     ];
+
     var builder = L.Storage.Hide.prototype.edit.call(this,e);
     //var laneControl = builder && builder.helpers['properties._storage_options.lane'];
     //(laneControl && laneControl.label) && (laneControl.label.innerHTML = '条数');
@@ -85,7 +87,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
     if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0, 'lane':0, 'lineWidth':0, 'lineType':0, 'lr':0}){
       var lineType = + (this.getOption('lineType') || 1);
       var lineWidth = + (this.getOption('lineWidth') || 10);
-      var lane = +(this.getOption('lane') || 1);
+      var lane = 1;//+(this.getOption('lane') || 1);
       var gbaControl = e.target.helpers['properties._storage_options.gba']
 
       var area = 0;
@@ -111,7 +113,7 @@ L.Storage.CheXingDao = L.Storage.Hide.extend({
     var gbm = +(this.getOption('gbm'));
     stringMap['lineType'] = lmd.getOptionsToMap(L.FormBuilder.LineSwitcher.prototype.allSelectOptions)[lineType] || '';
     stringMap['lineWidth'] = lmd.getOptionsToMap(L.FormBuilder.LineWidthSwitcher.prototype.allSelectOptions)[lineWidth] || '';
-    stringMap['lane'] = lane;
+    //stringMap['lane'] = lane;
     stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
     stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
 
@@ -128,7 +130,7 @@ lmd.tjCheXingDao = function(){
                 gbse: '结束桩号',
                 lineType: '形式',
                 lineWidth: '线宽(cm)',
-                lane: '道数',
+                //lane: '道数',
                 gbl: '长度(m)',
                 gba: '面积(m2)',
                 pos: '侧别',
