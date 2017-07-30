@@ -242,7 +242,7 @@ L.Storage.DangTuQiang = L.Storage.Hide.extend({
     var bulkControl = builder.helpers['properties._storage_options.bulk']
     var gbwControl  = builder.helpers['properties._storage_options.gbw']
     dtqType = +this.getOption('dtqType') || 1;
-    if(dtqType === 1) {//挡土墙
+    if(dtqType != 2) {//如果不等于表面处理
         gbaControl.hide()
         bulkControl.show()
         gbwControl.show()
