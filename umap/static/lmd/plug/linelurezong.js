@@ -46,6 +46,11 @@ L.Storage.ZongLineLure = L.Storage.SVGObject.extend({
       return true;
   },
 
+  //显示的名字不随着类型变化而变化
+  getClassAlias: function(){
+      return this.CLASS_ALIAS;
+  },
+
   getSvgData() {
       var sn = this.getOption('sn');
       var snTxt = '';

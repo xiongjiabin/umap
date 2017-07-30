@@ -359,6 +359,7 @@ temp = [
 	"3组左",
 	"3组右",
 	"4组左右",
+	"1组左右",
 ]
 for(i = 0, len = temp.length; i < len; i++){
   lmd.marker[lmd.MARKER_ROAD]['childs'][1]['wife'].push(temp[i])

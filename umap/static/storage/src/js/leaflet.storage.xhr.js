@@ -4,6 +4,27 @@ L.Storage.Xhr = L.Evented.extend({
         this.ui = ui;
     },
 
+    outputFormData: function( data ){
+        if(!data) {
+            console.log('no data');
+            return;
+        }
+        var keys = data.keys();
+        for (var key of keys) {
+            var val = data.get(key);
+            if(val instanceof Blob){
+                var reader = new FileReader();
+                reader.addEventListener("loadend", function() {
+                    console.log(key);
+                    console.log(reader.result);
+                });
+                reader.readAsText(val);
+            }else{
+                console.log(key, val);
+            }
+        }
+    },
+
     _wrapper: function () {
         var wrapper;
         if (window.XMLHttpRequest === undefined) {
@@ -153,10 +174,14 @@ L.Storage.Xhr = L.Evented.extend({
     },
 
     get: function(uri, options) {
+        console.log('get ' + uri );
+        this.outputFormData(options['data']);
         this._json('GET', uri, options);
     },
 
     post: function(uri, options) {
+        console.log('post ' + uri);
+        this.outputFormData(options['data']);
         this._json('POST', uri, options);
     },
 

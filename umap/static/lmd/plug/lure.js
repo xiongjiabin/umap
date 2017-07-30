@@ -1,6 +1,5 @@
 L.Storage.Lure = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LURE,
-  defaultName: '示警墩',
   CLASS_NAME: 'lure',
 
   getBasicOptions: function () {
@@ -21,7 +20,7 @@ L.Storage.Lure = L.Storage.Guardbar.extend({
       var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
       return stringMap;
   }
-  
+
 
 });
 

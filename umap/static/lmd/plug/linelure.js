@@ -32,6 +32,10 @@ L.Storage.LineLure = L.Storage.Guardbar.extend({
     }
   },
 
+  //显示的名字不随着类型变化而变化
+  getClassAlias: function(){
+      return this.CLASS_ALIAS;
+  },
  //加上图片处理
   _follow: function(e){
     var text = this.getOption('text');

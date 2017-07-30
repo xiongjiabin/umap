@@ -724,16 +724,18 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
     },
 
     getClassAlias: function(){
-       if(this.CLASS_ALIAS) return this.CLASS_ALIAS;
+       //if(this.CLASS_ALIAS) return this.CLASS_ALIAS;
        var gbtype = this.gbType
        var gbcat  = +this.getOption('gbc')
        var classObject = L.Storage.getGBClass(gbtype, gbcat)
-       if(classObject) {
+       return this.properties.name || classObject['name'];
+       /*if(classObject) {
          this.CLASS_ALIAS = classObject['name'] || this.properties.name;//类别
        }else{
          this.CLASS_ALIAS = this.properties.name
        }
        return this.CLASS_ALIAS;
+       */
     },
 
     updateText: function(e){
@@ -763,7 +765,10 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var selfValue = e.helper.value()
       var _storage_options = this.properties._storage_options;
 
-      if(e.helper.name === 'gbc') {
+      if(e.helper.name === 'name'){
+          this.updateText(e);
+          this._redraw();
+      }else if(e.helper.name === 'gbc') {
           this.updateName(e);
           this.updateText(e);
           this._redraw();
