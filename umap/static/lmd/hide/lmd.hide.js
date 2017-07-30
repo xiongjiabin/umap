@@ -296,7 +296,7 @@ L.Storage.DangTuQiang = L.Storage.Hide.extend({
         gbwControl  = e.target.helpers['properties._storage_options.gbw']
         dtqType = +this.getOption('dtqType')
         height = +this.getOption('hHeight')
-        if(dtqType === 1) {//挡土墙
+        if(dtqType != 2) {//不是表面的情况
             gbaControl.clear().hide()
             bulkControl.show()
             gbwControl.show()
