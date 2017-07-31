@@ -655,7 +655,8 @@ L.Storage.DataLayer = L.Class.extend({
         // }
         var polygonClass = {
           'polygon': L.Storage.Polygon,
-          'lmdArea': L.Storage.LmdArea
+          'lmdArea': L.Storage.LmdArea,
+          'sheshi': L.Storage.SheShi
         }
         var Class = (geojson.properties && polygonClass[geojson.properties.className]) || L.Storage.Polygon;
         return new Class(
