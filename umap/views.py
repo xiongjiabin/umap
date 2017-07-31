@@ -74,7 +74,7 @@ class Home(TemplateView, PaginatorMixin):
                 pass
             else:
                 qs = qs.exclude(id=showcase_map.pk)
-        maps = qs.order_by('-modified_at')[:50]
+        maps = qs.order_by('-modified_at')[:250]
         maps = self.paginate(maps, settings.UMAP_MAPS_PER_PAGE)
 
         return {
@@ -114,7 +114,7 @@ class UserMaps(DetailView, PaginatorMixin):
         owner = self.request.user == self.object
         manager = Map.objects if owner else Map.public
         maps = manager.filter(Q(owner=self.object) | Q(editors=self.object))
-        maps = maps.distinct().order_by('-modified_at')[:50]
+        maps = maps.distinct().order_by('-modified_at')[:250]
         if owner:
             per_page = settings.UMAP_MAPS_PER_PAGE_OWNER
         else:
