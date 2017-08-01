@@ -468,6 +468,8 @@ L.Storage.Map.include({
     },
 
     createTileLayer: function (tilelayer) {
+        tilelayer['useCache'] = true;
+        tilelayer['crossOrigin'] = true;
         return new L.TileLayer(tilelayer.url_template, tilelayer);
     },
 
