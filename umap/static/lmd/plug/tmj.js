@@ -44,8 +44,9 @@ L.Storage.TuMianJing = L.Storage.HuangShanDeng.extend({
         'properties._storage_options.lr',
         'properties._storage_options.tmjwz',//位置
         'properties._storage_options.sn',//桩号
-        'properties._storage_options.gbn',//数量
         'properties._storage_options.tmjcc', //尺寸
+        'properties._storage_options.gbn',//数量
+        'properties._storage_options.diameter',//立柱直径
         'properties._storage_options.ds',
       ];
   },
@@ -56,6 +57,7 @@ L.Storage.TuMianJing = L.Storage.HuangShanDeng.extend({
       stringMap['tmjcc'] = this.getOption('tmjcc');
       var tmjwz = +this.getOption('tmjwz');
       stringMap['tmjwz'] = lmd.getOptionsToMap(L.FormBuilder.Tmjwz.prototype.selectOptions)[tmjwz] || '';
+      stringMap['diameter'] = +this.getOption('diameter');
       return stringMap;
   }
 });
@@ -67,8 +69,9 @@ lmd.tjTuMianJing = function(){
         pos: '侧别',
         name: '类别',
         tmjwz: '位置',
+        tmjcc: '尺寸D(mm)',
         gbn: '数量(个)',
-        tmjcc: '立柱尺寸(mm)',
+        diameter: '立柱直径(mm)',
         ds: '状态',
     }
     data.push(lmd.objectToArray(titles))
@@ -107,7 +110,8 @@ L.FormBuilder.Tmjwz = L.FormBuilder.EmptySwitcher.extend({
 
     ]
 });
-L.Storage.FormBuilder.prototype.defaultOptions['tmjcc'] = {handler:'TmjSizeSwitcher','label':'尺寸'};
+
+L.Storage.FormBuilder.prototype.defaultOptions['tmjcc'] = {handler:'TmjSizeSwitcher','label':'尺寸D'};
 L.Storage.FormBuilder.prototype.defaultOptions['tmjwz'] = {handler:'Tmjwz','label': '位置'};
 
 
