@@ -958,15 +958,7 @@ L.FormBuilder.jsqSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   ]
 });
 
-//凸面镜的尺寸
-L.FormBuilder.tmjSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
-  selectOptions: [
-    [undefined,"无"],
-    ["600", "600mm"],
-    ["800", "800mm"],
-    ["1000", "1000mm"],
-  ]
-});
+
 L.FormBuilder.jsqTypeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     [undefined, "无"],
@@ -1004,21 +996,6 @@ L.FormBuilder.LczType = L.FormBuilder.EmptySwitcher.extend({
         ["3", "其他"],
     ]
 });
-//凸面镜
-L.FormBuilder.TmjType = L.FormBuilder.EmptySwitcher.extend({
-    selectOptions:[
-        ["1", "单柱式"],
-        ["2", "附着式"],
-    ]
-});
-L.FormBuilder.Tmjwz = L.FormBuilder.EmptySwitcher.extend({
-    selectOptions:[
-        ["1", "急弯"],
-        ["2", "交叉口"],
-
-    ]
-});
-//黄闪灯
 
 L.FormBuilder.CustomerSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
@@ -1220,11 +1197,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         tjssType: {handler: 'TjssType', label: '类别'},
         //里程桩
         lczType: {handler: 'LczType', label: '类别'},
-        //凸面镜
-        tmjType: {handler: 'TmjType', label: '类别'},
-        tmjNum: {handler: 'IntInput', label: '数量(个)'},
-        tmjwz: {handler: 'Tmjwz', label: '位置'},
-        tmjcc:{handler:'tmjSizeSwitcher', label: '尺寸'},
+
 
 
     },

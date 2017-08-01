@@ -7,6 +7,7 @@ L.Storage.HuangShanDeng = L.Storage.SVGObject.extend({
       ["2","附着式"],
       ["3","悬臂式"]
   ],
+  picUrl: "/static/storage/src/img/hsd.png",
 
   preInit: function() {
       if (!this.properties['className']) {
@@ -73,7 +74,7 @@ L.Storage.HuangShanDeng = L.Storage.SVGObject.extend({
       var tail = +this.getOption('tail') || (18 * text.length);
       var svgStr = '<text x="20" font-size="' + size + '">' + text + '</text>' +
                        '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 20,8 ' + tail + ',0"></path>' +
-                       '<image xlink:href="/static/storage/src/img/hsd.png" x = ' + (tail + 35) + ' y="-30"' + '  height="60" />';
+                       '<image xlink:href="' + this.picUrl + '" x = ' + (tail + 35) + ' y="-30"' + '  height="60" />';
 
       return svgStr
   },
@@ -160,8 +161,9 @@ L.Storage.HuangShanDeng = L.Storage.SVGObject.extend({
 lmd.tjHuangShanDeng = function(){
     var data = []
     var titles = {no:'序号',
-                name: '类别',
                 sn: '桩号',
+                pos: '侧别',
+                name: '类别',
                 gbn: '数量(个)',
                 ds: '状态',
     }
