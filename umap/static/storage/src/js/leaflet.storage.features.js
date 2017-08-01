@@ -617,7 +617,17 @@ L.Storage.FeatureMixin = {
 
     setSingleOption(key,value){
       this.properties._storage_options[key] = value
+    },
+
+    addPropertiesPrex(props, prex){
+        var newData = [];
+        prex = prex || 'properties._storage_options.';
+        for(var i = 0, len = props.length; i < len; i++){
+            newData.push(prex + props[i]);
+        }
+        return newData;
     }
+
 };
 
 L.Storage.Marker = L.Marker.extend({

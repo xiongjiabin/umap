@@ -128,9 +128,13 @@ L.Storage.SVGObject = L.SVGObject.extend({
     this._popupHandlersAdded = true; // prevent Leaflet from binding event on bindPopup
   },
 
+  initialize: function(map, latlng, options) {
+      L.Storage.LmdFeatureMixin.initialize.call(this, map, latlng, options)
+  },
+
   _onDragEnd: function(e){
-    this.isDirty = true;
-    this.edit(e);
+      this.isDirty = true;
+      this.edit(e);
   },
 
   _onMouseOut: function() {

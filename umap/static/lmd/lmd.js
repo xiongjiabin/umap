@@ -639,6 +639,7 @@ L.Storage.Map.include({
           'lure': 3, //警佑
           'linelure': 3,//横向线性导向
           'zlinelure': 3, //纵向线性诱导
+          'hsd':3,//黄闪灯
           'jck': 4, //交叉口
           'lmdArea': 5, //清除障碍物
           'prect': 6, //打印框
