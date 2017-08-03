@@ -292,8 +292,6 @@ lmd.tjJiansu = function(){
                 gbss: '起始桩号',
                 gbse: '结束桩号',
                 pos: '侧别',
-                gbl: '长度(m)',
-                gbw: '宽度(m)',
                 gba: '面积(m2)',
                 ds: '状态',
                 description:'备注'

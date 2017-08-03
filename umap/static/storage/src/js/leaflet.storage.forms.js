@@ -1197,8 +1197,8 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         tjssType: {handler: 'TjssType', label: '类别'},
         //里程桩
         lczType: {handler: 'LczType', label: '类别'},
-
-
+        //设置长度
+        szcd: {handler:'FloatInput', label: '设置长度(m)'}
 
     },
 

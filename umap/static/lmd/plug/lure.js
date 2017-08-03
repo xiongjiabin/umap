@@ -11,6 +11,7 @@ L.Storage.Lure = L.Storage.Guardbar.extend({
         'properties._storage_options.gbl',//总长
         'properties._storage_options.gbs',//间距
         'properties._storage_options.gbn',//数量
+        'properties._storage_options.tgsl',//铜管数量，只有连续示警墩的时候有作用
         'properties._storage_options.gblev',//级别
         'properties._storage_options.ds',
       ];
@@ -18,11 +19,56 @@ L.Storage.Lure = L.Storage.Guardbar.extend({
 
   getStringMap: function(){
       var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
+      var gbc = +this.getOption('gbc');
+      if(gbc === 2){
+          stringMap['tgsl'] = +this.getOption('tgsl');
+      }
       return stringMap;
+  },
+
+  resetTooltip: function(e) {
+
+    L.Storage.Guardbar.prototype.resetTooltip.call(this, e);
+    if(!e) return;
+    if(e.helper.name in {'gbc':0,'lr':0,'gbss':0,'gbse':0,'gbl':0,'gbs':0,'gbn':0}){
+        var tgslControl = e.target.helpers['properties._storage_options.tgsl']
+        var gbnControl = e.target.helpers['properties._storage_options.gbn']
+        var gbc = +this.getOption('gbc');
+        if(gbc === 2) {//联系书经炖
+            tgslControl.show();
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '示警墩数量(个)');
+            var gbn = +this.getOption('gbn');
+            if(gbn >= 1){
+                this.properties._storage_options.tgsl = tgslControl.input.value = 2 * (gbn - 1);
+            }else{
+                this.properties._storage_options.tgsl = tgslControl.input.value = 0;
+            }
+        }else{
+            tgslControl.hide().clear();
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '数量(个)');
+        }
+    }
+  },
+
+  edit: function(e) {
+    if(this.map.editEnabled) {
+        var builder = L.Storage.Guardbar.prototype.edit.call(this,e);
+        var tgslControl = builder.helpers['properties._storage_options.tgsl']
+        var gbnControl = builder.helpers['properties._storage_options.gbn']
+        var gbc = +this.getOption('gbc');
+        if(gbc === 2) {//l谦虚示警墩
+            tgslControl.show();
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '示警墩数量(个)')
+        }else{
+            tgslControl.hide();
+            gbnControl && gbnControl.label && (gbnControl.label.innerHTML = '数量(个)')
+        }
+    }
   }
 
-
 });
+
+L.Storage.FormBuilder.prototype.defaultOptions['tgsl'] = {handler:'FloatInput','label':'铜管数量(根)'};
 
 L.Storage.DataLayer.prototype._lineToClass[L.Storage.Lure.prototype.CLASS_NAME] = L.Storage.Lure;
 
@@ -72,6 +118,7 @@ lmd.tjLure = function(){
                 gbl: '长度(米)',
                 gbs: '间距(米)',
                 gbn: '数量(个)',
+                tgsl: '铜管数量(根)',
                 gblev: '级别',
                 ds: '状态',
                 description:'备注'

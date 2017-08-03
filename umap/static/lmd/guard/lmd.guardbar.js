@@ -18,9 +18,7 @@ L.Storage.GB_TYPE_ISOLATION = 9 //隔离设施
 L.Storage.GB_TYPE_LINELURE = 10 //线性诱导设施
 L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
 L.Storage.GB_TYPE_ZXBX = 12 //纵向标线
-L.Storage.GB_TYPE_TUMIANJING = 13 //凸面镜
-L.Storage.GB_TYPE_LCZ = 14 //里程桩
-L.Storage.GB_TYPE_HSD = 15 //黄闪灯
+
 
 
 
@@ -170,45 +168,7 @@ L.Storage.guardbarData = [
        },
        childs: [
         {name:'纵向标线',type: L.Storage.GB_DOT, defaultOptions: {}}, //一言难尽的修改
-      ]},
-      {
-        name: '凸面镜',
-        defaultData:{
-            gbc: "1", //默认
-            weight:"12",
-            color: "white",
-        },
-        childs: [
-          null,
-          {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-          {name:'附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-      ]},
-      {
-        name: '里程桩',
-        defaultData:{
-            gbc: "1", //默认
-            weight:"12",
-            color: "white",
-        },
-        childs: [
-          null,
-          {name:'混凝土', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-          {name:'玻璃钢', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-          {name:'其他', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-      ]},
-      {
-        name: '黄闪灯',
-        defaultData:{
-            gbc: "1", //默认
-            weight:"12",
-            color: "white",
-        },
-        childs: [
-          null,
-          {name:'悬臂式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-          {name:'单柱式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-          {name:'附着式', type: L.Storage.GB_CROSS,defaultOptions:{lmdtype:'lmdcross',weight:4,fill:false,'color':"white"}},
-      ]},
+      ]}
 ];
 
 L.Storage.getGBOptions = function(gbt){
@@ -890,9 +850,9 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
 
       if(needDrawAgain){
-        var gbss = this.getOption('gbss')
-        var gbse = this.getOption('gbse')
-        if(gbss && gbse && gbse > gbss){
+        var gbss = +this.getOption('gbss')
+        var gbse = +this.getOption('gbse')
+        if( gbse && gbse > gbss){
             var gl   = +this.getOption('lr') || lmd.POS_LEFT
             var offset = this.getOption('offset')
             if(offset === null ) offset = lmd.DEFAULT_OFFSET
@@ -934,6 +894,106 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       return name + '(' + snsString + '-' + sneString + ')'
     },
 });
+
+L.Storage.BarTypeNormal = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
+L.Storage.BarTypeRect  = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '10,5';
+  options['opacity'] = 1;
+  options['lineCap'] = 'butt';
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
+L.Storage.BarTypeCircle = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '0,25';
+  options['opacity'] = 1;
+  options['lineCap'] = 'round';
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
+L.Storage.BarTypeLine = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '5,20';
+  options['lineCap'] = 'butt';
+  options['opacity'] = 1;
+  options['weight'] = options.weight || 20;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+L.Storage.BarTypeCustomize = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '';
+  options['lineCap'] = 'round';
+  options['opacity'] = 0.4;
+  options['weight'] = options.weight || 5;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+
+
+  var gbtype = this.gbType
+  var gbcat  = +this.getOption('gbc')
+  var classObject = L.Storage.getGBClass(gbtype, gbcat)
+  if(!classObject) {
+      return
+  }
+  var type = classObject['type']
+  var optionsDefault = JSON.parse(JSON.stringify(classObject['defaultOptions']||{}))
+  optionsDefault['color'] = optionsDefault['fillColor'] = this.getOption('color')
+  this.updatePolyMarker(optionsDefault);
+}
+
+L.Storage.DotTypeLine = function(options){
+  options = options || {};
+  var option;
+  for (var idx in this.styleOptions) {
+      option = this.styleOptions[idx];
+      options[option] = this.getOption(option);
+  }
+  options['dashArray'] = '15,5';
+  options['lineCap'] = 'butt';
+  options['opacity'] = 1;
+  options['weight'] = options.weight || 5;
+  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
+  else this.options.pointerEvents = 'stroke';
+  this.parentClass.prototype.setStyle.call(this, options);
+};
+
 
 L.Storage.Lunkuo = L.Storage.Guardbar.extend({
   gbType: L.Storage.GB_TYPE_LUNKUO,
@@ -1054,6 +1114,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
         'properties._storage_options.gbss',//起始桩号
         'properties._storage_options.gbse',
         'properties._storage_options.gbl',//总长
+        'properties._storage_options.szcd', //设置长度
         'properties._storage_options.jslmTs',//每道设置条数
         'properties._storage_options.gbw',//宽度
         'properties._storage_options.gba',//面积
@@ -1062,37 +1123,91 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
   },
 
   resetTooltip: function(e){
-      L.Storage.Guardbar.prototype.resetTooltip.call(this,e);
+      L.Storage.Guardbar.prototype.resetTooltip.call(this, e);
       if(!e) return;
 
-      if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0,'jslmTs':0,'gbw':0}){
-          var gbl = +this.getOption('gbl');
-          var ret = this.caculateLanesAndSpace(gbl);
-          var gbaControl = e.target.helpers['properties._storage_options.gba'];
-          var descControl = e.target.helpers['properties.description'];
+      var gblControl = e.target.helpers['properties._storage_options.gbl'];
+      var jslmTsControl = e.target.helpers['properties._storage_options.jslmTs'];
+      var gbwControl = e.target.helpers['properties._storage_options.gbw'];
+      var gbaControl = e.target.helpers['properties._storage_options.gba'];
+      var descControl = e.target.helpers['properties.description'];
+      var szcdControl = e.target.helpers['properties._storage_options.szcd'];
 
-          if(!ret){
-              this.properties._storage_options.gba = gbaControl.input.value = 0;
-          }else {
-              var gbw = +this.getOption('gbw');
-              var jslmTs = +this.getOption('jslmTs');
-              var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
-              this.properties._storage_options.gba = gbaControl.input.value = area
-              descControl.input.value = this.properties.description = '一处设置' + ret['lanes'] + '道,' +
+      if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0,'jslmTs':0,'gbw':0, 'gbc': 0,'szcd':0}){
+          var gbc = +this.getOption('gbc');
+          if(e.helper.name === 'gbc'){
+              descControl.input.value = this.properties.description = '';
+          }
+
+          var gbl = +this.getOption('gbl');
+          var gbw = +this.getOption('gbw');
+          var jslmTs = +this.getOption('jslmTs');
+
+          if(gbc === 1){ //条状
+              var ret = this.caculateLanesAndSpace(gbl);
+
+              if(!ret){
+                  this.properties._storage_options.gba = gbaControl.input.value = 0;
+              }else {
+                  var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
+                  this.properties._storage_options.gba = gbaControl.input.value = area;
+                  descControl.input.value = this.properties.description = '一处设置' + ret['lanes'] + '道,' +
                                                                     '每道' + jslmTs + '条,' +
                                                                     '间距(米):' + ret['space'].join('_');
+              }
+              jslmTsControl.show();
+              szcdControl.hide().claer();
+              gblControl.label.innerHTML = '总长(m)';
+              gbwControl.label.innerHTML = '宽度(m)';
+              jslmTsControl.label.innerHTML = '每道设置条数';
+          }else{
+              gblControl.label.innerHTML = '设置长度(m)';
+              gbwControl.label.innerHTML = '设置宽度(m)';
+              jslmTsControl.label.innerHTML = '设置数量';
+              var szcd = +this.getOption('szcd');
+              if(gbc === 3) {//带状
+                  var area = (szcd * gbw).toFixed(2);
+                  jslmTsControl.hide().clear();
+              }else{
+                  var area = (szcd * gbw * jslmTs).toFixed(2);
+                  jslmTsControl.show();
+              }
+              gblControl.hide();
+              szcdControl.show();
+              this.properties._storage_options.gba = gbaControl.input.value = area;
           }
       }
   },
 
-  //name是自动生成的，依据所选择的参数
-  updateName: function(e){
-    if(!e) return
+  edit: function(e) {
+      if(!this.map.editEnabled) return;
+      var builder = L.Storage.Guardbar.prototype.edit.call(this,e);
+      var gblControl = builder.helpers['properties._storage_options.gbl'];
+      var jslmTsControl = builder.helpers['properties._storage_options.jslmTs'];
+      var gbwControl = builder.helpers['properties._storage_options.gbw'];
+      var gbaControl = builder.helpers['properties._storage_options.gba'];
+      var szcdControl = builder.helpers['properties._storage_options.szcd'];
 
-    L.Storage.Guardbar.prototype.updateName.call(this,e);
-
-    return
-  },
+      var gbc = +this.getOption('gbc');
+      if(gbc === 1) {//条状
+          jslmTsControl.show();
+          szcdControl.hide().claer();
+          gblControl.label.innerHTML = '总长(m)';
+          gbwControl.label.innerHTML = '宽度(m)';
+          jslmTsControl.label.innerHTML = '每道设置条数';
+      } else {
+          gblControl.label.innerHTML = '设置长度(m)';
+          gbwControl.label.innerHTML = '设置宽度(m)';
+          jslmTsControl.label.innerHTML = '设置数量';
+          if(gbc === 3) {//带状
+              jslmTsControl.hide().clear();
+          }else{
+              jslmTsControl.show();
+          }
+          szcdControl.show();
+          gblControl.hide();
+      }
+   },
 
   getStringMap: function(){
       var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
@@ -1125,103 +1240,3 @@ L.Storage.Biangou = L.Storage.Guardbar.extend({
   },
 
 });
-
-
-L.Storage.BarTypeNormal = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-
-L.Storage.BarTypeRect  = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '10,5';
-  options['opacity'] = 1;
-  options['lineCap'] = 'butt';
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-
-L.Storage.BarTypeCircle = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '0,25';
-  options['opacity'] = 1;
-  options['lineCap'] = 'round';
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-
-L.Storage.BarTypeLine = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '5,20';
-  options['lineCap'] = 'butt';
-  options['opacity'] = 1;
-  options['weight'] = options.weight || 20;
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
-L.Storage.BarTypeCustomize = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '';
-  options['lineCap'] = 'round';
-  options['opacity'] = 0.4;
-  options['weight'] = options.weight || 5;
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-
-
-  var gbtype = this.gbType
-  var gbcat  = +this.getOption('gbc')
-  var classObject = L.Storage.getGBClass(gbtype, gbcat)
-  if(!classObject) {
-      return
-  }
-  var type = classObject['type']
-  var optionsDefault = JSON.parse(JSON.stringify(classObject['defaultOptions']||{}))
-  optionsDefault['color'] = optionsDefault['fillColor'] = this.getOption('color')
-  this.updatePolyMarker(optionsDefault);
-}
-
-L.Storage.DotTypeLine = function(options){
-  options = options || {};
-  var option;
-  for (var idx in this.styleOptions) {
-      option = this.styleOptions[idx];
-      options[option] = this.getOption(option);
-  }
-  options['dashArray'] = '15,5';
-  options['lineCap'] = 'butt';
-  options['opacity'] = 1;
-  options['weight'] = options.weight || 5;
-  if (options.interactive) this.options.pointerEvents = 'visiblePainted';
-  else this.options.pointerEvents = 'stroke';
-  this.parentClass.prototype.setStyle.call(this, options);
-};
