@@ -528,7 +528,7 @@ L.Storage.FeatureMixin = {
     },
 
     resetTooltip: function () {
-        if(this._rings && this._rings.length > 0) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
+        if(!this._rings || (this._rings && this._rings.length > 0)) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
             this.unbindTooltip();
             if(!this.getOption('showLabel')) return
             var displayName = this.getDisplayName(),
