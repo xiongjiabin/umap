@@ -121,19 +121,22 @@ L.Storage.Map.include({
       for(j = 0, len1 = subHelpData.length; j < len1; j++) {
         subHelp = subHelpData[j]
         //得一段路必须在一个完整的地方，交叉的情况暂时不考虑
-        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max) {
-          floorData  = subHelp['data'][floorSubNo] &&
+        if(scaleSubNo >= subHelp.min && scaleSubNo <= subHelp.max) {
+            if(floorSubNo < subHelp.min) floorSubNo = subHelp.min;
+            if(ceilSubNo  > subHelp.max) ceilSubNo  = subHelp.max;
+
+            floorData  = subHelp['data'][floorSubNo] &&
                        [subHelp['data'][floorSubNo][1],subHelp['data'][floorSubNo][0]]
 
-          if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
-            ceilData  = subHelp['data'][ceilSubNo] &&
+            if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
+                ceilData  = subHelp['data'][ceilSubNo] &&
                         [subHelp['data'][ceilSubNo][1],subHelp['data'][ceilSubNo][0]]
-          }
+            }
 
-          if(floorOldSubNo >= subHelp.min && floorOldSubNo <= subHelp.max) {
-            floorOldData  = subHelp['data'][floorOldSubNo] &&
+            if(floorOldSubNo >= subHelp.min && floorOldSubNo <= subHelp.max) {
+                floorOldData  = subHelp['data'][floorOldSubNo] &&
                             [subHelp['data'][floorOldSubNo][1],subHelp['data'][floorOldSubNo][0]]
-          }
+            }
         }
 
         if(floorData && ceilData) {
@@ -167,8 +170,7 @@ L.Storage.Map.include({
                if(!feature.properties._storage_options['road']){
                    if(!feature.properties['className']){ //寻找没有设置是路，但是公里数比较比较高的
                        lineGeojson = feature.toGeoJSON()
-                       if(!lineGeojson || lineGeojson.type === 'Point'
-                          || lineGeojson.type === 'MultiPoint'){
+                       if(!lineGeojson || lineGeojson.type === 'Point' || lineGeojson.type === 'MultiPoint'){
                             continue;
                        }
                        try{
@@ -205,9 +207,10 @@ L.Storage.Map.include({
                    try{
                    sliced = turf.lineSlice(floorPoint,ceilPoint,tempLineGeoJson)
                    if(sliced){
-                       temp = 1000 * turf.lineDistance(sliced)
-                       if(!temp || temp <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
-                           console.log("距离不满足，继续找下一个:" + temp)
+                       var lineDist = 1000 * turf.lineDistance(sliced)
+                       if(!lineDist || lineDist <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
+                           console.log("距离不满足，继续找下一个:" + lineDist)
+
                            continue; //继续寻找下一个
                        }
                        temp = turf.point(sliced.geometry.coordinates[0])
@@ -218,25 +221,34 @@ L.Storage.Map.include({
                        continue;
                    }
 
-                   if(result['point']) {
-                       factor = turf.distance(floorPoint,ceilPoint) * 5 // *1000 / 200
+                   if(result['point'] && ((ceilSubNo - floorSubNo) > 1 )) {
+                       factor = lineDist  / 200
                    }else{
-                       factor = turf.distance(floorPoint,ceilPoint) * 10 // * 1000 / 100
-                       //实际的距离可能不是100米，俩个桩号之间，所以要生成一个factor
-                       along = turf.along(sliced, (scaleSubNo - floorSubNo )/10 * factor )
-                       if(along) {
-                           temp = along.geometry.coordinates
-                           result['point'] = [temp[1],temp[0]]
+                       factor = lineDist  / 100
+                       if(!result['point']){
+                           //实际的距离可能不是100米，俩个桩号之间，所以要生成一个factor
+                           along = turf.along(sliced, (scaleSubNo - floorSubNo )/10 * factor )
+                           if(along) {
+                               temp = along.geometry.coordinates
+                               result['point'] = [temp[1],temp[0]]
+                           }
+                       }else{
+                           /*L.geoJSON(sliced, {
+                               style: function (feature) {
+                                   return {color: 'yellow', weight:20};
+                               }
+                           }).addTo(this);*/
                        }
                    }
 
                    var m1 = 0
-                   if(((scaleSubNo - floorSubNo )/10 - 0.002) > 0){
-                       m1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 - 0.002) * factor)
+                   temp = (scaleSubNo - floorSubNo )/10;
+                   if((temp - 0.002) > 0){
+                       m1 = turf.along(sliced, (temp - 0.002) * factor)
                    }else{
                        m1 = turf.along(sliced, 0)
                    }
-                   var a1 = turf.along(sliced, ((scaleSubNo - floorSubNo )/10 + 0.002) * factor)
+                   var a1 = turf.along(sliced, (temp + 0.002) * factor)
                    var right = Math.round((360 + turf.bearing(m1,a1)) % 360)
                    var left  = Math.round((360 + turf.bearing(a1,m1)) % 360)
                    }catch(e){

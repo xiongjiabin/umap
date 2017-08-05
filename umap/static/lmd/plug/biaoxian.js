@@ -44,6 +44,31 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
       L.Storage.BarTypeRect.call(this,options)
   },
 
+
+  resetTooltip: function(e){
+      L.Storage.Guardbar.prototype.resetTooltip.call(this,e);
+      if(!e) return;
+
+      if(e.helper.name in {'gbss':0,'gbse':0,'gbl':0,'jslmTs':0,'gbw':0}){
+          var gbl = +this.getOption('gbl');
+          var ret = this.caculateLanesAndSpace(gbl);
+          var gbaControl = e.target.helpers['properties._storage_options.gba'];
+          var descControl = e.target.helpers['properties.description'];
+
+          if(!ret){
+              this.properties._storage_options.gba = gbaControl.input.value = 0;
+          }else {
+              var gbw = +this.getOption('gbw');
+              var jslmTs = +this.getOption('jslmTs');
+              var area = (0.45 * gbw * jslmTs * ret['lanes']).toFixed(2);
+              this.properties._storage_options.gba = gbaControl.input.value = area
+              descControl.input.value = this.properties.description = '一处设置' + ret['lanes'] + '道,' +
+                                                                      '每道' + jslmTs + '条,' +
+                                                                      '间距(米):' + ret['space'].join('_');
+           }
+       }
+   },
+
   //name是自动生成的，依据所选择的参数
   updateName: function(e){
     if(!e) return
@@ -63,17 +88,14 @@ L.Storage.Biaoxian = L.Storage.Jiansu.extend({
   },
 
   getStringMap: function(){
-    var stringMap = L.Storage.Jiansu.prototype.getStringMap.call(this);
+    var stringMap = L.Storage.Guardbar.prototype.getStringMap.call(this);
+    var jslmTs = this.getOption('jslmTs');
+    stringMap['jslmTs'] = jslmTs;
+
     var hColor =  +(this.getOption('hColor'));
     var gbm = +(this.getOption('gbm'));
-
     stringMap['hColor'] = lmd.getOptionsToMap(L.FormBuilder.ColorSwitcher.prototype.selectOptions)[hColor] || '';
     stringMap['gbm'] = lmd.getOptionsToMap(L.FormBuilder.MaterialSwitcher.prototype.selectOptions)[gbm] || '';
-
-    var num = 1;
-    var lr = +this.getOption('lr') || 1;
-    if(lmd.POS_MIDDLE === lr) num = 2;
-    stringMap['num'] = num;
 
     return stringMap;
   },
