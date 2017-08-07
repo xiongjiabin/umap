@@ -786,6 +786,7 @@ L.Storage.Map.include({
         offsetFlag.name = 'offset';
         this.help.button(offsetLabel, 'offsetHelp');
 
+        L.DomUtil.element('option', {value: '', innerHTML: L._('Import in a new layer')}, layerInput);
         this.eachDataLayer(function (datalayer) {
             if (datalayer.isLoaded()) {
                 var id = L.stamp(datalayer);
@@ -794,7 +795,6 @@ L.Storage.Map.include({
                 option.innerHTML = datalayer.options.name;
             }
         });
-        L.DomUtil.element('option', {value: '', innerHTML: L._('Import in a new layer')}, layerInput);
         L.DomUtil.element('option', {value: '', innerHTML: L._('Choose the data format')}, typeInput);
         for (var i = 0; i < types.length; i++) {
             option = L.DomUtil.create('option', '', typeInput);
