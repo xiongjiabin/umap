@@ -449,6 +449,7 @@ L.Storage.Help = L.Class.extend({
     outlink: L._('Define link to open in a new window on polygon click.'),
     dynamicRemoteData: L._('Fetch data each time map view changes.'),
     proxyRemoteData: L._('To use if remote server doesn\'t allow cross domain (slower)'),
+    browsable: L._('Set it to false to hide this layer from the slideshow, the data browser, the popup navigation…'),
     defaultSpeed: '需要依靠速度做选择的时候默认认为是这个速度',
     defaultLayer: '增加新元素的时候默认添加到这个层中;会在默认的层中查找上一个元素填充桩号，旋转角度等参数',
     offsetHelp: '如果需要转化成国内的坐标，请选择需要处理偏移',

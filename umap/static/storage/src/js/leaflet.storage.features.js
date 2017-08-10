@@ -67,10 +67,8 @@ L.Storage.FeatureMixin = {
         return this.datalayer && this.datalayer.isRemoteLayer();
     },
 
-    view: function(latlng) {
-        if (this.map.editEnabled) {
-            return;
-        }
+    view: function(e) {
+        if (this.map.editEnabled) return;
         var outlink = this.properties._storage_options.outlink,
             target = this.properties._storage_options.outlinkTarget
         if (outlink) {
@@ -88,13 +86,11 @@ L.Storage.FeatureMixin = {
         }
         if (this.map.slideshow) this.map.slideshow.current = this;
         this.attachPopup();
-        this.openPopup(latlng || this.getCenter());
+        this.openPopup(e && e.latlng || this.getCenter());
     },
 
     openPopup: function () {
-        if (this.map.editEnabled) {
-            return;
-        }
+        if (this.map.editEnabled) return;
         this.parentClass.prototype.openPopup.apply(this, arguments);
     },
 
@@ -272,7 +268,6 @@ L.Storage.FeatureMixin = {
 
     populate: function (feature) {
         this.properties = L.extend({}, feature.properties);
-        //this.options.title = feature.properties && feature.properties.name;
         this.properties._storage_options = L.extend({}, this.properties._storage_options);
         // Retrocompat
         if (this.properties._storage_options.clickable === false) {
@@ -308,18 +303,18 @@ L.Storage.FeatureMixin = {
         return value;
     },
 
-    bringToCenter: function (e, callback) {
-        var latlng;
-        if (e && e.zoomTo) this.map._zoom = e.zoomTo;
-        if (e && e.latlng) latlng = e.latlng;
-        else latlng = this.getCenter();
-        this.map.panTo(latlng);
-        if (callback) callback();
+    bringToCenter: function (e) {
+        e = e || {};
+        var latlng = e.latlng || this.getCenter();
+        this.map.setView(latlng, e.zoomTo || this.map.getZoom());
+        if (e.callback) e.callback.call(this);
     },
 
-    zoomTo: function () {
-        if (this.map.options.easing) this.flyTo();
-        else this.bringToCenter({zoomTo: this.getBestZoom()});
+    zoomTo: function (e) {
+        e = e || {};
+        var easing = e.easing !== undefined ? e.easing : this.map.options.easing;
+        if (easing) this.flyTo();
+        else this.bringToCenter({zoomTo: this.getBestZoom(), callback: e.callback});
     },
 
     getBestZoom: function () {
@@ -410,23 +405,13 @@ L.Storage.FeatureMixin = {
     addInteractions: function () {
         this.on('contextmenu editable:vertex:contextmenu', this._showContextMenu, this);
         this.on('click', this._onClick);
-        //this.on('dblclick', this._onDblClick);
     },
-
-    /*_onDblClick: function(e){
-        if (!this.isReadOnly()) {
-            if(this._toggleEditing)
-                this._toggleEditing(e);
-            else
-                this.edit(e);
-        }
-    },*/
 
     _onClick: function (e) {
         if (this.map.measureTools && this.map.measureTools.enabled()) return;
         this._popupHandlersAdded = true;  // Prevent leaflet from managing event
         if(!this.map.editEnabled) {
-            this.view(e.latlng);
+            this.view(e);
         } else if (!this.isReadOnly()) {
             if(e.originalEvent.shiftKey) {
                 if(this._toggleEditing)
@@ -701,9 +686,7 @@ L.Storage.Marker = L.Marker.extend({
     },
 
     _getIconUrl: function (name) {
-        if (typeof name === 'undefined') {
-            name = 'icon';
-        }
+        if (typeof name === 'undefined') name = 'icon';
         return this.getOption(name + 'Url');
     },
 
@@ -758,12 +741,12 @@ L.Storage.Marker = L.Marker.extend({
         fieldset.appendChild(builder.build());
     },
 
-    bringToCenter: function (e, callback) {
-        callback = callback || function (){};  // mandatory for zoomToShowLayer
+    bringToCenter: function (e) {
         if (this.datalayer.isClustered() && !this._icon) {
-            this.datalayer.layer.zoomToShowLayer(this, callback);
+            // callback is mandatory for zoomToShowLayer
+            this.datalayer.layer.zoomToShowLayer(this, e.callback || function (){});
         } else {
-            L.Storage.FeatureMixin.bringToCenter.call(this, e, callback);
+            L.Storage.FeatureMixin.bringToCenter.call(this, e);
         }
     },
 
@@ -775,6 +758,7 @@ L.Storage.Marker = L.Marker.extend({
     getPopupToolbarAnchor: function () {
         return this.options.icon.options.popupAnchor;
     }
+
 });
 
 
@@ -859,13 +843,13 @@ L.Storage.PathMixin = {
 
     onAdd: function (map) {
         this._container = null;
+        this.setStyle();
         // Show tooltip again when Leaflet.label allow static label on path.
         // cf https://github.com/Leaflet/Leaflet/pull/3952
         // this.map.on('showmeasure', this.showMeasureTooltip, this);
         // this.map.on('hidemeasure', this.removeTooltip, this);
         this.parentClass.prototype.onAdd.call(this, map);
         if (this.editing && this.editing.enabled()) this.editing.addHooks();
-        this.setStyle();
         this.resetTooltip();
     },
 

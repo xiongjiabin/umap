@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'hhztxt';
+  font-style: normal;
+  src: local('hhztxt'),
+       url('/static/fonts/hhztxt.ttf') format('truetype')
+}
+
 .storage-rect-icon {
     /*border: 1px solid white;*/
     border-radius: 5px 5px 5px 5px;
@@ -23,7 +30,7 @@
 }
 
 svg text{
-   font-family:  "Microsoft YaHei",  "STHeiti", "WenQuanYi Micro Hei";
+   font-family:  "SimSun", "Microsoft YaHei",  "STHeiti", "WenQuanYi Micro Hei";
    letter-spacing: 4px;
 }
 

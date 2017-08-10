@@ -1,5 +1,5 @@
 L.S.Layer = {
-    isBrowsable: true,
+    canBrowse: true,
 
     getFeatures: function () {
         return this._layers;
@@ -70,7 +70,7 @@ L.S.Layer.Cluster = L.MarkerClusterGroup.extend({
 L.S.Layer.Heat = L.HeatLayer.extend({
     _type: 'Heat',
     includes: [L.S.Layer],
-    isBrowsable: false,
+    canBrowse: false,
 
     initialize: function (datalayer) {
         this.datalayer = datalayer;
@@ -92,12 +92,12 @@ L.S.Layer.Heat = L.HeatLayer.extend({
         this.setLatLngs([]);
     },
 
-    _redraw: function () {
+    redraw: function () {
         // setlalngs call _redraw through setAnimFrame, thus async, so this
         // can ends with race condition if we remove the layer very faslty after.
         // Remove me when https://github.com/Leaflet/Leaflet.heat/pull/53 is released.
         if (!this._map) return;
-        L.HeatLayer.prototype._redraw.call(this);
+        L.HeatLayer.prototype.redraw.call(this);
     },
 
     getFeatures: function () {
@@ -137,7 +137,8 @@ L.Storage.DataLayer = L.Class.extend({
     includes: [L.Mixin.Events],
 
     options: {
-        displayOnLoad: true
+        displayOnLoad: true,
+        browsable: true
     },
 
     initialize: function (map, data) {
@@ -197,23 +198,26 @@ L.Storage.DataLayer = L.Class.extend({
         this.setOptions(data);
         this.backupOptions();
         this.connectToMap();
-        if ((this.map.datalayersOnLoad && this.storage_id && this.map.datalayersOnLoad.indexOf(this.storage_id.toString()) !== -1) ||
-            (!this.map.datalayersOnLoad && this.options.displayOnLoad)) {
-            this.show();
-        }
+        if (this.displayedOnLoad()) this.show();
         if (!this.storage_id) this.isDirty = true;
         this.onceLoaded(function () {
-            this.map.on('moveend', function () {
-                if (this.isRemoteLayer() && this.options.remoteData.dynamic && this.isVisible()) {
-                    this.fetchRemoteData();
-                }
-            }, this);
+            this.map.on('moveend', this.fetchRemoteData, this);
         });
+    },
+
+    displayedOnLoad: function () {
+        return ((this.map.datalayersOnLoad && this.storage_id && this.map.datalayersOnLoad.indexOf(this.storage_id.toString()) !== -1) ||
+            (!this.map.datalayersOnLoad && this.options.displayOnLoad));
     },
 
     insertBefore: function (other) {
         if (!other) return;
         this.parentPane.insertBefore(this.pane, other.pane);
+    },
+
+    insertAfter: function (other) {
+        if (!other) return;
+        this.parentPane.insertBefore(this.pane, other.pane.nextSibling);
     },
 
     bringToTop: function () {
@@ -242,7 +246,7 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     eachFeature: function (method, context) {
-        if (this.layer && this.layer.isBrowsable) {
+        if (this.layer && this.layer.canBrowse) {
             for (var i = 0; i < this._index.length; i++) {
                 method.call(context || this, this._layers[this._index[i]]);
             }
@@ -355,6 +359,7 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     fetchRemoteData: function () {
+        if (!this.isRemoteLayer()) return;
         var from = parseInt(this.options.remoteData.from, 10),
             to = parseInt(this.options.remoteData.to, 10);
         if ((!isNaN(from) && this.map.getZoom() < from) ||
@@ -362,6 +367,8 @@ L.Storage.DataLayer = L.Class.extend({
             this.clear();
             return;
         }
+        if (!this.options.remoteData.dynamic && this.hasDataLoaded()) return;
+        if (!this.isVisible()) return;
         var self = this,
             url = this.map.localizeUrl(this.options.remoteData.url);
         if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
@@ -476,7 +483,13 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     addData: function (geojson) {
-        return this.geojsonToFeatures(geojson);
+        try {
+            // Do not fail if remote data is somehow invalid,
+            // otherwise the layer becomes uneditable.
+            this.geojsonToFeatures(geojson);
+        } catch (err) {
+            console.error(err);
+        }
     },
 
     addRawData: function (c, type, options) {
@@ -590,7 +603,7 @@ L.Storage.DataLayer = L.Class.extend({
                 layer = this._polygonToLayer(geojson, latlngs);
                 break;
             case 'GeometryCollection':
-                return this.geojsonToFeatures(geojson.geometries);
+                return this.geojsonToFeatures(geometry.geometries);
 
             default:
                 this.map.ui.alert({content: L._('Skipping unkown geometry.type: {type}', {type: geometry.type}), level: 'error'});
@@ -797,22 +810,20 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     reset: function () {
-        if (this.storage_id) {
-            this.resetOptions();
-            this.parentPane.appendChild(this.pane);
-            if (this._leaflet_events_bk && !this._leaflet_events) {
-                this._leaflet_events = this._leaflet_events_bk;
-            }
-            this.clear();
-            this.hide();
-            if (this.isRemoteLayer()) this.fetchRemoteData();
-            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
-            this._loaded = true;
-            this.show();
-            this.isDirty = false;
-        } else {
-            this.erase();
+        if (!this.storage_id) this.erase();
+
+        this.resetOptions();
+        this.parentPane.appendChild(this.pane);
+        if (this._leaflet_events_bk && !this._leaflet_events) {
+            this._leaflet_events = this._leaflet_events_bk;
         }
+        this.clear();
+        this.hide();
+        if (this.isRemoteLayer()) this.fetchRemoteData();
+        else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+        this._loaded = true;
+        this.show();
+        this.isDirty = false;
     },
 
     redraw: function () {
@@ -827,7 +838,9 @@ L.Storage.DataLayer = L.Class.extend({
                 'options.name',
                 'options.description',
                 ['options.type', {handler: 'LayerTypeChooser', label: L._('Type of layer')}],
-                ['options.displayOnLoad', {label: L._('Display on load'), handler: 'Switch'}]
+                ['options.displayOnLoad', {label: L._('Display on load'), handler: 'Switch'}],
+                //没有必要加载这个browseable,
+                //['options.browsable', {label: L._('Data is browsable'), handler: 'Switch', helpEntries: 'browsable'}]
             ];
         var title = L.DomUtil.add('h3', '', container, L._('Layer properties'));
         var builder = new L.S.FormBuilder(this, metadataFields, {
@@ -983,8 +996,8 @@ L.Storage.DataLayer = L.Class.extend({
     buildVersionsFieldset: function (container) {
 
         var appendVersion = function (data) {
-            var date = new Date(parseInt(data.at, 10) * 1000);
-            var content = date.toLocaleDateString() + ' (' + parseInt(data.size) / 1000 + 'Kb)';
+            var date = new Date(parseInt(data.at, 10));
+            var content = date.toLocaleFormat() + ' (' + parseInt(data.size) / 1000 + 'Kb)';
             var el = L.DomUtil.create('div', 'storage-datalayer-version', versionsContainer);
             var a = L.DomUtil.create('a', '', el);
             L.DomUtil.add('span', '', el, content);
@@ -1071,8 +1084,16 @@ L.Storage.DataLayer = L.Class.extend({
         if (bounds.isValid()) this.map.fitBounds(bounds);
     },
 
+    allowBrowse: function () {
+        return !!this.options.browsable && this.canBrowse() && this.isVisible() && this._index.length;
+    },
+
     isVisible: function () {
         return this.map.hasLayer(this.layer);
+    },
+
+    canBrowse: function () {
+        return this.layer && this.layer.canBrowse;
     },
 
     getFeatureByIndex: function (index) {
@@ -1084,36 +1105,30 @@ L.Storage.DataLayer = L.Class.extend({
     getNextFeature: function (feature) {
         var id = this._index.indexOf(L.stamp(feature)),
             nextId = this._index[id + 1];
-        return nextId? this._layers[nextId]: this.getNextVisible().getFeatureByIndex(0);
+        return nextId? this._layers[nextId]: this.getNextBrowsable().getFeatureByIndex(0);
     },
 
     getPreviousFeature: function (feature) {
         if (this._index <= 1) { return null; }
         var id = this._index.indexOf(L.stamp(feature)),
             previousId = this._index[id - 1];
-        return previousId? this._layers[previousId]: this.getPreviousVisible().getFeatureByIndex(-1);
+        return previousId? this._layers[previousId]: this.getPreviousBrowsable().getFeatureByIndex(-1);
     },
 
-    getNextVisible: function () {
-        var id = this.getRank(),
-            next = this.map.datalayers_index[id + 1] || this.map.datalayers_index[0];
-        while(!next.isVisible() || !next.isBrowsable() || next._index.length === 0) {
-            next = next.getNextVisible();
+    getPreviousBrowsable: function () {
+        var id = this.getRank(), next, index = this.map.datalayers_index;
+        while(id = index[++id] ? id : 0, next = index[id]) {
+            if (next === this || next.allowBrowse()) break;
         }
         return next;
     },
 
-    getPreviousVisible: function () {
-        var id = this.getRank(),
-            prev = this.map.datalayers_index[id - 1] || this.map.datalayers_index[this.map.datalayers_index.length - 1];
-        while(!prev.isVisible() || !prev.isBrowsable() || prev._index.length === 0) {
-            prev = prev.getPreviousVisible();
+    getNextBrowsable: function () {
+        var id = this.getRank(), prev, index = this.map.datalayers_index;
+        while(id = index[--id] ? id : index.length - 1, prev = index[id]) {
+            if (prev === this || prev.allowBrowse()) break;
         }
         return prev;
-    },
-
-    isBrowsable: function () {
-        return this.layer && this.layer.isBrowsable;
     },
 
     umapGeoJSON: function () {
@@ -1156,7 +1171,9 @@ L.Storage.DataLayer = L.Class.extend({
                 this.updateOptions(data);
                 this.backupOptions();
                 this.connectToMap();
-                this.reset();  // Needed for reordering features
+                this._loaded = true;
+                this.redraw();  // Needed for reordering features
+                this.isDirty = false;
                 this.map.continueSaving();
             },
             context: this,

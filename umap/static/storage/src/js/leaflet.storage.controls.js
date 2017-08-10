@@ -771,9 +771,9 @@ L.Storage.DataLayersControl = L.Control.extend({
     },
 
     update: function () {
-        if (this._datalayers_container) {
+        if (this._datalayers_container && this._map) {
             this._datalayers_container.innerHTML = '';
-            this._map.eachDataLayer(function (datalayer) {
+            this._map.eachDataLayerReverse(function (datalayer) {
                 this.addDataLayer(this._datalayers_container, datalayer);
             }, this)
         }
@@ -794,7 +794,7 @@ L.Storage.DataLayersControl = L.Control.extend({
         datalayer.renderToolbox(datalayerLi);
         var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
 
-        datalayerLi.id = 'browse_data_toggle_' + datalayer.storage_id;
+        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
 
         title.innerHTML = datalayer.options.name;
@@ -811,7 +811,7 @@ L.Storage.DataLayersControl = L.Control.extend({
     openPanel: function () {
         if (!this.map.editEnabled) return;
         var container = L.DomUtil.create('ul', 'storage-browse-datalayers');
-        this.map.eachDataLayer(function (datalayer) {
+        this.map.eachDataLayerReverse(function (datalayer) {
             this.addDataLayer(container, datalayer, true);
         }, this);
         var orderable = new L.S.Orderable(container);
@@ -819,10 +819,10 @@ L.Storage.DataLayersControl = L.Control.extend({
             var layer = this.map.datalayers[e.src.dataset.id],
                 other = this.map.datalayers[e.dst.dataset.id],
                 minIndex = Math.min(e.initialIndex, e.finalIndex);
-            if (e.finalIndex === this.map.datalayers_index.length - 1) layer.bringToTop();
-            else if (e.finalIndex > e.initialIndex) other.insertBefore(layer);
-            else layer.insertBefore(other);
-            this.map.eachDataLayer(function (datalayer) {
+            if (e.finalIndex === 0) layer.bringToTop();
+            else if (e.finalIndex > e.initialIndex) layer.insertBefore(other);
+            else layer.insertAfter(other);
+            this.map.eachDataLayerReverse(function (datalayer) {
                 if (datalayer.getRank() >= minIndex) datalayer.isDirty = true;
             });
             this.map.indexDatalayers();
@@ -871,16 +871,12 @@ L.Storage.DataLayer.include({
         container.dataset.id = L.stamp(this);
     },
 
-    getLocalId: function () {
-        return this.storage_id || 'tmp' + L.Util.stamp(this);
-    },
-
     getHidableElements: function () {
         return document.querySelectorAll('.' + this.getHidableClass());
     },
 
     getHidableClass: function () {
-        return 'show_with_datalayer_' + this.getLocalId();
+        return 'show_with_datalayer_' + L.stamp(this);
     },
 
     propagateRemote: function () {
@@ -944,10 +940,12 @@ L.Storage.Map.include({
                 color.style.backgroundImage = 'url(' + symbol + ')';
             }
             L.DomEvent.on(zoom_to, 'click', function (e) {
-                this.bringToCenter(e, L.bind(this.view, this));
+                e.callback = this.view;
+                this.bringToCenter(e);
             }, feature);
             L.DomEvent.on(title, 'click', function (e) {
-                this.bringToCenter(e, L.bind(this.view, this));
+                e.callback = this.view
+                this.bringToCenter(e);
             }, feature);
             L.DomEvent.on(edit, 'click', function () {
                 this.edit();
@@ -989,7 +987,7 @@ L.Storage.Map.include({
         var appendAll = function () {
             featuresContainer.innerHTML = '';
             filterValue = filter.value;
-            this.eachDataLayer(function (datalayer) {
+            this.eachBrowsableDataLayer(function (datalayer) {
                 append(datalayer);
             });
         };

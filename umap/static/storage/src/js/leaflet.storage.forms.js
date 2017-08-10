@@ -239,12 +239,24 @@ L.FormBuilder.LayerTypeChooser = L.FormBuilder.Select.extend({
 
 });
 
+L.FormBuilder.SlideshowDelay = L.FormBuilder.IntSelect.extend({
+
+    getOptions: function () {
+        var options = [];
+        for (var i = 1; i < 30; i++) {
+            options.push([i * 1000, L._('{delay} seconds', {delay: i})]);
+        }
+        return options;
+    }
+
+});
+
 L.FormBuilder.DataLayerSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {
         var options = [];
-        this.builder.map.eachDataLayer(function (datalayer) {
-            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
+        this.builder.map.eachDataLayerReverse(function (datalayer) {
+            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.canBrowse()) {
                 options.push([L.stamp(datalayer), datalayer.getName()]);
             }
         });
@@ -1004,7 +1016,7 @@ L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
     getOptions: function () {
         var options = [["0",'无']]; //select必须是字符串位收尾
         this.builder.map.eachDataLayer(function (datalayer) {
-            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
+            if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.canBrowse()) {
                 options.push([datalayer.getOption('id') + "", datalayer.getName()]);
             }
         });
