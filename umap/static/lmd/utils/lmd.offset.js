@@ -232,7 +232,8 @@ L.PolylineOffset = {
     _offsetProjectLatlngs: function (offset, latlngs, result, tolerance) {
       var flat = latlngs[0] instanceof L.LatLng,
           len = latlngs.length,
-          i, ring, tmpPoint;
+          i, ring, tmpPoint,
+          tmp1,tmp2;
 
       if (flat) {
         ring = [];
@@ -244,12 +245,16 @@ L.PolylineOffset = {
            //console.log(Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']))
            //console.log(Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']))
            //console.log('end' + tolerance);
-           if ((i < (len-1)) &&
-               Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']) <= tolerance &&
-               Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']) <= tolerance){
+           tmp1 = Math.abs(tmpPoint['x'] - ring[ring.length - 1]['x']);
+           tmp2 = Math.abs(tmpPoint['y'] - ring[ring.length - 1]['y']);
+           if ((i < (len-1)) && tmp1 <= tolerance && tmp2 <= tolerance){
                //console.log(tolerance);
            }else{
-               ring.push(tmpPoint)
+               if( i >= (len-1) && len > 2 && ring.length > 1 && tmp1 <= tolerance && tmp2 <= tolerance){
+                   ring[ring.length - 1] = tmpPoint
+               }else{
+                   ring.push(tmpPoint)
+               }
            }
         }
         // Offset management hack ---
