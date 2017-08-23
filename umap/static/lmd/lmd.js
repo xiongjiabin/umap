@@ -20,6 +20,7 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
 
   DEFAULT_OFFSET: 80,
 
+  _map: null,
   init: function(map) {
 
     if(map.options && map.options.noControl) return;
@@ -32,6 +33,8 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
       labelTemplateLng: "经:{x}",
       labelTemplateSub: "桩号:{subno}"
     }).addTo(map);
+
+    lmd._map = map
   },
 
   bench: function(that, fun1, count){
@@ -83,6 +86,19 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
           pos = 'left';
       }
       return pos;
+  },
+
+  eachFeature(callback){
+      if(!lmd._map) {
+          console.log('map is empty')
+          return
+      }
+      if(!callback) {
+          return
+      }
+      lmd._map.eachLayerFeature(function (feature) {
+          callback(feature)
+      })
   }
 
 };

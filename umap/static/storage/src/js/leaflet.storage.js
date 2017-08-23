@@ -1137,6 +1137,7 @@ L.Storage.Map.include({
             geometry: this.geometry(),
             properties: this.exportOptions()
         };
+        geojson['properties']['datalayers'] = this.getDataLayers();
         this.backup();
         var formData = new FormData();
         formData.append('name', this.options.name);
@@ -1242,6 +1243,18 @@ L.Storage.Map.include({
         }
     },
 
+    getDataLayers: function(){
+        var datalayers = [];
+        this.eachDataLayer(function (datalayer) {
+            datalayers.push({
+                name: datalayer.getOption('name'),
+                id: datalayer.storage_id,
+                displayOnLoad: datalayer.getOption('displayOnLoad')
+            })
+        });
+        return datalayers;
+    },
+
     edit: function () {
         if(!this.editEnabled) return;
         var container = L.DomUtil.create('div'),
@@ -1341,6 +1354,7 @@ L.Storage.Map.include({
         ];
         builder = new L.S.FormBuilder(this, popupFields, {
             callback: function () {
+                if (e.helper.field === 'options.popupTemplate' || e.helper.field === 'options.popupContentTemplate') return;
                 this.eachDataLayer(function (datalayer) {
                     datalayer.redraw();
                 })
