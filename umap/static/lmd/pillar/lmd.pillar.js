@@ -125,7 +125,8 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     if (e.helper.name === 'sn' || e.helper.name === 'lr') {
       var lr = +this.getOption('lr')
       var data = this.map.getAnchorLatLngBySubNo(sn)
-      var pos = lr == 2 ? 'right' : 'left'
+      //var pos = lr == 2 ? 'right' : 'left'
+      var pos = lmd.getRotateLeftRight(lr);
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
           this.updateStyle()
@@ -214,7 +215,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     }
 
     //解决侧别的问题,pillar 只有左右，中间
-    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesLRM;
+    L.FormBuilder.LeftRightChoice.prototype.choices = L.FormBuilder.LeftRightChoice.prototype.choicesNoBoth;
 
     L.Storage.LmdFeatureMixin.edit.call(this, e)
   },
