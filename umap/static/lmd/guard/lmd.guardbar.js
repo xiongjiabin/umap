@@ -1156,7 +1156,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
                                                                     '间距(米):' + ret['space'].join('_');
               }
               jslmTsControl.show();
-              szcdControl.hide().claer();
+              szcdControl.hide().clear();
               gblControl.label.innerHTML = '总长(m)';
               gbwControl.label.innerHTML = '宽度(m)';
               jslmTsControl.label.innerHTML = '每道设置条数';
@@ -1191,7 +1191,7 @@ L.Storage.Jiansu = L.Storage.Guardbar.extend({
       var gbc = +this.getOption('gbc');
       if(gbc === 1) {//条状
           jslmTsControl.show();
-          szcdControl.hide().claer();
+          szcdControl.hide().clear();
           gblControl.label.innerHTML = '总长(m)';
           gbwControl.label.innerHTML = '宽度(m)';
           jslmTsControl.label.innerHTML = '每道设置条数';
