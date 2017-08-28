@@ -26,7 +26,7 @@ function plusSn( feature, offset, caculateWay){
         feature.del()
         console.log(name + '桩号(' + sn + ')经过偏移后为负值,  删除')
     }else {
-        feature.setSingleOption('sn', newSn);
+        feature.setSingleOption('sn', newSn.toFixed(3));
     }
     return true
 }
