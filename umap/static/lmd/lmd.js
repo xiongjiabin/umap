@@ -276,6 +276,7 @@ L.Storage.Map.include({
 
                    result['left'] = left
                    result['right'] = right
+                   result['line'] = tempLineGeoJson
 
                    this._SUBNO_BUFFER[scaleSubNo] = result
                    return this._SUBNO_BUFFER[scaleSubNo]
@@ -288,128 +289,61 @@ L.Storage.Map.include({
     return null
   },
 
-  getLineBetweenSubNos: function( beginSubNo, endSubNo ) {
-    var i = 0, j = 0, len = 0, len1 = 0, subHelp = null
-    var beginScaleSubNo = parseFloat(beginSubNo) * 10
-    var endScaleSubNo = parseFloat(endSubNo) * 10
-    var beginPoint = null, endPoint = null
-    var beginData = null, endData = null
+  getLineBetweenSubNos: function( beginSubNo, endSubNo) {
+      var i = 0, j = 0, sliced,temp
+      var beginPoint = null, endPoint = null，beginPointGeojson
+      var beginData = null, endData = null,endPointGeojson
 
-    beginData = this.getAnchorLatLngBySubNo(beginSubNo)
-    if(!beginData || !beginData['point']) return null
-    beginPoint = beginData['point']
-    endData = this.getAnchorLatLngBySubNo(endSubNo)
-    if(!endData || !endData['point']) return null
-    endPoint = endData['point']
+      beginData = this.getAnchorLatLngBySubNo(beginSubNo)
+      if(!beginData || !beginData['point']) return null
+      beginPoint = beginData['point']
+      endData = this.getAnchorLatLngBySubNo(endSubNo)
+      if(!endData || !endData['point']) return null
+      endPoint = endData['point']
 
-    var beginFloorSubNo = Math.floor( beginScaleSubNo )
-    var beginCeilSubNo  = Math.ceil( beginScaleSubNo )
-    var endFloorSubNo = Math.floor( endScaleSubNo )
-    var endCeilSubNo  = Math.ceil( endScaleSubNo )
-    var floorSubNo = beginFloorSubNo < endFloorSubNo ? beginFloorSubNo : endFloorSubNo
-    var ceilSubNo  = beginCeilSubNo  < endCeilSubNo  ? endCeilSubNo    : beginCeilSubNo
+      //用开始的那个点所在的线
+      var tempLineGeoJson = beginData['line']
 
-    var found = false
-    for (i = 0, len = this.datalayers_index.length; i < len; i++) {
-      var subHelpData = this.datalayers_index[i].options &&
-                        this.datalayers_index[i].options.subHelpData
-      if(!subHelpData) continue
-      for(j = 0, len1 = subHelpData.length; j < len1; j++) {
-        subHelp = subHelpData[j]
-        //得一段路必须在一个完整的地方，交叉的情况暂时不考虑
-        if(floorSubNo >= subHelp.min && floorSubNo <= subHelp.max) {
-          if(ceilSubNo >= subHelp.min && ceilSubNo <= subHelp.max) {
-              found  = true
-          }
-        }
-        if( found ) break
-      }
-      if( found ) break //退出，并且知道属于哪一个layer
-    }
+      try{
+          beginPointGeojson = turf.point([beginPoint[1],beginPoint[0]])
+          endPointGeojson   = turf.point([endPoint[1],endPoint[0]])
 
-    if( found ) {
-       var beginPointGeojson = turf.point([beginPoint[1],beginPoint[0]])
-       var endPointGeojson   = turf.point([endPoint[1],endPoint[0]])
-       var feature = null
-       var layer = this.datalayers_index[i]
-       var lineGeojson,sliced,  k = 0
-       var temp = 0;
-       for ( len1 = layer._index.length; k < len1; k++) {
-           feature = layer._layers[layer._index[k]]
-           if(feature.properties && feature.properties._storage_options) {
-             if(!feature.properties._storage_options['road']){
-                 if(!feature.properties['className']){ //寻找没有设置是路，但是公里数比较比较高的
-                     lineGeojson = feature.toGeoJSON()
-                     temp = turf.lineDistance(lineGeojson)
-                     if(temp >= 3){ //if 3公里以上的，默认为路
-                         console.log('公里数为' + temp + '公里,默认为路')
-                     }else{
-                         continue
-                     }
+         sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,tempLineGeoJson)
+         if( sliced ){
+            temp = 1000 * turf.lineDistance(sliced)
+             if(!temp || temp < 1) { //这个地方不是一段100米的桩号，是查找的桩号之间的距离，不可能小于1米，小于1米，说明没有找到
+                 console.log("距离不满足，继续找下一个:" + temp)
+                 return null //继续寻找下一个
+             }
+             temp = turf.point(sliced.geometry.coordinates[0])
+             if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
+                 sliced.geometry.coordinates.reverse()
+             }
+
+            //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
+             var temp1 = null, temp2 = null
+             var newCoordinates = []
+             for(j = 0; j < sliced.geometry.coordinates.length; j++){
+                 temp2 = sliced.geometry.coordinates[j]
+                 if(!temp1 ){
+                     newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
                  }else{
-                     continue
-                 }
-             }else{
-                 //如果是条路的话
-                 lineGeojson = feature.toGeoJSON()
-             }
-
-             //解决一个bug的问题，当这个line是multiline的时候，turf的方式不管用，得转化成一个一个lineString xiongjaibin 2017-05-11
-             var lineGeos = [];
-             if(lineGeojson.geometry.type === 'MultiLineString'){
-                 for(i = 0; i < lineGeojson.geometry.coordinates.length; i++){
-                     lineGeos.push(turf.lineString(lineGeojson.geometry.coordinates[i]));
-                 }
-             }else{
-                 lineGeos.push(lineGeojson);
-             }
-
-             for(i = 0; i < lineGeos.length; i++) {
-               var tempLineGeoJson = lineGeos[i]
-
-               try{
-
-                   sliced = turf.lineSlice(beginPointGeojson,endPointGeojson,tempLineGeoJson)
-                   if( sliced ){
-                       temp = 1000 * turf.lineDistance(sliced)
-                       if(!temp || temp < 1) { //这个地方不是一段100米的桩号，是查找的桩号之间的距离，不可能小于1米，小于1米，说明没有找到
-                           console.log("距离不满足，继续找下一个:" + temp)
-                           continue; //继续寻找下一个
-                       }
-                       temp = turf.point(sliced.geometry.coordinates[0])
-                       if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
-                           sliced.geometry.coordinates.reverse()
-                       }
-
-                       //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
-                       var temp1 = null, temp2 = null
-                       var newCoordinates = []
-                       for(j = 0; j < sliced.geometry.coordinates.length; j++){
-                           temp2 = sliced.geometry.coordinates[j]
-                           if(!temp1 ){
-                               newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
-                           }else{
-                               if(temp1[0] === temp2[0] && temp1[1] === temp2[1] && temp1[2] === temp2[2]){
-
-                               }else{
-                                   newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
-                               }
-                          }
-                          temp1 = temp2
-                      }
-
-                      return newCoordinates
-                   }
-                }catch(e){
-                    continue
+                     if(temp1[0] === temp2[0] && temp1[1] === temp2[1] && temp1[2] === temp2[2]){
+                     }else{
+                         newCoordinates.push(L.latLng([temp2[1],temp2[0],temp2[2] || 0]))
+                     }
                 }
-             }
-          }
-        }
-    }
+                temp1 = temp2
+            }
 
-    console.log('no found this line ' + beginSubNo + ':' + endSubNo )
-    return null
+            return newCoordinates
+         }
+      }catch(e){
+          return null
+      }
+
+      console.log('no found this line ' + beginSubNo + ':' + endSubNo )
+      return null
   },
 
   latLngBetween : function(latlng, leftLatLng, rightLatLng){
