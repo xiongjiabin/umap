@@ -120,6 +120,8 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     this.setSvgText(this.getSvgData(ps,sn,color,tail))
 
     if(!e) return
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
+    
     var selfValue = e.helper.value()
 
     if (e.helper.name === 'sn' || e.helper.name === 'lr') {

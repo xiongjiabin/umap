@@ -76,11 +76,12 @@ L.Storage.ZongLineLure = L.Storage.SVGObject.extend({
   },
 
   resetTooltip: function(e){
-    var lr = +this.getOption('lr')
-    var sn = this.getOption('sn')
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
 
     if(!e) return
     var selfValue = e.helper.value()
+    var lr = +this.getOption('lr')
+    var sn = this.getOption('sn')
 
     if (e.helper.name === 'sn' || e.helper.name === 'lr') {
         var data = this.map.getAnchorLatLngBySubNo(sn)

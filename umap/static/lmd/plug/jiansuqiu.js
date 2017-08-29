@@ -105,7 +105,8 @@ L.Storage.JianSuQiu = L.Storage.SVGObject.extend({
     var width = this.getOption('width')
     var fontSize = this.getOption('fontSize')
     /*this.setSvgText(this.getSvgData(lr,sn,color,height,width))*/
-
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
+    
     if(!e) return
     var selfValue = e.helper.value()
 

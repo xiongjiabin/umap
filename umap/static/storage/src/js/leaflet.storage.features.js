@@ -527,7 +527,13 @@ L.Storage.FeatureMixin = {
         }
     },
 
-    resetTooltip: function () {
+    resetTooltip: function (e) {
+        if(e){
+            if (e.helper.name in {'sn':0,'gbss':0,'gbse':0}) {
+                this.saveSnLatLng()
+            }
+        }
+
         if(!this._rings || (this._rings && this._rings.length > 0)) { //如果元素还没有创建，但是这个时候去显示tooltip，导致太多的异常
             this.unbindTooltip();
             if(!this.getOption('showLabel')) return
@@ -545,6 +551,39 @@ L.Storage.FeatureMixin = {
                 }
             }
         }
+    },
+
+    //保存原始的桩号对应的经纬度
+    saveSnLatLng: function(){
+        var sn, gbss,gbse;
+        var that = this
+        var doit = function( label, psn ){
+            var data = that.map.getAnchorLatLngBySubNo(+psn)
+            if(data){
+                if(!that.properties._location) {
+                    that.properties._location = {}
+                }
+                that.properties._location[label] = data['point'].reduceRight(function(pre,cur){
+                    return pre + ',' + cur;
+                });
+            }
+            return true
+        }
+        var emptyit = function(label){
+            if(!that.properties._location) {
+                return true
+            }
+            delete that.properties._location[label]
+        }
+
+        sn = this.getOption('sn')
+        gbss = this.getOption('gbss')
+        gbse = this.getOption('gbse')
+
+        sn ? doit('sn',sn) : emptyit('sn')
+        gbss ? doit('gbss',gbss): emptyit('gbss')
+        gbse ? doit('gbse',gbse): emptyit('gbse')
+        return true
     },
 
     matchFilter: function (filter, keys) {

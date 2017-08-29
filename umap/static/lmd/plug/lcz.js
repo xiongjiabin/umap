@@ -53,14 +53,16 @@ L.Storage.LiChengZhuang = L.Storage.SVGObject.extend({
 
 
   resetTooltip: function(e){
-    var lr = +this.getOption('lr')
 
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
+    
     if(!e) return
+    var lr = +this.getOption('lr')
     var selfValue = e.helper.value()
     if(e.helper.name === 'gbc') {
         this.updateName(e);
         this.setSvgText(this.getSvgData())
-        }
+    }
   },
   getBasicOptions: function () {
     return [

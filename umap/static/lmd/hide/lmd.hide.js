@@ -47,6 +47,7 @@ L.Storage.Hide = L.Storage.SVGObject.extend({
 
   resetTooltip: function(e){
 
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
     if (!e) return;
     this.setSvgText(this.getSvgData())
     var gbs, distance, gbn, gbnControl, gbss, gbse, gblControl

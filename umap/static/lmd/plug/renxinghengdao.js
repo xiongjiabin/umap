@@ -100,15 +100,16 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
   },
 
   resetTooltip: function(e){
+    L.Storage.FeatureMixin.resetTooltip.call(this,e)
+
+    if(!e) return
+    var selfValue = e.helper.value()
     var sn = this.getOption('sn')
     var height = this.getOption('height')
     var color = this.getOption('color')
     var width = this.getOption('width')
     var fontSize = this.getOption('fontSize')
     /*this.setSvgText(this.getSvgData(sn,color,height,width))*/
-
-    if(!e) return
-    var selfValue = e.helper.value()
 
     if (e.helper.name === 'sn') {
       var data = this.map.getAnchorLatLngBySubNo(sn)
