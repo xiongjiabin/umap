@@ -342,7 +342,8 @@ L.Storage.LmdMarker = L.Storage.Marker.extend({
       var lr = +this.getOption('lr')
       var sn = this.getOption('sn')
       var data = this.map.getAnchorLatLngBySubNo(sn)
-      var pos = lr == lmd.POS_RIGHT ? 'right' : 'left'
+      //var pos = lr == lmd.POS_RIGHT ? 'right' : 'left'
+      var pos = lmd.getRotateLeftRight(lr,'left');
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
           this.caculateHelpXY()
