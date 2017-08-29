@@ -82,8 +82,14 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
   getRotateLeftRight: function( lr , defaultPos){
       lr = +lr;
       var pos = defaultPos || 'right';
-      if(lr === lmd.POS_LEFT || lr === lmd.POS_MIDDLE_LEFT){
-          pos = 'left';
+      if(pos == 'right') {
+          if(lr === lmd.POS_LEFT || lr === lmd.POS_MIDDLE_LEFT){
+              pos = 'left';
+          }
+      }else{
+          if(lr === lmd.POS_RIGHT || lr === lmd.POS_MIDDLE_RIGHT){
+              pos = 'right';
+          }
       }
       return pos;
   },

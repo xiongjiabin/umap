@@ -121,14 +121,14 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
 
     if(!e) return
     L.Storage.FeatureMixin.resetTooltip.call(this,e)
-    
+
     var selfValue = e.helper.value()
 
     if (e.helper.name === 'sn' || e.helper.name === 'lr') {
       var lr = +this.getOption('lr')
       var data = this.map.getAnchorLatLngBySubNo(sn)
       //var pos = lr == 2 ? 'right' : 'left'
-      var pos = lmd.getRotateLeftRight(lr);
+      var pos = lmd.getRotateLeftRight(lr,'left');
       if(data && (data[pos] !== undefined)){
           this.properties._storage_options['rotate'] = data[pos]
           this.updateStyle()
