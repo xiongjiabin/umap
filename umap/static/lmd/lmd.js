@@ -291,7 +291,7 @@ L.Storage.Map.include({
 
   getLineBetweenSubNos: function( beginSubNo, endSubNo) {
       var i = 0, j = 0, sliced,temp
-      var beginPoint = null, endPoint = null，beginPointGeojson
+      var beginPoint = null, endPoint = null,beginPointGeojson
       var beginData = null, endData = null,endPointGeojson
 
       beginData = this.getAnchorLatLngBySubNo(beginSubNo)
