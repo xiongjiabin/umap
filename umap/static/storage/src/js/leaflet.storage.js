@@ -19,7 +19,7 @@ L.Map.mergeOptions({
     default_labelDirection: 'auto',
     attributionControl: false,
     allowEdit: true,
-    embedControl: false,
+    embedControl: true,
     zoomControl: true,
     datalayersControl: 'expanded',
     searchControl: false,
