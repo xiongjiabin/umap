@@ -6,7 +6,7 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
   POS_BOTH: 4,
   POS_MIDDLE_LEFT: 5, //中分左
   POS_MIDDLE_RIGHT: 6, //中分右
-  MIN_VALID_TWO_SUBS: 30,
+  MIN_VALID_TWO_SUBS: 10,
   DEFAULT_ROAD_LINE: 0.5 * MM_PER_PIX,
   DEFAULT_ROAD_COLOR: '#00EEEE',
   DEFAULT_FACILITY_LINE: 1 * MM_PER_PIX,
@@ -232,12 +232,14 @@ L.Storage.Map.include({
                        var lineDist = 1000 * turf.lineDistance(sliced)
                        if(!lineDist || lineDist <= lmd.MIN_VALID_TWO_SUBS) { //本来求的是一段桩号之间的距离100m，如果小于50米，认为这个不是这段线里面的
                            console.log("距离不满足，继续找下一个:" + lineDist)
-
                            continue; //继续寻找下一个
                        }
+                       //lineSlice有一个bug，他是去找俩个点在另外一条路上的最近的俩个点的line，就有可能偷到别人的线上去
+                       //when first coordinate is far away from the floorPoint,then the line is not the line
                        temp = turf.point(sliced.geometry.coordinates[0])
                        if((turf.distance(temp,floorPoint) * 1000) > 5){
-                           sliced.geometry.coordinates.reverse()
+                           //sliced.geometry.coordinates.reverse()
+                           contniue;
                        }
                    }else {
                        continue;
@@ -322,9 +324,9 @@ L.Storage.Map.include({
                  return null //继续寻找下一个
              }
              temp = turf.point(sliced.geometry.coordinates[0])
-             if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
-                 sliced.geometry.coordinates.reverse()
-             }
+             //if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
+             //   sliced.geometry.coordinates.reverse()
+             //}
 
             //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
              var temp1 = null, temp2 = null
