@@ -237,9 +237,14 @@ L.Storage.Map.include({
                        //lineSlice有一个bug，他是去找俩个点在另外一条路上的最近的俩个点的line，就有可能偷到别人的线上去
                        //when first coordinate is far away from the floorPoint,then the line is not the line
                        temp = turf.point(sliced.geometry.coordinates[0])
-                       if((turf.distance(temp,floorPoint) * 1000) > 5){
-                           //sliced.geometry.coordinates.reverse()
-                           contniue;
+                       var distanceToFloor = turf.distance(temp,floorPoint) * 1000
+                       if(distanceToFloor > 5){
+                           var distanceToCeil = turf.distance(temp, ceilPoint) * 1000
+                           if(distanceToCeil <= 5){
+                               sliced.geometry.coordinates.reverse()
+                           }else {
+                               contniue;
+                           }
                        }
                    }else {
                        continue;
@@ -327,6 +332,13 @@ L.Storage.Map.include({
              //if((turf.distance(temp,beginPointGeojson) * 1000) > 5){
              //   sliced.geometry.coordinates.reverse()
              //}
+             var distanceToFloor = turf.distance(temp,beginPointGeojson) * 1000
+             if(distanceToFloor > 5){
+                 var distanceToCeil = turf.distance(temp, endPointGeojson) * 1000
+                 if(distanceToCeil <= 5){
+                     sliced.geometry.coordinates.reverse()
+                 }
+             }
 
             //感觉turf.lineslice有一个bug，会在开始或者结束有一个重复的坐标,somttimes
              var temp1 = null, temp2 = null
