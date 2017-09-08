@@ -29,6 +29,8 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
         scale: preOptions['scale'] || 4.1,
         rotate: preOptions['rotate'] || 0,
         color: preOptions['color'] || 'Yellow',
+        ds: preOptions['ds'] || 1, //因为颜色跟随了上个的，所以状态也得跟谁
+        pd: preOptions['pd'] || 60,
         sn: ''
       }
     }
