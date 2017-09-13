@@ -20,8 +20,6 @@ L.Storage.GB_TYPE_FENDAOTI = 11 //分道体
 L.Storage.GB_TYPE_ZXBX = 12 //纵向标线
 
 
-
-
 L.Storage.OFFSET_PLUS = 20; //定义字和设施之间的关系
 
 L.Storage.guardbarData = [
@@ -318,7 +316,8 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
 
       var size = 35;
       var color = this.getOption('color') || "Blue";
-      var tail = (+this.getOption('tail')) || (27 * text.length);
+      var tailDefault = 27 * text.length;
+      var tail = (+this.getOption('tail')) || tailDefault;
 
       var options = {
         rotate: +this.getOption('rotate'),
@@ -344,7 +343,7 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       var latlng = this.map.layerPointToLatLng([destX, destY]);
 
       const preTail = L.Storage.OFFSET_PLUS * scaleZoom;
-      var formatText = '<text  font-size="' + size + '">' + text + '</text>' +
+      var formatText = '<text  x="' + (tail - tailDefault) + '" font-size="' + size + '">' + text + '</text>' +
                        '<path stroke-width="1px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m -' +
                        preTail + ',15 ' + (tail+preTail) + ',0"></path>';
       options['svgText'] = formatText;
