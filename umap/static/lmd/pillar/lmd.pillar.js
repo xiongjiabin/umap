@@ -62,45 +62,46 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
       1: '<circle cx="92" cy="-17" r="15" />' +
          '<rect width="178" height="20" x="0" y="-10" />' +
          '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
-         '<text class="pillt" x="200" y="20">{{桩号}}</text>', //单柱式
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //单柱式
 
       2: '<circle cx="42" cy="-30" r="15"/><circle cx="129" cy="-30" r="15"/>' +
          '<rect width="178" height="25" x="0" y="-15" />' +
          '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
-         '<text class="pillt" x="200" y="20">{{桩号}}</text>', //双柱式
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //双柱式
 
       3: '<rect width="150" height="25" x="0" y="-12.5" />' +
          '<circle cx="168" cy="0" r="15" />' +
          '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
-         '<text class="pillt" x="200" y="20">{{桩号}}</text>', //单悬臂式
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //单悬臂式
 
       4: '<rect width="73" height="25" x="106" y="-12.5" />' +
          '<circle cx="90" cy="-12.5" r="15" /> ' +
          '<rect width="72" height="25" x="2" y="-12.5"/>' +
          '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/> '+
-         '<text class="pillt" x="200" y="20">{{桩号}}</text>', //双悬臂式
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //双悬臂式
 
       5: '<circle cx="16" cy="-7.5" r="15" />'+
          '<rect width="121" height="25" x="32" y="-20" />' +
          '<circle cx="168" cy="-7.5" r="15" />' +
          '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/> ' +
-         '<text class="pillt" x="200" y="20">{{桩号}}</text>', //门架式
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //门架式
 
       6: '<circle cx="52" cy="-20" r="10"/><circle cx="119" cy="-20" r="10"/>' +
-         '<rect width="200" height="20" x="0" y="-10" />' +
-         '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 202,25 {{tail}},0"/>' +
-         '<text class="pillt" x="220" y="20">{{桩号}}</text>', //附着式
+         '<rect width="180" height="20" x="0" y="-10" />' +
+         '<path stroke-width="3px" stroke-opacity="1" stroke="{{color}}" fill="none" d="m 180,25 {{tail}},0"/>' +
+         '<text class="pillt" x="{{textX}}" y="20">{{桩号}}</text>', //附着式
     }
     var svgStr = typeSvg[type] || typeSvg[1]
     var snStr
     tail = tail || 320
     color = color || 'Yellow'
     if(sn || (sn === 0)){ //sn可能为0
-      snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
-      svgStr = svgStr.replace('{{桩号}}', snStr)
+        snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
+        svgStr = svgStr.replace('{{桩号}}', snStr)
     }
     svgStr = svgStr.replace('{{tail}}',tail)
     svgStr = svgStr.replace('{{color}}',color)
+    svgStr = svgStr.replace('{{textX}}', 200 + (tail - 320))
 
     return svgStr
   },
