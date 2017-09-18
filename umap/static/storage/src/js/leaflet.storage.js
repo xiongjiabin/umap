@@ -360,6 +360,7 @@ L.Storage.Map.include({
                 modifierKey = e.ctrlKey || e.metaKey,
                 shiftKey = e.shiftKey;
 
+            //console.log(e);
             /* Generic shortcuts */
             if (key === L.S.Keys.F && modifierKey) {
                 L.DomEvent.stop(e);
@@ -372,12 +373,15 @@ L.Storage.Map.include({
 
             if (key === L.S.Keys.A && shiftKey) {
                 L.DomEvent.stop(e);
-                this.setZoom(17);
+                this.setZoom(18);
             }
             if (key === L.S.Keys.S && shiftKey) {
                 L.DomEvent.stop(e);
-                this.setZoom(12);
+                this.setZoom(16);
             }
+
+            //console.log('shift:' + shiftKey)
+            //console.log('key:' + key)
 
             if (!this.options.allowEdit) return;
 
@@ -443,6 +447,13 @@ L.Storage.Map.include({
             if (e.keyCode === L.S.Keys.ESC) {
                 if (this.editEnabled) this.editTools.stopDrawing();
                 if (this.measureTools.enabled()) this.measureTools.stopDrawing();
+            }
+
+            if(e.altKey) {
+                this.options['syncVideoEnable'] = !this.options['syncVideoEnable']
+                this.fire('updateStatus', {
+                    msg: this.options['syncVideoEnable'] ? '视频同步打开':'视频同步关闭'
+                })
             }
         };
         L.DomEvent.addListener(document, 'keydown', globalShortcuts, this);
@@ -1532,6 +1543,12 @@ L.Storage.Map.include({
         L.DomEvent.on(name, 'click', this.edit, this);
         this.on('postsync', L.bind(setName, this));
         this.help.button(title, 'edit');
+        var status = L.DomUtil.create('span','storage-status',title);
+        status.innerHTML = '...';
+        this.on('updateStatus', function(e){
+            status.innerHTML = e['msg'];
+        });
+
         var save = L.DomUtil.create('a', 'leaflet-control-edit-save button', container);
         save.href = '#';
         save.title = L._('Save current edits') + ' (Ctrl-S)';
