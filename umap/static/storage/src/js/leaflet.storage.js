@@ -1207,7 +1207,7 @@ L.Storage.Map.include({
         if(defaultLayerIndex) {
             for(i in this.datalayers) {
                 if(this.datalayers.hasOwnProperty(i)) {
-                    if(this.datalayers[i].options['id'] === defaultLayerIndex){
+                    if(this.datalayers[i].storage_id === defaultLayerIndex){
                         datalayer = this.datalayers[i]
                         break
                     }

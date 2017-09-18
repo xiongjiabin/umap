@@ -1012,7 +1012,7 @@ L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
         var options = [["0",'无']]; //select必须是字符串位收尾
         this.builder.map.eachDataLayer(function (datalayer) {
             if(datalayer.isLoaded() && !datalayer.isRemoteLayer() && datalayer.isBrowsable()) {
-                options.push([datalayer.getOption('id') + "", datalayer.getName()]);
+                options.push([datalayer.storage_id + "", datalayer.getName()]);
             }
         });
         return options;
