@@ -346,10 +346,15 @@ L.Storage.FeatureMixin = {
 
     getLmdPrevious: function ( obj ) {
        if(obj && obj.datalayer){
-         return obj.datalayer.getPreviousFeature(obj)
+           return obj.datalayer.getPreviousFeature(obj)
        } else {
-         var defaultLayer = obj.map.defaultDataLayer()
-         return defaultLayer.getFeatureByIndex(-1)
+           var defaultLayer = null
+           var classAlias = obj.getClassName();
+           if(classAlias){
+               defaultLayer = obj.map.getFacilityDefaultLayer(classAlias);
+           }
+           defaultLayer = defaultLayer || obj.map.defaultDataLayer()
+           return defaultLayer.getFeatureByIndex(-1)
        }
        return null
     },

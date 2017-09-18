@@ -1204,9 +1204,9 @@ L.Storage.Map.include({
     defaultDataLayer: function () {
         var datalayer, fallback, i;
         var defaultLayerIndex = +this.getOption('defaultLayer')
-        if( defaultLayerIndex ) {
-            for (i in this.datalayers) {
-                if (this.datalayers.hasOwnProperty(i)) {
+        if(defaultLayerIndex) {
+            for(i in this.datalayers) {
+                if(this.datalayers.hasOwnProperty(i)) {
                     if(this.datalayers[i].options['id'] === defaultLayerIndex){
                         datalayer = this.datalayers[i]
                         break
@@ -1214,7 +1214,7 @@ L.Storage.Map.include({
                 }
             }
         }
-        if (datalayer && !datalayer.isRemoteLayer() && datalayer.isBrowsable() && datalayer.isVisible()) {
+        if(datalayer && !datalayer.isRemoteLayer() && datalayer.isBrowsable() && datalayer.isVisible()) {
             return datalayer;
         }
 
@@ -1262,6 +1262,16 @@ L.Storage.Map.include({
                 id: datalayer.storage_id,
                 displayOnLoad: datalayer.getOption('displayOnLoad')
             })
+        });
+        return datalayers;
+    },
+
+    getDataLayersByName: function(name){
+        var datalayers = [];
+        this.eachDataLayer(function (datalayer) {
+            if(datalayer.getOption('name') === name){
+                datalayers.push(datalayer)
+            }
         });
         return datalayers;
     },
