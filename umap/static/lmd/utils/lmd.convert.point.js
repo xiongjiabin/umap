@@ -2,27 +2,7 @@
  * Created by Wandergis on 2015/7/8.
  * 提供了百度坐标（BD09）、国测局坐标（火星坐标，GCJ02）、和WGS84坐标系之间的转换
  */
-//UMD魔法代码
-// if the module has no dependencies, the above pattern can be simplified to
-(function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define([], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like environments that support module.exports,
-        // like Node.
-        module.exports = factory();
-    } else {
-        // Browser globals (root is window)
-        root.coordtransform = factory();
-    }
-}(this, function() {
-    //定义一些常量
-    var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
-    var PI = 3.1415926535897932384626;
-    var a = 6378245.0;
-    var ee = 0.00669342162296594323;
+
     /**
      * 百度坐标系 (BD-09) 与 火星坐标系 (GCJ-02)的转换
      * 即 百度 转 谷歌、高德
@@ -31,6 +11,11 @@
      * @returns {*[]}
      */
     var bd09togcj02 = function bd09togcj02(bd_lon, bd_lat) {
+        //定义一些常量
+        var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+        var PI = 3.1415926535897932384626;
+        var a = 6378245.0;
+        var ee = 0.00669342162296594323;
         var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
         var x = bd_lon - 0.0065;
         var y = bd_lat - 0.006;
@@ -49,6 +34,12 @@
      * @returns {*[]}
      */
     var gcj02tobd09 = function gcj02tobd09(lng, lat) {
+        //定义一些常量
+        var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+        var PI = 3.1415926535897932384626;
+        var a = 6378245.0;
+        var ee = 0.00669342162296594323;
+
         var z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * x_PI);
         var theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * x_PI);
         var bd_lng = z * Math.cos(theta) + 0.0065;
@@ -63,6 +54,12 @@
      * @returns {*[]}
      */
     var wgs84togcj02 = function wgs84togcj02(lng, lat) {
+        //定义一些常量
+        var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+        var PI = 3.1415926535897932384626;
+        var a = 6378245.0;
+        var ee = 0.00669342162296594323;
+
         if (out_of_china(lng, lat)) {
             return [lng, lat]
         } else {
@@ -87,6 +84,12 @@
      * @returns {*[]}
      */
     var gcj02towgs84 = function gcj02towgs84(lng, lat) {
+        //定义一些常量
+        var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+        var PI = 3.1415926535897932384626;
+        var a = 6378245.0;
+        var ee = 0.00669342162296594323;
+
         if (out_of_china(lng, lat)) {
             return [lng, lat]
         } else {
@@ -130,10 +133,9 @@
         return (lng < 72.004 || lng > 137.8347) || ((lat < 0.8293 || lat > 55.8271) || false);
     };
 
-    return {
+    var coordtransform = {
         bd09togcj02: bd09togcj02,
         gcj02tobd09: gcj02tobd09,
         wgs84togcj02: wgs84togcj02,
         gcj02towgs84: gcj02towgs84
     }
-}));
