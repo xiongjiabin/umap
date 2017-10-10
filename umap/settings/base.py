@@ -177,7 +177,7 @@ COMPRESS_OFFLINE = True
 
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
-LOGIN_URL = "login"
+LOGIN_URL = "/admin/login/"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/login/popup/end/"
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',

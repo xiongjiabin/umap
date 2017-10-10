@@ -22,13 +22,22 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_bytes
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from django.core.validators import URLValidator, ValidationError
 
 from leaflet_storage.models import Map
 from leaflet_storage.forms import DEFAULT_CENTER
+from django.conf.urls import url, include
+from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
 
 class PaginatorMixin(object):
     per_page = 5
@@ -47,8 +56,7 @@ class PaginatorMixin(object):
             qs = paginator.page(paginator.num_pages)
         return qs
 
-
-class Home(TemplateView, PaginatorMixin):
+class Home(LoginRequiredMixin, TemplateView, PaginatorMixin):
     template_name = "umap/home.html"
     list_template_name = "leaflet_storage/map_list.html"
 
@@ -83,6 +91,7 @@ class Home(TemplateView, PaginatorMixin):
             "showcase_map": showcase_map,
             "DEMO_SITE": settings.UMAP_DEMO_SITE
         }
+
 
     def get_template_names(self):
         """
