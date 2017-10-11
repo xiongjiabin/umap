@@ -111,7 +111,7 @@ class About(Home):
 about = About.as_view()
 
 
-class UserMaps(DetailView, PaginatorMixin):
+class UserMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
     model = User
     slug_url_kwarg = 'username'
     slug_field = 'username'
@@ -145,7 +145,7 @@ class UserMaps(DetailView, PaginatorMixin):
 user_maps = UserMaps.as_view()
 
 
-class Search(TemplateView, PaginatorMixin):
+class Search(LoginRequiredMixin, TemplateView, PaginatorMixin):
     template_name = "umap/search.html"
     list_template_name = "leaflet_storage/map_list.html"
 

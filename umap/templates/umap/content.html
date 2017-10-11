@@ -38,13 +38,13 @@
         });
       });
     }*/
-    var logout = document.querySelector('a.logout');
-    if (logout) {
-      L.DomEvent.on(logout, 'click', function (e) {
-        L.DomEvent.stop(e);
-        xhr.logout(this.getAttribute('href'));
-      });
-    }
+    // var logout = document.querySelector('a.logout');
+    // if (logout) {
+    //     L.DomEvent.on(logout, 'click', function (e) {
+    //     L.DomEvent.stop(e);
+    //     xhr.logout(this.getAttribute('href'));
+    //   });
+    // }
     var getMore = function (e) {
       L.DomEvent.stop(e);
       xhr._ajax({
