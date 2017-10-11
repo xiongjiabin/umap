@@ -22,13 +22,12 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_bytes
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+
 from django.core.validators import URLValidator, ValidationError
 
 from leaflet_storage.models import Map
 from leaflet_storage.forms import DEFAULT_CENTER
-from django.conf.urls import url, include
-from django.contrib import admin
+
 from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
