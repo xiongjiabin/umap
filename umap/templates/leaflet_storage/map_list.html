@@ -3,7 +3,17 @@
 {% for map_inst in maps %}
 <hr />
 <div class="col wide">
-    <div class="legend"><a href="{{map_inst.get_absolute_url}}">{{map_inst.name}}</a>{% if map_inst.owner %} <em>{% trans "by" %} <a href="{% url 'user_maps' map_inst.owner.username %}">{{ map_inst.owner }}</a>{% trans " 最后编辑于 " %} {{ map_inst.modified_at }}</em>{% endif %}</div>
+    <div class="legend">
+      <a href="{{map_inst.get_absolute_url}}">{{map_inst.name}}</a>
+      {% if map_inst.owner %}
+      <em>{% trans "by" %}
+        <a href="{% url 'user_maps' map_inst.owner.username %}">
+          {{ map_inst.owner }}
+        </a>
+        {% trans "last edited at" %} <td>{{ map_inst.modified_at|date:"Y-m-d H:i:s" }}</td>
+      </em>
+      {% endif %}
+    </div>
 </div>
 {% endfor %}
 {% if maps.has_next %}
