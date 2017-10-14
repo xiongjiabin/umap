@@ -5,6 +5,7 @@
 from django.conf.global_settings import *   # pylint: disable=W0614,W0401
 from django.template.defaultfilters import slugify
 
+
 #==============================================================================
 # Generic Django project settings
 #==============================================================================
@@ -60,6 +61,7 @@ INSTALLED_APPS = (
     'umap',
     'compressor',
     'social.apps.django_app.default',
+    'mana',
 )
 
 # =============================================================================
@@ -166,7 +168,6 @@ UMAP_MAPS_PER_PAGE = 5
 UMAP_MAPS_PER_PAGE_OWNER = 10
 MAP_SHORT_URL_NAME = "umap_short_url"
 UMAP_USE_UNACCENT = False
-UMAP_FEEDBACK_LINK = "http://wiki.openstreetmap.org/wiki/UMap#Feedback_and_help"
 UMAP_JIAOAN_LINK = "http://www.jiaoan100.com"
 USER_MAPS_URL = 'user_maps'
 
