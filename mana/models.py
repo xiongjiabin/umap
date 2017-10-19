@@ -39,7 +39,7 @@ class ProfileUser(object):
     __metaclass__ = ProfileBase
 
 class ExtraInfo(ProfileUser):
-    company_id = models.BigIntegerField(verbose_name='company id', blank=True, null=True)
+    company = models.ForeignKey(Company, related_name='company', blank=True, null=True)
 
 
 
