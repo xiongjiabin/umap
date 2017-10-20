@@ -1004,6 +1004,13 @@ L.FormBuilder.LczType = L.FormBuilder.EmptySwitcher.extend({
     ]
 });
 
+L.FormBuilder.RenderMode = L.FormBuilder.EmptySwitcher.extend({
+    selectOptions:[
+        ["1","色彩+底图"],
+        ["2","黑白-底图"],
+    ]
+})
+
 L.FormBuilder.CustomerSwitcher = L.FormBuilder.EmptySwitcher.extend({});
 
 L.FormBuilder.DefaultDataLayerSwitcher = L.FormBuilder.Select.extend({
@@ -1205,7 +1212,10 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         //里程桩
         lczType: {handler: 'LczType', label: '类别'},
         //设置长度
-        szcd: {handler:'FloatInput', label: '设置长度(m)'}
+        szcd: {handler:'FloatInput', label: '设置长度(m)'},
+
+        //底图渲染模式
+        renderMode: {handler:'RenderMode', label: '渲染模式'},
 
     },
 

@@ -87,7 +87,6 @@ L.SVG.include({
   },
 
   _addSVGObject: function(layer) {
-    //'<circle cx="92" cy="18" r="14.5" /> <rect width="178" height="20" x="2" y="31" />'
     layer._svgObjectChild.innerHTML = layer.options.svgText
     layer._svgObject.appendChild(layer._svgObjectChild)
     this._rootGroup.appendChild(layer._svgObject)

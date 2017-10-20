@@ -86,6 +86,7 @@ L.Storage.Map.include({
         L.Util.setBooleanFromQueryString(this.options, 'displayCaptionOnLoad');
         L.Util.setBooleanFromQueryString(this.options, 'captionBar');
         L.Util.setBooleanFromQueryString(this.options, 'noControl');
+
         //熊佳斌， 如果是打印模式下，添加nocontrl=true，不显示任何别的空间 2017-05-26
         for (var i = 0; i < this.HIDDABLE_CONTROLS.length; i++) {
             L.Util.setNullableBooleanFromQueryString(this.options, this.HIDDABLE_CONTROLS[i] + 'Control');
@@ -470,6 +471,8 @@ L.Storage.Map.include({
                 }
             }
         }
+        var renderMode = +this.getOption('renderMode');
+        if(renderMode === 2) return; //黑白-底色,如果是，不用加载底图
         if (this.options.tilelayer && this.options.tilelayer.url_template && this.options.tilelayer.attribution) {
             this.customTilelayer = this.createTileLayer(this.options.tilelayer);
             this.selectTileLayer(this.customTilelayer);
@@ -1072,6 +1075,7 @@ L.Storage.Map.include({
         'speed',
         'defaultLayer',
         'tileOpacity',
+        'renderMode',
         'licence',
         'tilelayer',
         'limitBounds',
@@ -1284,7 +1288,8 @@ L.Storage.Map.include({
                 'options.description',
                 'options.speed',
                 'options.defaultLayer',
-                'options.tileOpacity'
+                'options.tileOpacity',
+                'options.renderMode'
             ],
             title = L.DomUtil.create('h4', '', container);
         title.innerHTML = L._('Edit map properties');
