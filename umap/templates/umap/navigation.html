@@ -9,11 +9,11 @@
   <section class="col half menu ttwo-third mwide">
     <ul>
       {% if user.is_authenticated %}
-        <li><a href="{% url 'user_maps' user.username %}">{% trans "My maps" %} ({{ user }})</a></li>
+        <li><a href="{% url 'user_maps' user.username %}"> {{ user }} {% trans "Of map" %}</a></li>
       {% else %}
         <li><a href='/admin/login/?next=/' class="login">{% trans "Log in" %} / {% trans "Sign in" %}</a></li>
       {% endif %}
-      <li><a href="{% url 'company_maps' user.username %}">{% trans "Company Maps" %} ({{ user.company.namecd  }})</a></li>
+      <li><a href="{% url 'company_maps' user.username %}"> {{ user.company.short_name  }} {% trans "Of map" %}</a></li>
       <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
       <li class="mhide"><a target="link" href="{{ UMAP_JIAOAN_LINK }}">{% trans "JiaoAn Forum" %}</a></li>
       {% if user.is_authenticated %}

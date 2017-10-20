@@ -11,14 +11,15 @@ class Company(models.Model):
     def __unicode__(self):
         return self.name
 
-    name = models.CharField(max_length=80)
-    addr = models.CharField(max_length=100)
-    faren = models.CharField(max_length=10)
-    phone = models.CharField(max_length=20)
-    fax = models.CharField(max_length=20)
-    province = models.CharField(max_length=20)
-    city = models.CharField(max_length=20)
-    homepage = models.CharField(max_length=100)
+    name = models.CharField(max_length=80, null=True)
+    short_name = models.CharField(max_length=10, blank=True)
+    addr = models.CharField(max_length=100, null=True, blank=True)
+    faren = models.CharField(max_length=10, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    fax = models.CharField(max_length=20, null=True, blank=True)
+    province = models.CharField(max_length=20, null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
+    homepage = models.CharField(max_length=100, null=True, blank=True)
     addtime = models.DateField()
 
 class ProfileBase(type):

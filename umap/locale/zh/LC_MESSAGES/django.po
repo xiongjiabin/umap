@@ -28,6 +28,9 @@ msgstr ""
 msgid "Browse %(current_user)s's maps"
 msgstr "浏览%(current_user)s的所有地图"
 
+msgid "Browse %(company)s's maps"
+msgstr "浏览%(company.name)s的所有地图"
+
 #: templates/leaflet_storage/map_detail.html:24
 msgid "Type editors nick to add…"
 msgstr ""
@@ -91,6 +94,9 @@ msgstr "关于"
 
 msgid "Company Maps"
 msgstr "公司地图"
+
+msgid "Of map"
+msgstr "的地图"
 
 #: templates/umap/navigation.html:17
 msgid "JiaoAn Forum"
