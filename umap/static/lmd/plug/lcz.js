@@ -41,7 +41,7 @@ L.Storage.LiChengZhuang = L.Storage.SVGObject.extend({
   getSvgData() {
     var text = this.getTypeName();
     var size = 18;
-    var color = this.getOption('color') || this.defaultColor;
+    var color = this.map.getRenderColor(this.getOption('color') || this.defaultColor);
     var tail = +this.getOption('tail') || (18 * text.length);
     var svgStr = '<text x="20" font-size="' + size + '">' + text + '</text>' +
                      '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 20,8 ' + tail + ',0"></path>' +
@@ -55,7 +55,7 @@ L.Storage.LiChengZhuang = L.Storage.SVGObject.extend({
   resetTooltip: function(e){
 
     L.Storage.FeatureMixin.resetTooltip.call(this,e)
-    
+
     if(!e) return
     var lr = +this.getOption('lr')
     var selfValue = e.helper.value()

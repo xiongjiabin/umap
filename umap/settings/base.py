@@ -85,7 +85,7 @@ LOGIN_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
-JS_VERSION = '?ver=20170823'
+JS_VERSION = '?ver=201701012'
 
 STATIC_ROOT = os.path.join('static')
 MEDIA_ROOT = os.path.join('uploads')
@@ -161,7 +161,7 @@ LEAFLET_STORAGE_EXTRA_URLS = {
     'ajax_proxy': '/ajax-proxy/?url={url}'
 }
 SITE_URL = "http://umap.org"
-SITE_NAME = "交通安全辅助设计"
+SITE_NAME = "交安辅助设计"
 UMAP_DEMO_SITE = False
 UMAP_EXCLUDE_DEFAULT_MAPS = False
 UMAP_MAPS_PER_PAGE = 5

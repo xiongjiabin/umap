@@ -60,7 +60,7 @@ L.Storage.ZongLineLure = L.Storage.SVGObject.extend({
       var text = snTxt + ' ' + this.getTypeName();
       var msh = this.getOption('msh') || 1;
       var size = 18;
-      var color = this.getOption('color') || this.defaultColor;
+      var color = this.map.getRenderColor(this.getOption('color') || this.defaultColor);
       var tail = +this.getOption('tail') || (18 * text.length);
       var svgStr = '<text x="20" font-size="' + size + '">' + text + '</text>' +
                        '<path stroke-width="2px" stroke-opacity="1" stroke="' + color + '" fill="none" d="m 20,8 ' + tail + ',0"></path>' +

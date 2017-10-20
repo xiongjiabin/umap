@@ -315,13 +315,13 @@ L.Storage.Guardbar = L.Storage.Polyline.extend({
       }
 
       var size = 35;
-      var color = this.getOption('color') || "Blue";
+      var color = this.map.getRenderColor(this.getOption('color') || "Blue");
       var tailDefault = 27 * text.length;
       var tail = (+this.getOption('tail')) || tailDefault;
 
       var options = {
         rotate: +this.getOption('rotate'),
-        color: this.getOption('color'),
+        color: color,
         //svgText: formatText,
         interactive: false
       };
@@ -901,6 +901,8 @@ L.Storage.BarTypeNormal = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   this.parentClass.prototype.setStyle.call(this, options);
 };
 
@@ -911,6 +913,8 @@ L.Storage.BarTypeRect  = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   options['dashArray'] = '10,5';
   options['opacity'] = 1;
   options['lineCap'] = 'butt';
@@ -926,6 +930,8 @@ L.Storage.BarTypeCircle = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   options['dashArray'] = '0,25';
   options['opacity'] = 1;
   options['lineCap'] = 'round';
@@ -941,6 +947,8 @@ L.Storage.BarTypeLine = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   options['dashArray'] = '5,20';
   options['lineCap'] = 'butt';
   options['opacity'] = 1;
@@ -956,6 +964,8 @@ L.Storage.BarTypeCustomize = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   options['dashArray'] = '';
   options['lineCap'] = 'round';
   options['opacity'] = 0.4;
@@ -984,6 +994,8 @@ L.Storage.DotTypeLine = function(options){
       option = this.styleOptions[idx];
       options[option] = this.getOption(option);
   }
+  options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+  options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
   options['dashArray'] = '15,5';
   options['lineCap'] = 'butt';
   options['opacity'] = 1;

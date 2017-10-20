@@ -51,3 +51,6 @@ svg text{
 .pillt {
     font-size:70px;
 }
+.leaflet-container {
+    background: white;
+}

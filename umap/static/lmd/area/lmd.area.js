@@ -118,7 +118,5 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
     stringMap['gbn'] = this.getOption('gbn') + unit;//数量
 
     return stringMap
-
   },
-
 });

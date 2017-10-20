@@ -94,7 +94,7 @@ L.Storage.LmdPillar = L.Storage.SVGObject.extend({
     var svgStr = typeSvg[type] || typeSvg[1]
     var snStr
     tail = tail || 320
-    color = color || 'Yellow'
+    color = this.map.getRenderColor(color || 'Yellow')
     if(sn || (sn === 0)){ //sn可能为0
         snStr = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
         svgStr = svgStr.replace('{{桩号}}', snStr)

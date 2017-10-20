@@ -4,6 +4,12 @@
 <head>
     <title>{% block head_title %}{{ SITE_NAME }}{% endblock %}</title>
     <meta charset="utf-8">
+    <!-- IE Fix for HTML5 Tags -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    {% block extra_head %}
+    {% endblock extra_head %}
     {% compress css %}
     <!-- Included CSS Files (Compressed) -->
     <link rel="stylesheet" href="{{ STATIC_URL }}storage/contrib/css/storage.ui.default.css">
@@ -13,12 +19,6 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}lmd/marker/lmd.storage.icon.css?ver=20170523">
 
     {% endcompress css %}
-    <!-- IE Fix for HTML5 Tags -->
-    <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    {% block extra_head %}
-    {% endblock extra_head %}
     {% compress js %}
     <script src="{{ STATIC_URL }}umap/js/autocomplete.js"></script>
     {% endcompress js %}

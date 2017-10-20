@@ -64,7 +64,7 @@ L.Storage.Rxhdx = L.Storage.SVGObject.extend({
 
     height = +height || 50
     height2 = height * 2
-    color = color || defaultColor
+    color = this.map.getRenderColor(color || defaultColor)
     width = +width || 20
     fontSize = +fontSize || 14;
     //var space = width * 2.5

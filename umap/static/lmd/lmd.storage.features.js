@@ -185,7 +185,7 @@ L.Storage.SVGObject = L.SVGObject.extend({
       var scale = this.getOption('scale');
       var rotate = this.getOption('rotate');
       var options = {}
-      if(color) options['color'] = color
+      if(color) options['color'] = this.map.getRenderColor(color)
 
       var scaleZoom = lmd.getLmdZoom(this.map)
 

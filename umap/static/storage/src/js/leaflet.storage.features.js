@@ -891,6 +891,9 @@ L.Storage.PathMixin = {
             option = this.styleOptions[idx];
             options[option] = this.getOption(option);
         }
+        options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
+        options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
+            
         if (options.interactive) this.options.pointerEvents = 'visiblePainted';
         else this.options.pointerEvents = 'stroke';
         this.parentClass.prototype.setStyle.call(this, options);
@@ -1063,8 +1066,7 @@ L.Storage.Polyline = L.Polyline.extend({
 
     //added by xiongjiabin
     getBasicOptions: function () {
-        return [
-        ];
+        return [];
     },
 
     isSameClass: function (other) {
