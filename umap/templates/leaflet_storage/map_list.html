@@ -1,20 +1,21 @@
 {% load leaflet_storage_tags umap_tags i18n %}
 
 {% for map_inst in maps %}
-<hr />
-<div class="col wide">
-    <div class="legend">
-      <a href="{{map_inst.get_absolute_url}}">{{map_inst.name}}</a>
-      {% if map_inst.owner %}
-      <em>{% trans "by" %}
-        <a href="{% url 'user_maps' map_inst.owner.username %}">
-          {{ map_inst.owner }}
-        </a>
-        {% trans "last edited at" %} <td>{{ map_inst.modified_at|date:"Y-m-d H:i:s" }}</td>
-      </em>
-      {% endif %}
-    </div>
-</div>
+    {% if map_inst.company_id == user.company.id %}
+        <hr />
+        <div class="col wide">
+            <div class="legend">
+              <a href="{{map_inst.get_absolute_url}}">{{map_inst.name}}</a>
+              <em>{% trans "by" %}
+                <a href="{% url 'user_maps' map_inst.owner.username %}">
+                  {{ map_inst.owner }}
+                </a>
+                {% trans "last edited at" %} <td>{{ map_inst.modified_at|date:"Y-m-d H:i:s" }}</td>
+              </em>
+            </div>
+        </div>
+        <hr />
+    {% endif %}
 {% endfor %}
 {% if maps.has_next %}
 <div class="col wide"><a href="?{% paginate_querystring maps.next_page_number %}" class="button more_button neutral">{% trans "More" %}</a></div>

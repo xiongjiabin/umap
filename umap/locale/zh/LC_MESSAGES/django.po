@@ -89,6 +89,9 @@ msgstr "签到"
 msgid "About"
 msgstr "关于"
 
+msgid "Company Maps"
+msgstr "公司地图"
+
 #: templates/umap/navigation.html:17
 msgid "JiaoAn Forum"
 msgstr "交安论坛"

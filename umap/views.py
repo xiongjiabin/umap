@@ -110,6 +110,36 @@ class About(Home):
 
 about = About.as_view()
 
+class CompanyMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
+    model = User
+    slug_url_kwarg = 'username'
+    slug_field = 'username'
+    list_template_name = "leaflet_storage/map_list.html"
+
+    def get_context_data(self, **kwargs):
+        owner = self.request.user == self.object
+        manager = Map.objects
+        maps = manager.filter(Q(company_id = self.object.company.id))
+        maps = maps.distinct().order_by('-modified_at')[:250]
+        per_page = settings.UMAP_MAPS_PER_PAGE
+        maps = self.paginate(maps, per_page)
+        kwargs.update({
+            "maps": maps,
+            "owner": owner
+        })
+        return super(CompanyMaps, self).get_context_data(**kwargs)
+
+    def get_template_names(self):
+        """
+        Dispatch template according to the kind of request: ajax or normal.
+        """
+        if self.request.is_ajax():
+            return [self.list_template_name]
+        else:
+            return super(CompanyMaps, self).get_template_names()
+
+company_maps = CompanyMaps.as_view()
+
 
 class UserMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
     model = User
@@ -129,7 +159,8 @@ class UserMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
             per_page = settings.UMAP_MAPS_PER_PAGE
         maps = self.paginate(maps, per_page)
         kwargs.update({
-            "maps": maps
+            "maps": maps,
+            "owner": owner
         })
         return super(UserMaps, self).get_context_data(**kwargs)
 
