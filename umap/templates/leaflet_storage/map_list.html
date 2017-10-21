@@ -1,7 +1,6 @@
 {% load leaflet_storage_tags umap_tags i18n %}
 
 {% for map_inst in maps %}
-    {% if map_inst.company_id == user.company.id %}
         <hr />
         <div class="col wide">
             <div class="legend">
@@ -15,7 +14,6 @@
             </div>
         </div>
         <hr />
-    {% endif %}
 {% endfor %}
 {% if maps.has_next %}
 <div class="col wide"><a href="?{% paginate_querystring maps.next_page_number %}" class="button more_button neutral">{% trans "More" %}</a></div>
