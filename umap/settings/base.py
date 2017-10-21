@@ -79,9 +79,9 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(project_module.__file__))
 
 ROOT_URLCONF = 'umap.urls'
 
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/admin/login/'
+LOGOUT_URL = '/admin/logout/'
+LOGIN_REDIRECT_URL = '/admin/login/'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
@@ -143,6 +143,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'umap.middleware.LoginRequiredMiddleware'
 )
 
 # =============================================================================
@@ -179,7 +180,6 @@ COMPRESS_OFFLINE = True
 
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
-LOGIN_URL = "/admin/login/"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/login/popup/end/"
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',

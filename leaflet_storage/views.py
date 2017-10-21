@@ -42,11 +42,6 @@ ANONYMOUS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30  # One month
 #     Utils      #
 # ############## #
 
-class LoginRequiredMixin(object):
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
 
 def _urls_for_js(urls=None):
     """
@@ -160,7 +155,7 @@ class MapDetailMixin(object):
         return None
 
 
-class MapView(LoginRequiredMixin, MapDetailMixin, DetailView):
+class MapView(MapDetailMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -221,11 +216,11 @@ class MapViewGeoJSON(MapView):
         return HttpResponse(context['map_settings'])
 
 
-class MapNew(LoginRequiredMixin, MapDetailMixin, TemplateView):
+class MapNew(MapDetailMixin, TemplateView):
     template_name = "leaflet_storage/map_detail.html"
 
 
-class MapCreate(LoginRequiredMixin, FormLessEditMixin, CreateView):
+class MapCreate(FormLessEditMixin, CreateView):
     model = Map
     form_class = MapSettingsForm
 
@@ -261,7 +256,7 @@ class MapCreate(LoginRequiredMixin, FormLessEditMixin, CreateView):
         return response
 
 
-class MapUpdate(LoginRequiredMixin, FormLessEditMixin, UpdateView):
+class MapUpdate(FormLessEditMixin, UpdateView):
     model = Map
     form_class = MapSettingsForm
     pk_url_kwarg = 'map_id'
@@ -306,7 +301,7 @@ class UpdateMapPermissions(UpdateView):
         return render_to_json(self.get_template_names(), context, self.request)
 
 
-class MapDelete(LoginRequiredMixin, DeleteView):
+class MapDelete(DeleteView):
     model = Map
     pk_url_kwarg = "map_id"
 
@@ -322,7 +317,7 @@ class MapDelete(LoginRequiredMixin, DeleteView):
         return simple_json_response(redirect="/")
 
 
-class MapClone(LoginRequiredMixin, View):
+class MapClone(View):
 
     def post(self, *args, **kwargs):
         if not getattr(settings, "LEAFLET_STORAGE_ALLOW_ANONYMOUS", False) \
@@ -353,7 +348,7 @@ class MapClone(LoginRequiredMixin, View):
         return response
 
 
-class MapShortUrl(LoginRequiredMixin, RedirectView):
+class MapShortUrl(RedirectView):
     query_string = True
     permanent = True
 
@@ -386,7 +381,7 @@ class MapOldUrl(RedirectView):
         return url
 
 
-class MapAnonymousEditUrl(LoginRequiredMixin, RedirectView):
+class MapAnonymousEditUrl(RedirectView):
 
     permanent = False
 
@@ -450,7 +445,7 @@ class GZipMixin(object):
             return hashlib.md5(f.read()).hexdigest()
 
 
-class DataLayerView(LoginRequiredMixin, GZipMixin, BaseDetailView):
+class DataLayerView(GZipMixin, BaseDetailView):
     model = DataLayer
 
     def render_to_response(self, context, **response_kwargs):
@@ -485,7 +480,7 @@ class DataLayerVersion(DataLayerView):
             path=self.object.get_version_path(self.kwargs['name']))
 
 
-class DataLayerCreate(LoginRequiredMixin, FormLessEditMixin, GZipMixin, CreateView):
+class DataLayerCreate(FormLessEditMixin, GZipMixin, CreateView):
     model = DataLayer
     form_class = DataLayerForm
 
@@ -497,7 +492,7 @@ class DataLayerCreate(LoginRequiredMixin, FormLessEditMixin, GZipMixin, CreateVi
         return response
 
 
-class DataLayerUpdate(LoginRequiredMixin, FormLessEditMixin, GZipMixin, UpdateView):
+class DataLayerUpdate(FormLessEditMixin, GZipMixin, UpdateView):
     model = DataLayer
     form_class = DataLayerForm
 
@@ -526,7 +521,7 @@ class DataLayerUpdate(LoginRequiredMixin, FormLessEditMixin, GZipMixin, UpdateVi
         return super(DataLayerUpdate, self).post(request, *args, **kwargs)
 
 
-class DataLayerDelete(LoginRequiredMixin, DeleteView):
+class DataLayerDelete(DeleteView):
     model = DataLayer
 
     def delete(self, *args, **kwargs):

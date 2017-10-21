@@ -32,12 +32,6 @@ from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
-class LoginRequiredMixin(object):
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
-
 class PaginatorMixin(object):
     per_page = 5
 
@@ -55,7 +49,7 @@ class PaginatorMixin(object):
             qs = paginator.page(paginator.num_pages)
         return qs
 
-class Home(LoginRequiredMixin, TemplateView, PaginatorMixin):
+class Home(TemplateView, PaginatorMixin):
     template_name = "umap/home.html"
     list_template_name = "leaflet_storage/map_list.html"
 
@@ -110,11 +104,12 @@ class About(Home):
 
 about = About.as_view()
 
-class CompanyMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
+class CompanyMaps(DetailView, PaginatorMixin):
     model = User
     slug_url_kwarg = 'username'
     slug_field = 'username'
     list_template_name = "leaflet_storage/map_list.html"
+    context_object_name = "company"
 
     def get_context_data(self, **kwargs):
         owner = self.request.user == self.object
@@ -141,7 +136,7 @@ class CompanyMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
 company_maps = CompanyMaps.as_view()
 
 
-class UserMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
+class UserMaps(DetailView, PaginatorMixin):
     model = User
     slug_url_kwarg = 'username'
     slug_field = 'username'
@@ -176,7 +171,7 @@ class UserMaps(LoginRequiredMixin, DetailView, PaginatorMixin):
 user_maps = UserMaps.as_view()
 
 
-class Search(LoginRequiredMixin, TemplateView, PaginatorMixin):
+class Search(TemplateView, PaginatorMixin):
     template_name = "umap/search.html"
     list_template_name = "leaflet_storage/map_list.html"
 
