@@ -5,7 +5,7 @@ from . import __version__
 
 def settings(request):
     return {
-        'UMAP_FEEDBACK_LINK': djsettings.UMAP_FEEDBACK_LINK,
+        #'UMAP_FEEDBACK_LINK': djsettings.UMAP_FEEDBACK_LINK,
         'UMAP_JIAOAN_LINK': djsettings.UMAP_JIAOAN_LINK,
         'SITE_NAME': djsettings.SITE_NAME
     }
