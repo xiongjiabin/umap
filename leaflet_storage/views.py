@@ -32,8 +32,6 @@ from .forms import (DataLayerForm, UpdateMapPermissionsForm, MapSettingsForm,
                     AnonymousMapPermissionsForm, DEFAULT_LATITUDE,
                     DEFAULT_LONGITUDE, FlatErrorList)
 
-from django.contrib.auth.decorators import login_required
-
 User = get_user_model()
 ANONYMOUS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30  # One month
 
@@ -41,7 +39,6 @@ ANONYMOUS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30  # One month
 # ############## #
 #     Utils      #
 # ############## #
-
 
 def _urls_for_js(urls=None):
     """
