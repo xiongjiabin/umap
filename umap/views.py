@@ -18,17 +18,18 @@ from django.db.models import Q
 from django.contrib.gis.measure import D
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import *
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_bytes
 from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect
 
 from django.core.validators import URLValidator, ValidationError
 
 from leaflet_storage.models import Map
 from leaflet_storage.forms import DEFAULT_CENTER
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 User = get_user_model()
 
@@ -170,6 +171,21 @@ class UserMaps(DetailView, PaginatorMixin):
 
 user_maps = UserMaps.as_view()
 
+def login_user(request):
+    username = password = ''
+    if request.POST:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                if request.session.get('next'):
+                    return redirect('/' + request.session.get('next'))
+                else:
+                    return redirect('/admin/')
+
+    return render(request, 'umap/login.html', {'username':username})
 
 class Search(TemplateView, PaginatorMixin):
     template_name = "umap/search.html"
@@ -181,7 +197,7 @@ class Search(TemplateView, PaginatorMixin):
         if q:
             where = "to_tsvector(name) @@ plainto_tsquery(%s)"
             if getattr(settings, 'UMAP_USE_UNACCENT', False):
-                where = "to_tsvector(unaccent(name)) @@ plainto_tsquery(unaccent(%s))"  # noqa
+                where = "to_tsvector((name)) @@ plainto_tsquery(unaccent(%s))"  # noqa
             results = Map.objects.filter(share_status=Map.PUBLIC)
             results = results.extra(where=[where], params=[q])
             results = results.order_by('-modified_at')

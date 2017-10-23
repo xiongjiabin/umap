@@ -79,11 +79,12 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(project_module.__file__))
 
 ROOT_URLCONF = 'umap.urls'
 
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/login/?next=/'
 LOGOUT_URL = '/admin/logout/'
-LOGIN_REDIRECT_URL = '/admin/login/?next=/'
+LOGIN_REDIRECT_URL = '/'
 LOGIN_EXEMPT_URLS = (
     r'admin/logout/',
+    r'login/'
 )
 
 STATIC_URL = '/static/'

@@ -17,7 +17,7 @@
       <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
       <li class="mhide"><a target="link" href="{{ UMAP_JIAOAN_LINK }}">{% trans "JiaoAn Forum" %}</a></li>
       {% if user.is_authenticated %}
-        <li><a href='/admin/logout/?next=/' class="logout">{% trans "Log out" %}</a></li>
+        <li><a href='/admin/logout/' class="logout">{% trans "Log out" %}</a></li>
       {% endif %}
     </ul>
   </section>
