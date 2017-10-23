@@ -81,7 +81,10 @@ ROOT_URLCONF = 'umap.urls'
 
 LOGIN_URL = '/admin/login/'
 LOGOUT_URL = '/admin/logout/'
-LOGIN_REDIRECT_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/admin/login/?next=/'
+LOGIN_EXEMPT_URLS = (
+    r'admin/logout/',
+)
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
