@@ -6,7 +6,6 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 
 EXEMPT_URLS = [re.compile(settings.LOGIN_URL.lstrip('/'))]
-
 class LoginRequiredMiddleware:
 
     def __init__(self, get_response=None):
@@ -24,7 +23,7 @@ class LoginRequiredMiddleware:
         if path == reverse('admin:logout').lstrip('/'):
             logout(request)
 
-        if not request.user.is_authenticated() and not url_is_exempt:
-            return redirect(settings.LOGIN_REDIRECT_URL)
+        elif not request.user.is_authenticated() and not url_is_exempt:
+            return redirect(settings.LOGIN_REDIRECT_URL + path)
         else:
             return None
