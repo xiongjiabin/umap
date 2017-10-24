@@ -174,6 +174,7 @@ UMAP_MAPS_PER_PAGE_OWNER = 10
 MAP_SHORT_URL_NAME = "umap_short_url"
 UMAP_USE_UNACCENT = False
 UMAP_JIAOAN_LINK = "http://www.jiaoan100.com"
+UMAP_ABOUT_LINK = "http://www.jiaoan100.com/about"
 USER_MAPS_URL = 'user_maps'
 
 # =============================================================================

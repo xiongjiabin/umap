@@ -7,7 +7,8 @@ def settings(request):
     return {
         #'UMAP_FEEDBACK_LINK': djsettings.UMAP_FEEDBACK_LINK,
         'UMAP_JIAOAN_LINK': djsettings.UMAP_JIAOAN_LINK,
-        'SITE_NAME': djsettings.SITE_NAME
+        'SITE_NAME': djsettings.SITE_NAME,
+        'UMAP_ABOUT_LINK': djsettings.UMAP_ABOUT_LINK,
     }
 
 
