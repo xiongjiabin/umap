@@ -151,19 +151,19 @@ class MapDetailMixin(object):
     def get_short_url(self):
         return None
 
-
 class MapView(MapDetailMixin, DetailView):
-
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        canonical = self.get_canonical_url()
-        if not request.path == canonical:
-            if request.META.get('QUERY_STRING'):
-                canonical = "?".join([canonical, request.META['QUERY_STRING']])
-            return HttpResponsePermanentRedirect(canonical)
-        if not self.object.can_view(request):
-            return HttpResponseForbidden('Forbidden')
-        return super(MapView, self).get(request, *args, **kwargs)
+        if self.object.company_id == request.user.company.id:
+            canonical = self.get_canonical_url()
+            if not request.path == canonical:
+                if request.META.get('QUERY_STRING'):
+                    canonical = "?".join([canonical, request.META['QUERY_STRING']])
+                return HttpResponsePermanentRedirect(canonical)
+            if not self.object.can_view(request):
+                return HttpResponseForbidden('Forbidden')
+            return super(MapView, self).get(request, *args, **kwargs)
+        return HttpResponse('权限不足, 退回可跳到主页')
 
     def get_canonical_url(self):
         return self.object.get_absolute_url()

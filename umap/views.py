@@ -55,7 +55,8 @@ class Home(TemplateView, PaginatorMixin):
     list_template_name = "leaflet_storage/map_list.html"
 
     def get_context_data(self, **kwargs):
-        qs = Map.public
+        owner = self.request.user
+        qs = Map.public.filter(Q(company_id = owner.company.id))
         if (settings.UMAP_EXCLUDE_DEFAULT_MAPS and
             'spatialite' not in settings.DATABASES['default']['ENGINE']):
                 # Unsupported query type for sqlite.
