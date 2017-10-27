@@ -152,6 +152,7 @@ class MapDetailMixin(object):
         return None
 
 class MapView(MapDetailMixin, DetailView):
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.company_id == request.user.company.id:
@@ -163,45 +164,66 @@ class MapView(MapDetailMixin, DetailView):
             if not self.object.can_view(request):
                 return HttpResponseForbidden('Forbidden')
             return super(MapView, self).get(request, *args, **kwargs)
-        return HttpResponse('权限不足, 退回可跳到主页')
+        return HttpResponseForbidden('Forbidden')
 
     def get_canonical_url(self):
-        return self.object.get_absolute_url()
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            return self.object.get_absolute_url()
+        return HttpResponseForbidden('Forbidden')
 
     def get_datalayers(self):
-        datalayers = DataLayer.objects.filter(map=self.object)
-        return [l.metadata for l in datalayers]
+        self.object = self.get_object()
+        if self.get_object().company_id == self.request.user.company.id:
+            datalayers = DataLayer.objects.filter(map=self.object)
+            return [l.metadata for l in datalayers]
+        return HttpResponseForbidden('Forbidden')
 
     def get_tilelayers(self):
-        return TileLayer.get_list(selected=self.object.get_tilelayer())
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            return TileLayer.get_list(selected=self.object.get_tilelayer())
+        return HttpResponseForbidden('Forbidden')
 
     def is_edit_allowed(self):
-        return self.object.can_edit(self.request.user, self.request)
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            return self.object.can_edit(self.request.user, self.request)
+        return HttpResponseForbidden('Forbidden')
 
     def get_storage_id(self):
-        return self.object.pk
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            return self.object.pk
+        return HttpResponseForbidden('Forbidden')
 
     def get_short_url(self):
-        shortUrl = None
-        if hasattr(settings, 'SHORT_SITE_URL'):
-            short_url_name = getattr(settings, 'MAP_SHORT_URL_NAME',
-                                     'map_short_url')
-            short_path = reverse_lazy(short_url_name,
-                                      kwargs={'pk': self.object.pk})
-            shortUrl = "%s%s" % (settings.SHORT_SITE_URL, short_path)
-        return shortUrl
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            shortUrl = None
+            if hasattr(settings, 'SHORT_SITE_URL'):
+                short_url_name = getattr(settings, 'MAP_SHORT_URL_NAME',
+                                         'map_short_url')
+                short_path = reverse_lazy(short_url_name,
+                                          kwargs={'pk': self.object.pk})
+                shortUrl = "%s%s" % (settings.SHORT_SITE_URL, short_path)
+            return shortUrl
+        return HttpResponseForbidden('Forbidden')
 
     def get_geojson(self):
-        map_settings = self.object.settings
-        if "properties" not in map_settings:
-            map_settings['properties'] = {}
-        if self.object.owner and hasattr(settings, 'USER_MAPS_URL'):
-            map_settings['properties']['author'] = {
-                'name': self.object.owner.get_username(),
-                'link': reverse(settings.USER_MAPS_URL,
-                                args=(self.object.owner.get_username(), ))
-            }
-        return map_settings
+        self.object = self.get_object()
+        if self.object.company_id == self.request.user.company.id:
+            map_settings = self.object.settings
+            if "properties" not in map_settings:
+                map_settings['properties'] = {}
+            if self.object.owner and hasattr(settings, 'USER_MAPS_URL'):
+                map_settings['properties']['author'] = {
+                    'name': self.object.owner.get_username(),
+                    'link': reverse(settings.USER_MAPS_URL,
+                                    args=(self.object.owner.get_username(), ))
+                }
+            return map_settings
+        return HttpResponseForbidden('Forbidden')
 
 
 class MapViewGeoJSON(MapView):
@@ -259,13 +281,15 @@ class MapUpdate(FormLessEditMixin, UpdateView):
     pk_url_kwarg = 'map_id'
 
     def form_valid(self, form):
-        self.object.settings = form.cleaned_data["settings"]
-        self.object.save()
-        return simple_json_response(
-            id=self.object.pk,
-            url=self.object.get_absolute_url(),
-            info=_("Map has been updated!")
-        )
+        if self.object.company_id == self.request.user.company.id:
+            self.object.settings = form.cleaned_data["settings"]
+            self.object.save()
+            return simple_json_response(
+                id=self.object.pk,
+                url=self.object.get_absolute_url(),
+                info=_("Map has been updated!")
+            )
+        return HttpResponseForbidden('No Permission')
 
 
 class UpdateMapPermissions(UpdateView):
@@ -274,28 +298,36 @@ class UpdateMapPermissions(UpdateView):
     pk_url_kwarg = 'map_id'
 
     def get_form_class(self):
-        if self.object.owner:
-            return UpdateMapPermissionsForm
-        else:
-            return AnonymousMapPermissionsForm
+        if self.object.company_id == self.request.company.id:
+            if self.object.owner:
+                return UpdateMapPermissionsForm
+            else:
+                return AnonymousMapPermissionsForm
+        return HttpResponseForbidden('No Permission')
 
     def get_form(self, form_class=None):
-        form = super(UpdateMapPermissions, self).get_form(form_class)
-        user = self.request.user
-        if self.object.owner and not user == self.object.owner:
-            del form.fields['edit_status']
-            del form.fields['share_status']
-            del form.fields['owner']
-        return form
+        if self.object.company_id == self.request.company.id:
+            form = super(UpdateMapPermissions, self).get_form(form_class)
+            user = self.request.user
+            if self.object.owner and not user == self.object.owner:
+                del form.fields['edit_status']
+                del form.fields['share_status']
+                del form.fields['owner']
+            return form
+        return HttpResponseForbidden('No Permission')
 
     def form_valid(self, form):
-        self.object = form.save()
-        return simple_json_response(
-            info=_("Map editors updated with success!"))
+        if self.object.company_id == self.request.company.id:
+            self.object = form.save()
+            return simple_json_response(
+                info=_("Map editors updated with success!"))
+        return HttpResponseForbidden('No Permission')
 
     def render_to_response(self, context, **response_kwargs):
-        context.update(response_kwargs)
-        return render_to_json(self.get_template_names(), context, self.request)
+        if self.object.company_id == self.request.company.id:
+            context.update(response_kwargs)
+            return render_to_json(self.get_template_names(), context, self.request)
+        return HttpResponseForbidden('No Permission')
 
 
 class MapDelete(DeleteView):
@@ -317,32 +349,34 @@ class MapDelete(DeleteView):
 class MapClone(View):
 
     def post(self, *args, **kwargs):
-        if not getattr(settings, "LEAFLET_STORAGE_ALLOW_ANONYMOUS", False) \
-           and not self.request.user.is_authenticated():
-            return HttpResponseForbidden('Forbidden')
-        owner = self.request.user if self.request.user.is_authenticated() else None
-        self.object = kwargs['map_inst'].clone(owner=owner)
-        response = simple_json_response(redirect=self.object.get_absolute_url())
-        if not self.request.user.is_authenticated():
-            key, value = self.object.signed_cookie_elements
-            response.set_signed_cookie(
-                key=key,
-                value=value,
-                max_age=ANONYMOUS_COOKIE_MAX_AGE
-            )
-            anonymous_url = "%s%s" % (
-                settings.SITE_URL,
-                self.object.get_anonymous_edit_url()
-            )
-            msg = _(
-                "Your map has been cloned! If you want to edit this map from "
-                "another computer, please use this link: %(anonymous_url)s"
-                % {"anonymous_url": anonymous_url}
-            )
-        else:
-            msg = _("Congratulations, your map has been cloned!")
-        messages.info(self.request, msg)
-        return response
+        if kwargs['map_inst'].company_id == self.request.user.company.id:
+            if not getattr(settings, "LEAFLET_STORAGE_ALLOW_ANONYMOUS", False) \
+               and not self.request.user.is_authenticated():
+                return HttpResponseForbidden('Forbidden')
+            owner = self.request.user if self.request.user.is_authenticated() else None
+            self.object = kwargs['map_inst'].clone(owner=owner)
+            response = simple_json_response(redirect=self.object.get_absolute_url())
+            if not self.request.user.is_authenticated():
+                key, value = self.object.signed_cookie_elements
+                response.set_signed_cookie(
+                    key=key,
+                    value=value,
+                    max_age=ANONYMOUS_COOKIE_MAX_AGE
+                )
+                anonymous_url = "%s%s" % (
+                    settings.SITE_URL,
+                    self.object.get_anonymous_edit_url()
+                )
+                msg = _(
+                    "Your map has been cloned! If you want to edit this map from "
+                    "another computer, please use this link: %(anonymous_url)s"
+                    % {"anonymous_url": anonymous_url}
+                )
+            else:
+                msg = _("Congratulations, your map has been cloned!")
+            messages.info(self.request, msg)
+            return response
+        return HttpResponseForbidden('No permission')
 
 
 class MapShortUrl(RedirectView):
@@ -446,35 +480,39 @@ class DataLayerView(GZipMixin, BaseDetailView):
     model = DataLayer
 
     def render_to_response(self, context, **response_kwargs):
-        response = None
-        path = self.path()
+        if self.object.map.company_id == self.request.user.company.id:
+            response = None
+            path = self.path()
 
-        if getattr(settings, 'LEAFLET_STORAGE_XSENDFILE_HEADER', None):
-            response = HttpResponse()
-            path = path.replace(settings.MEDIA_ROOT, '/internal')
-            response[settings.LEAFLET_STORAGE_XSENDFILE_HEADER] = path
-        else:
-            # TODO IMS
-            statobj = os.stat(path)
-            with open(path, 'rb') as f:
-                response = HttpResponse(
-                    f.read(),  # should not be used in production!
-                    content_type='application/json'
-                )
-            response["Last-Modified"] = http_date(statobj.st_mtime)
-            response['ETag'] = '%s' % hashlib.md5(force_bytes(response.content)).hexdigest()  # noqa
-            response['Content-Length'] = len(response.content)
-        if path.endswith(self.EXT):
-            response['Content-Encoding'] = 'gzip'
-        return response
+            if getattr(settings, 'LEAFLET_STORAGE_XSENDFILE_HEADER', None):
+                response = HttpResponse()
+                path = path.replace(settings.MEDIA_ROOT, '/internal')
+                response[settings.LEAFLET_STORAGE_XSENDFILE_HEADER] = path
+            else:
+                # TODO IMS
+                statobj = os.stat(path)
+                with open(path, 'rb') as f:
+                    response = HttpResponse(
+                        f.read(),  # should not be used in production!
+                        content_type='application/json'
+                    )
+                response["Last-Modified"] = http_date(statobj.st_mtime)
+                response['ETag'] = '%s' % hashlib.md5(force_bytes(response.content)).hexdigest()  # noqa
+                response['Content-Length'] = len(response.content)
+            if path.endswith(self.EXT):
+                response['Content-Encoding'] = 'gzip'
+            return response
+        return HttpResponseForbidden('No permission')
 
 
 class DataLayerVersion(DataLayerView):
 
     def _path(self):
-        return '{root}/{path}'.format(
-            root=settings.MEDIA_ROOT,
-            path=self.object.get_version_path(self.kwargs['name']))
+        if self.object.map.company_id == self.request.user.company.id:
+            return '{root}/{path}'.format(
+                root=settings.MEDIA_ROOT,
+                path=self.object.get_version_path(self.kwargs['name']))
+        return HttpResponseForbidden('No permission')
 
 
 class DataLayerCreate(FormLessEditMixin, GZipMixin, CreateView):
@@ -495,6 +533,8 @@ class DataLayerUpdate(FormLessEditMixin, GZipMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save()
+        if self.object.map.company_id != self.request.company.id:
+            return HttpResponseForbidden('No Permission')
         response = simple_json_response(**self.object.metadata)
         response['ETag'] = self.etag()
         return response
@@ -511,11 +551,13 @@ class DataLayerUpdate(FormLessEditMixin, GZipMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.map != self.kwargs['map_inst']:
-            return HttpResponseForbidden('Route to nowhere')
-        if not self.if_match():
-            return HttpResponse(status=412)
-        return super(DataLayerUpdate, self).post(request, *args, **kwargs)
+        if self.object.map.company_id == self.request.user.company.id:
+            if self.object.map != self.kwargs['map_inst']:
+                return HttpResponseForbidden('Route to nowhere')
+            if not self.if_match():
+                return HttpResponse(status=412)
+            return super(DataLayerUpdate, self).post(request, *args, **kwargs)
+        return HttpResponseForbidden('No Permission')
 
 
 class DataLayerDelete(DeleteView):
@@ -523,17 +565,21 @@ class DataLayerDelete(DeleteView):
 
     def delete(self, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.map != self.kwargs['map_inst']:
-            return HttpResponseForbidden('Route to nowhere')
-        self.object.delete()
-        return simple_json_response(info=_("Layer successfully deleted."))
+        if self.object.map.company_id == self.request.user.company.id:
+            if self.object.map != self.kwargs['map_inst']:
+                return HttpResponseForbidden('Route to nowhere')
+            self.object.delete()
+            return simple_json_response(info=_("Layer successfully deleted."))
+        return HttpResponseForbidden('No Permission')
 
 
 class DataLayerVersions(BaseDetailView):
     model = DataLayer
 
     def render_to_response(self, context, **response_kwargs):
-        return simple_json_response(versions=self.object.versions)
+        if self.get_object().map.company_id == self.request.user.company.id:
+            return simple_json_response(versions=self.object.versions)
+        return HttpResponseForbidden('No Permission')
 
 
 # ############## #
