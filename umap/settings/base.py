@@ -20,6 +20,7 @@ USE_TZ = True
 USE_I18N = True
 USE_L10N = True
 LANGUAGE_CODE = 'en'
+UMAP_TOKEN_NAME = 'token'
 LANGUAGES = (
     ('en', 'English'),
     ('fr', u'Francais'),
@@ -46,7 +47,8 @@ LANGUAGES = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = ''
-
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+UMAP_MAX_AGE = 3600
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,7 +149,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'umap.middleware.LoginRequiredMiddleware'
+    'umap.middleware.AuthenticationMiddleware',
+    'umap.middleware.LoginRequiredMiddleware',
 )
 
 # =============================================================================
@@ -155,6 +158,8 @@ MIDDLEWARE_CLASSES = (
 # =============================================================================
 
 AUTHENTICATION_BACKENDS += (
+    'django.contrib.auth.backends.ModelBackend',
+    'umap.backends.ModelBackend',
 )
 
 # =============================================================================

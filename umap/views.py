@@ -31,6 +31,8 @@ from leaflet_storage.forms import DEFAULT_CENTER
 
 from django.contrib.auth import authenticate, login
 
+from .backends import ModelBackend
+
 User = get_user_model()
 
 class PaginatorMixin(object):
@@ -180,6 +182,8 @@ def login_user(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
+                token = ModelBackend().create_token(user)
+                print 'token: ' + str(token)
                 login(request, user)
                 if request.session.get('next'):
                     return redirect('/' + request.session.get('next'))
