@@ -51,9 +51,8 @@ class UrlAuthBackendMixin(object):
             return
         except signing.BadSignature:
             return
-        print type(self.get_user(*struct.unpack(str('!i'), data[:4])))
         user = self.get_user(*struct.unpack(str('!i'), data[:4]))
-        if user is None
+        if user is None:
             return
         h = crypto.pbkdf2(
             user.password, self.salt, self.iterations, digest=self.digest
