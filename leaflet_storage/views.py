@@ -12,7 +12,7 @@ from django.core.signing import Signer, BadSignature
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseRedirect, HttpResponsePermanentRedirect)
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from django.views.generic import View
@@ -604,7 +604,7 @@ class PictogramJSONList(ListView):
 
 def logout(request):
     do_logout(request)
-    return simple_json_response(redirect="/")
+    return redirect('/')
 
 
 class LoginPopupEnd(TemplateView):
