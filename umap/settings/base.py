@@ -48,7 +48,7 @@ LANGUAGES = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = ''
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-UMAP_MAX_AGE = 3600
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

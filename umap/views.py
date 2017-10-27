@@ -183,13 +183,12 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 token = ModelBackend().create_token(user)
-                print 'token: ' + str(token)
+                request.session['token'] = token
                 login(request, user)
                 if request.session.get('next'):
                     return redirect('/' + request.session.get('next'))
                 else:
                     return redirect('/admin/')
-
     return render(request, 'umap/login.html', {'username':username})
 
 class Search(TemplateView, PaginatorMixin):
