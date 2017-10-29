@@ -229,7 +229,7 @@ lmd.tjPrintRect = function(){
     'totalPages': 1,
     'digram': '',
     'current':0,
-    pages: []
+     pages: []
   };
 
 
@@ -271,7 +271,7 @@ lmd.tjPrintRect = function(){
               '-' +
               L.Storage.LmdFeatureMixin.showSubNice.call(this,page['gbse']),
       'angle': 360 - (+page['rotateCenter']),
-      'url': window.location.origin + window.location.pathname + '?noControl=1#18/' + page['centerGPS'] || '',
+      'url': window.location.origin + window.location.pathname + '?token=' + lmd._token + '&noControl=1#18/' + page['centerGPS'] || '',
       //链接中增加nocontrol=1，表明不用渲染任何控件
       'gbssAngle': +page['gbssAngle'],
       'gbseAngle': +page['gbseAngle']

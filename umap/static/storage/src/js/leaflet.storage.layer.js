@@ -482,7 +482,12 @@ L.Storage.DataLayer = L.Class.extend({
     addRawData: function (c, type, options) {
         var self = this;
         this.rawToGeoJSON(c, type, function (geojson) {
-            if (geojson._storage) self.setOptions(geojson._storage);
+            //如果有俩个对象，俩个对象都有_storage,这个值会被覆盖
+            //这个对象设置的是datalayer的属性，而不是本身这个对象的属性
+            //熊佳斌 #futurerelease
+            if (geojson._storage) {
+                self.setOptions(geojson._storage);
+            }
             self.addData(geojson);
         }, options);
     },

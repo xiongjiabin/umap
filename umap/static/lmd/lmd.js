@@ -21,7 +21,7 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
   DEFAULT_OFFSET: 80,
 
   _map: null,
-  init: function(map) {
+  init: function(map, token) {
 
     if(map.options && map.options.noControl) return;
     //init the latlng show events
@@ -35,6 +35,7 @@ var MM_PER_PIX = 4961 / 420 //* (window.devicePixelRatio || 1),
     }).addTo(map);
 
     lmd._map = map
+    lmd._token = token
   },
 
   bench: function(that, fun1, count){
@@ -527,6 +528,35 @@ L.Storage.Map.include({
     return result
   },
 
+  getPicsInBounds: function(){
+    var bounds = this.getBounds()
+    var result = []
+    var additions = null
+    var latlng = null
+
+    this.datalayers_index.map( function(datalayer) {
+        if(!datalayer.isVisible() || !datalayer.options){
+            return
+        }
+        additions = datalayer.options.addtions
+        if(!additions) return
+        additions.map(function(pic){
+            if(pic['lat'] && pic['lng'] && pic['img']){
+                latlng = [pic['lat'],pic['lng']]
+                if(bounds.contains(latlng)){
+                    result.push({
+                        img: pic['img'],
+                        lat: pic['lat'],
+                        lng: pic['lng']
+                    })
+                }
+            }
+        })
+    })
+
+    return result
+  },
+
   _MARKER_SHOW: [],
   handleShowMarker: function(){
     var MAX_SHOWED = 40
@@ -550,6 +580,20 @@ L.Storage.Map.include({
     }
   },
 
+  _PICS_SHOW: [],
+  handleShowPics: function(){
+      var zoom = this.getZoom()
+      if(zoom <= 17 ) return
+      var pics = this.getPicsInBounds()
+      var temp = null,index = 0
+      var that = this
+      pics.map(function(pic) {
+          var key = [pic['lat'],pic['lng']].join('_')
+          if(that['_PICS_SHOW'][key]) return
+          that['_PICS_SHOW'][key] = that.createPicMarker(pic)
+      })
+  },
+
   getRenderColor: function(color){
       var renderMode = +this.getOption('renderMode')
       if(renderMode === 2){
@@ -557,7 +601,31 @@ L.Storage.Map.include({
       }
       return color
   },
-  
+
+  createPicMarker: function( result  ) {
+      var latlng = [result['lat'],result['lng']];
+      var sn = +result[2];
+      var k = sn / 10;
+      var sk = sn % 10;
+      var white = this.getRenderColor('white');
+      var formatText = '<circle stroke-width="2px" stroke-opacity="1" fill="white" cx="0" cy="0" r="5"></circle>'
+      var options = {
+        stroke: white,
+        rotate: 0,
+        color: white,
+        scale: 10,//* lmd.getLmdZoom(this),
+        svgText: formatText,
+        interactive: false,
+      };
+
+      //var data = this.getAnchorLatLngBySubNo(sn / 10);
+      //if(data) {
+          //options['rotate'] = data['left'];
+      //}
+
+      return new L.SVGObject(latlng, options).addTo(this);
+  },
+
   createSubMarker: function( result  ) {
       var latlng = [result[0],result[1]];
       var sn = +result[2];

@@ -38,10 +38,6 @@ COMPRESS_OFFLINE = True
 LANGUAGE_CODE = 'zh'
 
 AUTHENTICATION_BACKENDS = (
-    'social.backends.github.GithubOAuth2',
-    'social.backends.bitbucket.BitbucketOAuth',
-    'social.backends.twitter.TwitterOAuth',
-    'social.backends.openstreetmap.OpenStreetMapOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 SOCIAL_AUTH_GITHUB_KEY = 'xxx'

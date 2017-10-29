@@ -218,6 +218,8 @@ L.Storage.Map.include({
         this.on('moveend',this.handleShowMarker);
         this.on('update.marker', this.handleShowMarker);
 
+        !this.options.noControl && this.on('moveend',this.handleShowPics);
+
         var that = this;
         this.options.noControl && setTimeout( function(){
             that.fire('update.marker');

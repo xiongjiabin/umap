@@ -1,3 +1,4 @@
+umap.egg*
 dist/
 res/generated/
 
@@ -215,3 +216,9 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
+
+migrations
+lib
+include
+share
+uploads

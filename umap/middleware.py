@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 import re
 
+import json
+from django.utils.encoding import smart_bytes
+from django.http import (HttpResponse)
 from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import redirect
@@ -45,20 +48,21 @@ class LoginRequiredMiddleware:
     def process_view(self, request, view_func, view_args, view_kwargs):
         assert hasattr(request, 'user')
         path = request.path_info.lstrip('/')
+        #print "path:" + path
         url_is_exempt = any(url.match(path) for url in EXEMPT_URLS)
 
-        if path == reverse('admin:logout').lstrip('/'):
-            logout(request)
-            return redirect(settings.LOGIN_URL)
-
-        if request.user.is_authenticated() and url_is_exempt:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        elif not request.user.is_authenticated() and url_is_exempt:
+        if url_is_exempt:
+            #white list'
             return None
-        elif request.user.is_authenticated() and not url_is_exempt:
-            request.session['next'] = path
-            return None
+        if not request.user.is_authenticated():
+            #print 'need authenticated'
+            if request.is_ajax():
+                retjson = {
+                    "ret":-1,
+                    "msg":'need authenticate'
+                }
+                return HttpResponse(json.dumps(retjson))
+            else:
+                return redirect(settings.LOGIN_URL + path)
         else:
-            if not url_is_exempt:
-                request.session['next'] = path
-            return redirect(settings.LOGIN_URL + path)
+            return None

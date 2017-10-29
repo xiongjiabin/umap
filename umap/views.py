@@ -18,7 +18,7 @@ from django.db.models import Q
 from django.contrib.gis.measure import D
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import *
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_bytes
 from django.core.urlresolvers import reverse
@@ -179,6 +179,7 @@ def login_user(request):
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
+        nextRedirect = request.POST.get('next') or ''
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -187,11 +188,10 @@ def login_user(request):
                 #print 'token: ' + token
                 login(request, user)
                 request.session['token'] = token
-                if request.session.get('next'):
-                    return redirect('/' + request.session.get('next'))
-                else:
-                    return redirect('/')
-    return render(request, 'umap/login.html', {'username':username})
+                print nextRedirect
+                return redirect(nextRedirect)
+    nextRedirect = request.GET.get('next') or request.session['next'] or '/'
+    return render(request, 'umap/login.html', {'username':username,'next': nextRedirect})
 
 class Search(TemplateView, PaginatorMixin):
     template_name = "umap/search.html"

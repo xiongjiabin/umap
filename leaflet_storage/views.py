@@ -122,6 +122,8 @@ class MapDetailMixin(object):
         map_settings['properties']['datalayers'] = self.get_datalayers()
         context['map_settings'] = json.dumps(map_settings,
                                              indent=settings.DEBUG)
+        if hasattr(self.request.session, 'token'):
+            context['token'] = self.request.session['token']
         return context
 
     def get_tilelayers(self):
@@ -380,7 +382,7 @@ class MapClone(View):
             messages.info(self.request, msg)
             return response
         msg = _("You have no permission!")
-        return None
+        return response
 
 
 class MapShortUrl(RedirectView):
