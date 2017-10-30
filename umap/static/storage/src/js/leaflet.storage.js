@@ -1149,6 +1149,12 @@ L.Storage.Map.include({
         this._copyLayerLeafletId = 0;
         this._currentFocusObj = null;
 
+        //save current zome is the zoom
+        //save current center is the center
+        this.options['zoom'] = this.getZoom();
+        this.options['center'] = this.getCenter();
+        //这样每次打开都是上一次的位置
+
         var geojson = {
             type: 'Feature',
             geometry: this.geometry(),
