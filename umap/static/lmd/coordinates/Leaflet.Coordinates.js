@@ -60,6 +60,7 @@ L.Control.Coordinates = L.Control.extend({
     }
     subNoSpan = L.DomUtil.create("span", "", this._inputcontainer);
     this._subNo = this._createInput("subNo", this._inputcontainer);
+    this._img = L.DomUtil.create("img", "uiHidden", this._inputcontainer);
 
     xSpan.innerHTML = options.labelTemplateLng.replace("{x}", "");
     ySpan.innerHTML = options.labelTemplateLat.replace("{y}", "");
@@ -292,19 +293,20 @@ L.Control.Coordinates = L.Control.extend({
         syncUrl += 'seek-location:' + this._inputY.value + ',' + this._inputX
           .value;
 
-        console.log(syncUrl)
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', syncUrl, true);
-        xhr.send("")
+        //console.log(syncUrl)
+        //var xhr = new XMLHttpRequest();
+        //xhr.open('GET', syncUrl, true);
+        //xhr.send("")
+        this._img.src = syncUrl
       }
 
-      console.time('get sub no')
+      //console.time('get sub no')
       var result = this._map.getSubNoByLatLng([pos.lng, pos.lat])
-      console.log(result)
+      //console.log(result)
       var subNo = '0'
       if (result) subNo = result[2]
       this._subNo.value = subNo
-      console.timeEnd('get sub no')
+      //console.timeEnd('get sub no')
 
       pos['subno'] = subNo
       this._label.innerHTML = this._createCoordinateLabel(pos);
