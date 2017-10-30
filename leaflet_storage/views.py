@@ -302,7 +302,7 @@ class UpdateMapPermissions(UpdateView):
     pk_url_kwarg = 'map_id'
 
     def get_form_class(self):
-        if self.object.company_id == self.request.company.id:
+        if self.object.company_id == self.request.user.company.id:
             if self.object.owner:
                 return UpdateMapPermissionsForm
             else:
@@ -310,7 +310,7 @@ class UpdateMapPermissions(UpdateView):
         return None
 
     def get_form(self, form_class=None):
-        if self.object.company_id == self.request.company.id:
+        if self.object.company_id == self.request.user.company.id:
             form = super(UpdateMapPermissions, self).get_form(form_class)
             user = self.request.user
             if self.object.owner and not user == self.object.owner:
@@ -321,7 +321,7 @@ class UpdateMapPermissions(UpdateView):
         return None
 
     def form_valid(self, form):
-        if self.object.company_id == self.request.company.id:
+        if self.object.company_id == self.request.user.company.id:
             self.object = form.save()
             return simple_json_response(
                 info=_("Map editors updated with success!"))
@@ -329,7 +329,7 @@ class UpdateMapPermissions(UpdateView):
                 info=_("You have no permission!"))
 
     def render_to_response(self, context, **response_kwargs):
-        if self.object.company_id == self.request.company.id:
+        if self.object.company_id == self.request.user.company.id:
             context.update(response_kwargs)
             return render_to_json(self.get_template_names(), context, self.request)
         return None
@@ -539,7 +539,7 @@ class DataLayerUpdate(FormLessEditMixin, GZipMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        if self.object.map.company_id != self.request.company.id:
+        if self.object.map.company_id != self.request.user.company.id:
             return None
         response = simple_json_response(**self.object.metadata)
         response['ETag'] = self.etag()
