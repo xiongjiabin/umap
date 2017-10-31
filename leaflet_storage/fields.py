@@ -28,6 +28,14 @@ class DictField(models.TextField):
         else:
             return value
 
+
+    def value_from_object(self, obj):
+        """
+        Returns the value of this field in the given model instance.
+        """
+        value = getattr(obj, self.attname)
+        return json.dumps(value, ensure_ascii=False) if value is not None else ''
+
     def value_to_string(self, obj):
         """Return value from object converted to string properly"""
         return smart_text(self.get_prep_value(self._get_val_from_obj(obj)))
