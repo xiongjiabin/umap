@@ -29,7 +29,7 @@ from django.core.validators import URLValidator, ValidationError
 from leaflet_storage.models import Map
 from leaflet_storage.forms import DEFAULT_CENTER
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from .backends import ModelBackend
 
@@ -192,6 +192,10 @@ def login_user(request):
                 return redirect(nextRedirect)
     nextRedirect = request.GET.get('next') or request.session['next'] or '/'
     return render(request, 'umap/login.html', {'username':username,'next': nextRedirect})
+
+def user_logout(request):
+    logout(request)
+    return redirect(settings.LOGIN_URL)
 
 class Search(TemplateView, PaginatorMixin):
     template_name = "umap/search.html"

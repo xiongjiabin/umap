@@ -13,6 +13,7 @@ from . import views
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^admin/logout/$', views.user_logout),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', views.login_user),
     url('', include('social.apps.django_app.urls', namespace='social')),

@@ -51,9 +51,6 @@ class LoginRequiredMiddleware:
         #print "path:" + path
         url_is_exempt = any(url.match(path) for url in EXEMPT_URLS)
 
-        if path == reverse('admin:logout').lstrip('/'):
-            logout(request)
-
         if url_is_exempt:
             #white list'
             return None
