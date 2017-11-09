@@ -634,7 +634,7 @@ L.Storage.FeatureMixin = {
       }
 
       var sn = this.getOption('sn')
-      if(sn){
+      if(sn || sn == 0){
         stringMap['gbss'] = stringMap['sn'] = L.Storage.LmdFeatureMixin.showSubNice.call(this,sn)
       }else{
         stringMap['sn'] = '';
@@ -893,7 +893,7 @@ L.Storage.PathMixin = {
         }
         options['color'] && (options['color'] = this.map.getRenderColor(options['color']))
         options['fillColor'] && (options['fillColor'] = this.map.getRenderColor(options['fillColor']))
-            
+
         if (options.interactive) this.options.pointerEvents = 'visiblePainted';
         else this.options.pointerEvents = 'stroke';
         this.parentClass.prototype.setStyle.call(this, options);
