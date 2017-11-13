@@ -930,8 +930,8 @@ L.FormBuilder.jsrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
 L.FormBuilder.tcrxSizeSwitcher = L.FormBuilder.EmptySwitcher.extend({
   selectOptions: [
     [undefined,"无"],
-    ["L80", "40-70_____D80"],
-    ["L60", "<40  _____D60"]
+    ["D80", "40-70_____D80"],
+    ["D60", "<40  _____D60"]
   ]
 });
 
