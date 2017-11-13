@@ -96,7 +96,7 @@ L.Storage.LmdArea = L.Storage.Polygon.extend({
   getStringMap: function(){
 
     var stringMap = L.Storage.FeatureMixin.getStringMap.call(this)
-    if(stringMap['name']){
+    if(!stringMap['name']){
         stringMap['name'] = this.defaultName
     }
 

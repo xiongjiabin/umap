@@ -1109,7 +1109,7 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         gbl: {handler: 'FloatInput', label: '总长(m)'},
         gbw: {handler: 'FloatInput', label: '宽度(m)'},
         gbs: {handler: 'FloatInput', label: '间距(m)'},
-        gbn: {handler: 'IntInput', label: '数量'},
+        gbn: {handler: 'FloatInput', label: '数量'},
         gbss: {handler: 'FloatInput', label: '起始桩号'},
         gbse: {handler: 'FloatInput', label: '结束桩号'},
         gbm:  {handler: 'MaterialSwitcher',label: '材料'},
