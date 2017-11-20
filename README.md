@@ -1,4 +1,3 @@
-
 # uMap project
 
 [![Requirements Status](https://requires.io/github/umap-project/umap/requirements.svg?branch=master)](https://requires.io/github/umap-project/umap/requirements/?branch=master)
@@ -113,3 +112,7 @@ To speep up umap home page rendering on large instance, the following index can 
 ## Translating
 
 Everything is managed through Transifex: https://www.transifex.com/projects/p/umap/
+
+## 语言生成后需要的操作
+django-admin compilemessages -l zh
+
