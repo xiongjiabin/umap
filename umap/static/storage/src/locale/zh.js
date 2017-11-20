@@ -95,7 +95,7 @@ var locale = {
     "The zoom and center have been setted.": "缩放比例尺与中心设置完成",
     "To zoom": "放大",
     "Untitled layer": "未命名图层",
-    "Untitled map": "未命名地图",
+    "Untitled map": "未命名设计",
     "Update permissions and editors": "更新权限与编辑员",
     "Url": "Url",
     "User content credits": "用户内容信用",

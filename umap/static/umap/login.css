@@ -2,6 +2,7 @@ html{
     width: 100%;
     height: 100%;
     color: #212121;
+    overflow: hidden;
 }
 body{
     background: url(img/grey.jpg) no-repeat;
