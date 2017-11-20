@@ -9,6 +9,7 @@ def settings(request):
         'UMAP_JIAOAN_LINK': djsettings.UMAP_JIAOAN_LINK,
         'SITE_NAME': djsettings.SITE_NAME,
         'UMAP_ABOUT_LINK': djsettings.UMAP_ABOUT_LINK,
+        'UMAP_JIAOAN_ABOUT': djsettings.UMAP_JIAOAN_ABOUT,
     }
 
 

@@ -101,13 +101,6 @@ class Home(TemplateView, PaginatorMixin):
 
 home = Home.as_view()
 
-
-class About(Home):
-
-    template_name = "umap/about.html"
-
-about = About.as_view()
-
 class CompanyMaps(DetailView, PaginatorMixin):
     model = User
     slug_url_kwarg = 'username'

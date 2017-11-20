@@ -26,10 +26,10 @@ msgstr ""
 #: templates/auth/user_detail.html:7
 #, python-format
 msgid "Browse %(current_user)s's maps"
-msgstr "浏览%(current_user)s的所有地图"
+msgstr "浏览%(current_user)s的所有设计"
 
 msgid "Browse %(company)s's maps"
-msgstr "浏览%(company.name)s的所有地图"
+msgstr "浏览%(company.name)s的所有设计"
 
 #: templates/leaflet_storage/map_detail.html:24
 msgid "Type editors nick to add…"
@@ -70,15 +70,15 @@ msgstr ""
 
 #: templates/umap/home.html:16
 msgid "Map of the uMaps"
-msgstr "uMaps的地图"
+msgstr "uMaps的设计"
 
 #: templates/umap/home.html:23
 msgid "Get inspired, browse maps"
-msgstr "浏览地图得灵感"
+msgstr "浏览设计得灵感"
 
 #: templates/umap/navigation.html:12
 msgid "My maps"
-msgstr "我的地图"
+msgstr "我的设计"
 
 #: templates/umap/navigation.html:14
 msgid "Log in"
@@ -93,10 +93,10 @@ msgid "About"
 msgstr "关于"
 
 msgid "Company Maps"
-msgstr "公司地图"
+msgstr "公司设计"
 
 msgid "Of map"
-msgstr "的地图"
+msgstr "的设计"
 
 #: templates/umap/navigation.html:17
 msgid "JiaoAn Forum"
@@ -112,11 +112,11 @@ msgstr "开始新设计"
 
 #: templates/umap/search.html:13
 msgid "Not map found."
-msgstr "没有搜索到地图"
+msgstr "没有搜索到设计"
 
 #: templates/umap/search_bar.html:6
 msgid "Search maps"
-msgstr "搜索地图"
+msgstr "搜索设计"
 
 #: templates/umap/search_bar.html:9
 msgid "Search"
@@ -124,13 +124,13 @@ msgstr "搜索"
 
 #: views.py:198
 msgid "View the map"
-msgstr "浏览地图"
+msgstr "浏览设计"
 
 #~ msgid "Map settings"
-#~ msgstr "地图设置"
+#~ msgstr "设计设置"
 
 #~ msgid "Choose the layers of your map"
-#~ msgstr "选择地图的图层"
+#~ msgstr "选择设计的图层"
 
 #~ msgid "Add POIs: markers, lines, polygons..."
 #~ msgstr "添加兴趣点:点，线，面..."
@@ -139,13 +139,13 @@ msgstr "浏览地图"
 #~ msgstr "管理兴趣点颜色与图标"
 
 #~ msgid "Manage map options: display a minimap, locate user on load…"
-#~ msgstr "地图选项：显示鹰眼图，加载时用户定位"
+#~ msgstr "设计选项：显示鹰眼图，加载时用户定位"
 
 #~ msgid "Choose the license for your data"
 #~ msgstr "选择数据的许可"
 
 #~ msgid "Embed and share your map"
-#~ msgstr "嵌入与分享地图"
+#~ msgstr "嵌入与分享设计"
 
 #~ msgid "Play with the demo"
 #~ msgstr "试用示例"

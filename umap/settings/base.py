@@ -180,6 +180,7 @@ MAP_SHORT_URL_NAME = "umap_short_url"
 UMAP_USE_UNACCENT = False
 UMAP_JIAOAN_LINK = "http://www.jiaoan100.com"
 UMAP_ABOUT_LINK = "http://www.jiaoan100.com/about"
+UMAP_JIAOAN_ABOUT = "http://ppt.jiaoan100.com"
 USER_MAPS_URL = 'user_maps'
 
 # =============================================================================
