@@ -181,7 +181,7 @@ def login_user(request):
                 #print 'token: ' + token
                 login(request, user)
                 request.session['token'] = token
-                print nextRedirect
+                #print nextRedirect
                 return redirect(nextRedirect)
     nextRedirect = request.GET.get('next') or request.session['next'] or '/'
     return render(request, 'umap/login.html', {'username':username,'next': nextRedirect})

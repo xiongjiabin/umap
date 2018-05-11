@@ -122,8 +122,8 @@ class MapDetailMixin(object):
         map_settings['properties']['datalayers'] = self.get_datalayers()
         context['map_settings'] = json.dumps(map_settings,
                                              indent=settings.DEBUG)
-        if hasattr(self.request.session, 'token'):
-            context['token'] = self.request.session['token']
+        context['token'] = self.request.session.get('token','')
+
         return context
 
     def get_tilelayers(self):
